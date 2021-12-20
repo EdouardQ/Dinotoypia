@@ -15,3 +15,5 @@ composer req symfony/mime
 composer req google/recaptcha
 
 composer req symfony/translation
+
+composer req symfony/webpack-encore-bundle
