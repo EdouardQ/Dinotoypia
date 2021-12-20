@@ -1,5 +1,7 @@
 security:
-    encoders:
+    enable_authenticator_manager: true
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\Customer:
             algorithm: auto
         App\Entity\UserBack:
@@ -19,29 +21,17 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
         customer:
             provider: customer
             pattern: ^/customer
-            
-            # error  a fix
-            custom_authenticators:
-                - App\Security\CustomerAuthenticator
-
         userBack:
             provider: userBack
             pattern: ^/jurassicback
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\UserBackAuthenticator
- 
         main:
-            pattern: ^/
-            anonymous: true
+            lazy: true
             logout:
                 path: security.logout
-    
+
     access_control:
         # customer
         #- { path: ^/customer/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
@@ -49,3 +39,16 @@ security:
         # userBack
         - { path: ^/jurassicback/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/jurassicback, roles: ROLE_USERBACK}
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

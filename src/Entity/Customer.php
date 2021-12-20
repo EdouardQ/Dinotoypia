@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -74,6 +76,28 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      */
     private $fidelityPoints;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="customer")
+     */
+    private $orders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Voucher::class, mappedBy="customer")
+     */
+    private $vouchers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GiftCodeToCustomer::class, mappedBy="customer")
+     */
+    private $giftCodeToCustomers;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+        $this->vouchers = new ArrayCollection();
+        $this->giftCodeToCustomers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -237,6 +261,96 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFidelityPoints(int $fidelityPoints): self
     {
         $this->fidelityPoints = $fidelityPoints;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Voucher[]
+     */
+    public function getVouchers(): Collection
+    {
+        return $this->vouchers;
+    }
+
+    public function addVoucher(Voucher $voucher): self
+    {
+        if (!$this->vouchers->contains($voucher)) {
+            $this->vouchers[] = $voucher;
+            $voucher->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoucher(Voucher $voucher): self
+    {
+        if ($this->vouchers->removeElement($voucher)) {
+            // set the owning side to null (unless already changed)
+            if ($voucher->getCustomer() === $this) {
+                $voucher->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GiftCodeToCustomer[]
+     */
+    public function getGiftCodeToCustomers(): Collection
+    {
+        return $this->giftCodeToCustomers;
+    }
+
+    public function addGiftCodeToCustomer(GiftCodeToCustomer $giftCodeToCustomer): self
+    {
+        if (!$this->giftCodeToCustomers->contains($giftCodeToCustomer)) {
+            $this->giftCodeToCustomers[] = $giftCodeToCustomer;
+            $giftCodeToCustomer->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGiftCodeToCustomer(GiftCodeToCustomer $giftCodeToCustomer): self
+    {
+        if ($this->giftCodeToCustomers->removeElement($giftCodeToCustomer)) {
+            // set the owning side to null (unless already changed)
+            if ($giftCodeToCustomer->getCustomer() === $this) {
+                $giftCodeToCustomer->setCustomer(null);
+            }
+        }
 
         return $this;
     }

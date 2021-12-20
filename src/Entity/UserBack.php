@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserBackRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,36 @@ class UserBack implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $lastName;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=UserBack::class, inversedBy="userBacksCreated")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserBack::class, mappedBy="createdBy")
+     */
+    private $userBacksCreated;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $createdAt;
+
+    public function __construct()
+    {
+        $this->userBacksCreated = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,5 +135,83 @@ class UserBack implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?self
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?self $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getUserBacksCreated(): Collection
+    {
+        return $this->userBacksCreated;
+    }
+
+    public function addUserBacksCreated(self $userBacksCreated): self
+    {
+        if (!$this->userBacksCreated->contains($userBacksCreated)) {
+            $this->userBacksCreated[] = $userBacksCreated;
+            $userBacksCreated->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBacksCreated(self $userBacksCreated): self
+    {
+        if ($this->userBacksCreated->removeElement($userBacksCreated)) {
+            // set the owning side to null (unless already changed)
+            if ($userBacksCreated->getCreatedBy() === $this) {
+                $userBacksCreated->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }
