@@ -8,11 +8,11 @@ security:
             algorithm: auto
 
     providers:
-        customer:
+        customer_provider:
             entity:
                 class: App\Entity\Customer
                 property: email
-        userBack:
+        userBack_provider:
             entity:
                 class: App\Entity\UserBack
                 property: email
@@ -22,22 +22,26 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         customer:
-            provider: customer
+            provider: customer_provider
             pattern: ^/customer
+            custom_authenticator:
+                - App\Security\CustomerAuthenticator
+            
         userBack:
-            provider: userBack
+            provider: userBack_provider
             pattern: ^/jurassicback
+            custom_authenticator:
+                - App\Security\UserBackAuthenticator
         main:
-            lazy: true
             logout:
                 path: security.logout
 
     access_control:
         # customer
-        #- { path: ^/customer/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/customer/login, roles: PUBLIC_ACCESS}
         - { path: ^/customer, roles: ROLE_CUSTOMER}
         # userBack
-        - { path: ^/jurassicback/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/jurassicback/login, roles: PUBLIC_ACCESS}
         - { path: ^/jurassicback, roles: ROLE_USERBACK}
 
 when@test:

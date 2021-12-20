@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/login', name: 'security.customer.login')]
+    #[Route('/customer/login', name: 'security.customer.login')]
     public function customerLogin(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -24,7 +24,7 @@ class SecurityController extends AbstractController
         return $this->render('security/login_customer.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route('/jurassicback', name: 'security.user_back.login')]
+    #[Route('/jurassicback/login', name: 'security.user_back.login')]
     public function userBackLogin(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
