@@ -2,17 +2,16 @@
 
 ## Requires
 
-composer req asset debug annot twig make form validator orm ormfixtures security
+composer req asset debug annot twig make form validator orm security
 
-composer require fakerphp/faker --dev
+composer req profiler ormfixtures fakerphp/faker --dev
 
-composer require symfonycasts/verify-email-bundle symfony/mailer
+composer req symfonycasts/verify-email-bundle symfony/mailer
 
-composer require symfonycasts/reset-password-bundle
+composer req symfonycasts/reset-password-bundle
 
 composer req symfony/mime
 
 composer req google/recaptcha
 
 composer req symfony/translation
-
