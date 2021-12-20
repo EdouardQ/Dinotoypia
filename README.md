@@ -1,6 +1,6 @@
 # Dinotoypia
 
-## Requires
+## Requires PHP
 
 composer req asset debug annot twig make form validator orm security
 
@@ -17,3 +17,13 @@ composer req google/recaptcha
 composer req symfony/translation
 
 composer req symfony/webpack-encore-bundle
+
+## Requires React
+
+yarn install
+
+yarn add react react-dom
+
+yarn add @babel/preset-react --dev
+
+Server de dev : yarn run dev-serser

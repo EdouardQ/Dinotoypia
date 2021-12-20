@@ -55,6 +55,9 @@ Encore
         config.corejs = 3;
     })
 
+    // enable React
+    .enableReactPreset()
+
     // enables Sass/SCSS support
     //.enableSassLoader()
 
