@@ -26,7 +26,7 @@ yarn add react react-dom
 
 yarn add @babel/preset-react --dev
 
-Server de dev : yarn run dev-serser
+Server de dev : yarn run dev-server
 
 ## Authors
 
