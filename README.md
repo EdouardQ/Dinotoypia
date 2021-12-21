@@ -30,6 +30,6 @@ Server de dev : yarn run dev-serser
 
 ## Authors
 
-* **Edouard** **Quilliou** _alias_ [@EdouardQ](https://github.com/EdouardQ)
-* **Jonas** **Groetschel** _alias_ [@Jogroe](https://github.com/Jogroe)
-* **Marc** **Baribaud** _alias_ [@devFendrix](https://github.com/devFendrix)
+* **Edouard Quilliou** _alias_ [@EdouardQ](https://github.com/EdouardQ)
+* **Jonas Groetschel** _alias_ [@Jogroe](https://github.com/Jogroe)
+* **Marc Baribaud** _alias_ [@devFendrix](https://github.com/devFendrix)
