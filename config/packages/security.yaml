@@ -23,23 +23,24 @@ security:
             security: false
         customer:
             provider: customer_provider
-            pattern: ^/customer
-            custom_authenticator:
-                - App\Security\CustomerAuthenticator
-            
+            pattern: ^/my-account
+            custom_authenticator: App\Security\CustomerAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 259200 # 3 days in seconds  #604800 # 1 week in seconds
+                path: /
         userBack:
             provider: userBack_provider
             pattern: ^/jurassicback
-            custom_authenticator:
-                - App\Security\UserBackAuthenticator
+            custom_authenticator: App\Security\UserBackAuthenticator
         main:
             logout:
                 path: security.logout
 
     access_control:
         # customer
-        - { path: ^/customer/login, roles: PUBLIC_ACCESS}
-        - { path: ^/customer, roles: ROLE_CUSTOMER}
+        - { path: ^/my-account/login, roles: PUBLIC_ACCESS}
+        - { path: ^/my-account, roles: ROLE_CUSTOMER}
         # userBack
         - { path: ^/jurassicback/login, roles: PUBLIC_ACCESS}
         - { path: ^/jurassicback, roles: ROLE_USERBACK}

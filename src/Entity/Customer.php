@@ -99,11 +99,17 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=RefurbishedToy::class, mappedBy="customer")
+     */
+    private $refurbishedToys;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->vouchers = new ArrayCollection();
         $this->giftCodeToCustomers = new ArrayCollection();
+        $this->refurbishedToys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -368,6 +374,36 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RefurbishedToy[]
+     */
+    public function getRefurbishedToys(): Collection
+    {
+        return $this->refurbishedToys;
+    }
+
+    public function addRefurbishedToy(RefurbishedToy $refurbishedToy): self
+    {
+        if (!$this->refurbishedToys->contains($refurbishedToy)) {
+            $this->refurbishedToys[] = $refurbishedToy;
+            $refurbishedToy->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRefurbishedToy(RefurbishedToy $refurbishedToy): self
+    {
+        if ($this->refurbishedToys->removeElement($refurbishedToy)) {
+            // set the owning side to null (unless already changed)
+            if ($refurbishedToy->getCustomer() === $this) {
+                $refurbishedToy->setCustomer(null);
+            }
+        }
 
         return $this;
     }

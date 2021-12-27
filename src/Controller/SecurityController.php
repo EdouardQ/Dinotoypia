@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/customer/login', name: 'security.customer.login')]
+    #[Route('/my-account/login', name: 'security.customer.login')]
     public function customerLogin(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {

@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Service\ReCaptchaCheckerService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,14 +23,18 @@ class UserBackAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'security.user_back.login';
 
     private UrlGeneratorInterface $urlGenerator;
+    private ReCaptchaCheckerService $reCaptchaCheckerService;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, ReCaptchaCheckerService $reCaptchaCheckerService)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->reCaptchaCheckerService = $reCaptchaCheckerService;
     }
 
     public function authenticate(Request $request): Passport
     {
+        $this->reCaptchaCheckerService->check($request);
+
         $email = $request->request->get('email', '');
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);

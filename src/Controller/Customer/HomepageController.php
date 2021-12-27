@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/customer')]
+#[Route('/my-account')]
 class HomepageController extends AbstractController
 {
     #[Route('/', name: 'customer.homepage.index')]
