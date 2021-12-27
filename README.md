@@ -18,6 +18,8 @@ composer req symfony/translation
 
 composer req symfony/webpack-encore-bundle
 
+composer req stripe/stripe-php
+
 ## Requires React
 
 yarn install
