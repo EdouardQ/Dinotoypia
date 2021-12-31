@@ -17,7 +17,7 @@ class ProductController extends AbstractController
         $this->productRepository = $productRepository;
     }
 
-    #[Route('/', name: 'jurassicback.product.index')]
+    #[Route('/', name: 'user_back.product.index')]
     public function index(): Response
     {
         return $this->render('user_back/product/index.html.twig', [
