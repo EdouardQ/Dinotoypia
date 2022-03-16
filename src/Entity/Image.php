@@ -76,7 +76,9 @@ class Image
         return $this;
     }
 
-    /** @ORM\PreRemove() */
+    /**
+     * @ORM\PreRemove()
+     */
     public function preRemove(LifecycleEventArgs $args)
     {
         !$this->fileName ?: unlink('./img/products/'.$this->fileName) ;

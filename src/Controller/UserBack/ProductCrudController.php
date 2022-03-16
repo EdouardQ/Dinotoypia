@@ -33,9 +33,12 @@ class ProductCrudController extends AbstractCrudController
     {
         return [
             TextField::new('label')->setLabel('Nom'),
-            TextareaField::new('description'),
-            MoneyField::new('price')->setCurrency('EUR')->setStoredAsCents(false),
-            AssociationField::new('category'),
+            TextareaField::new('description')->setLabel('Description'),
+            MoneyField::new('price')
+                ->setCurrency('EUR')
+                ->setStoredAsCents(false)
+                ->setLabel('Prix'),
+            AssociationField::new('category')->setLabel('Catégorie'),
         ];
     }
 }

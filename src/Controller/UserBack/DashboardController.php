@@ -5,6 +5,7 @@ namespace App\Controller\UserBack;
 use App\Entity\Image;
 use App\Entity\Product;
 use App\Entity\ProductCategory;
+use App\Entity\UserBack;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -36,6 +37,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Produits', 'fa fa-tags', Product::class),
             MenuItem::linkToCrud('Catégories', 'fa fa-tags', ProductCategory::class),
             MenuItem::linkToCrud('Images', 'fa fa-tags', Image::class),
+            MenuItem::section('Admin')->setPermission('ROLE_ADMIN'),
+            MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', UserBack::class)->setPermission('ROLE_ADMIN'),
 
         ];
     }

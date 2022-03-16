@@ -27,7 +27,7 @@ class UserBack implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     private $roles = [];
 
@@ -67,6 +67,11 @@ class UserBack implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userBacksCreated = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->firstName.' '.$this->lastName;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -101,10 +106,12 @@ class UserBack implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
 
+        $roles[] = 'ROLE_USERBACK';
+
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
 

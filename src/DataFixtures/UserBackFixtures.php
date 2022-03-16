@@ -24,7 +24,7 @@ class UserBackFixtures extends Fixture
         [
             'email' => "j.Groetschel@dinotoypia.fr",
             'firstName' => "Jonas",
-            'lastName' => "Groetschel",
+            'lastName' => "groetschel",
         ],
     ];
 
@@ -40,7 +40,7 @@ class UserBackFixtures extends Fixture
             $entity->setEmail($userBack['email']);
             $entity->setFirstName($userBack['firstName']);
             $entity->setLastName($userBack['lastName']);
-            $entity->setRoles(["ROLE_USERBACK"]);
+            $entity->setRoles(["ROLE_USERBACK", "ROLE_ADMIN"]);
             $entity->setCreatedAt(new \DateTimeImmutable());
             $entity->setPassword($this->userPasswordHasher->hashPassword($entity, "azerty"));
 

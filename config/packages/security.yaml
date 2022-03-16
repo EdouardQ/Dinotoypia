@@ -6,6 +6,9 @@ security:
             algorithm: auto
         App\Entity\UserBack:
             algorithm: auto
+        App\Entity\User:
+            algorithm: auto
+
 
     providers:
         customer_provider:
@@ -15,6 +18,11 @@ security:
         userBack_provider:
             entity:
                 class: App\Entity\UserBack
+                property: email
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
                 property: email
 
     firewalls:
