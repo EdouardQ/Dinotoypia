@@ -36,12 +36,12 @@ class Product
     private $description;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="decimal", precision=8, scale=2)
      */
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product", orphanRemoval=true)
      */
     private $images;
 
@@ -54,6 +54,11 @@ class Product
     {
         $this->images = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->label;
     }
 
     public function getId(): ?int

@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Image
 {
@@ -23,7 +25,7 @@ class Image
     private $label;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $fileName;
 
@@ -72,5 +74,11 @@ class Image
         $this->product = $product;
 
         return $this;
+    }
+
+    /** @ORM\PreRemove() */
+    public function preRemove(LifecycleEventArgs $args)
+    {
+        !$this->fileName ?: unlink('./img/products/'.$this->fileName) ;
     }
 }

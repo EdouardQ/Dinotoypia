@@ -20,6 +20,8 @@ composer req symfony/webpack-encore-bundle
 
 composer req stripe/stripe-php
 
+composer req easycorp/easyadmin-bundle symfony/ux-chartjs
+
 ## Requires React
 
 yarn install

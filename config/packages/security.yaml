@@ -21,6 +21,7 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         customer:
             provider: customer_provider
             pattern: ^/my-account
@@ -29,10 +30,14 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 259200 # 3 days in seconds  #604800 # 1 week in seconds
                 path: /
+
         userBack:
             provider: userBack_provider
             pattern: ^/jurassicback
             custom_authenticator: App\Security\UserBackAuthenticator
+            logout:
+                path: security.logout
+
         main:
             logout:
                 path: security.logout
