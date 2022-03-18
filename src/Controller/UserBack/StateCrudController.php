@@ -2,26 +2,26 @@
 
 namespace App\Controller\UserBack;
 
-use App\Entity\ProductCategory;
+use App\Entity\State;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class ProductCategoryCrudController extends AbstractCrudController
+class StateCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return ProductCategory::class;
+        return State::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->setSearchFields(['label'])
-            ->setEntityLabelInSingular('Catégorie')
-            ->setEntityLabelInPlural('Catégories')
+            ->setEntityLabelInSingular('État')
+            ->setEntityLabelInPlural('États')
             ->setEntityPermission('ROLE_DEV')
             ;
     }
@@ -37,6 +37,7 @@ class ProductCategoryCrudController extends AbstractCrudController
     {
         return [
             TextField::new('label')->setLabel('Nom'),
+            TextField::new('code')->setLabel('Code')
         ];
     }
 }

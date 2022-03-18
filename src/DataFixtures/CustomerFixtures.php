@@ -27,7 +27,6 @@ class CustomerFixtures extends Fixture
                     ->setAddress($faker->address())
                     ->setCity($faker->city())
                     ->setCountry($faker->country())
-                    ->setRoles(["ROLE_CUSTOMER"])
                     ->setZip($faker->postcode())
                     ->setPhone($faker->phoneNumber())
                     ->setFidelityPoints($faker->numberBetween(0, 2000))

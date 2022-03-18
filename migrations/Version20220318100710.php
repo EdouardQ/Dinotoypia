@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220317082021 extends AbstractMigration
+final class Version20220318100710 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,12 +25,12 @@ final class Version20220317082021 extends AbstractMigration
         $this->addSql('CREATE TABLE gift_code_to_customer (id INT AUTO_INCREMENT NOT NULL, customer_id INT NOT NULL, gift_code_id INT NOT NULL, number_used INT NOT NULL, INDEX IDX_CDED996C9395C3F3 (customer_id), INDEX IDX_CDED996C4B80CDB8 (gift_code_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE image (id INT AUTO_INCREMENT NOT NULL, product_id INT NOT NULL, label VARCHAR(255) NOT NULL, file_name VARCHAR(255) DEFAULT NULL, INDEX IDX_C53D045F4584665A (product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `order` (id INT AUTO_INCREMENT NOT NULL, customer_id INT NOT NULL, state_id INT NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', tracking_number VARCHAR(255) DEFAULT NULL, estimated_delivery DATE DEFAULT NULL COMMENT \'(DC2Type:date_immutable)\', INDEX IDX_F52993989395C3F3 (customer_id), INDEX IDX_F52993985D83CC1 (state_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE order_item (id INT AUTO_INCREMENT NOT NULL, id_order_id INT NOT NULL, product_id INT NOT NULL, quantity INT NOT NULL, INDEX IDX_52EA1F09DD4481AD (id_order_id), INDEX IDX_52EA1F094584665A (product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE order_item (id INT AUTO_INCREMENT NOT NULL, order_id INT NOT NULL, product_id INT NOT NULL, quantity INT NOT NULL, INDEX IDX_52EA1F098D9F6D38 (order_id), INDEX IDX_52EA1F094584665A (product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE product (id INT AUTO_INCREMENT NOT NULL, category_id INT NOT NULL, label VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, price NUMERIC(8, 2) NOT NULL, INDEX IDX_D34A04AD12469DE2 (category_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE product_category (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE refurbish_state (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE refurbished_toy (id INT AUTO_INCREMENT NOT NULL, customer_id INT DEFAULT NULL, state_id INT NOT NULL, bar_code_number VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_4533C8649395C3F3 (customer_id), INDEX IDX_4533C8645D83CC1 (state_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE state (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE state (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user_back (id INT AUTO_INCREMENT NOT NULL, created_by_id INT DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON DEFAULT NULL, password VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', UNIQUE INDEX UNIQ_174F8DFEE7927C74 (email), INDEX IDX_174F8DFEB03A8386 (created_by_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE voucher (id INT AUTO_INCREMENT NOT NULL, customer_id INT NOT NULL, label VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', expires_on DATE NOT NULL COMMENT \'(DC2Type:date_immutable)\', INDEX IDX_1392A5D89395C3F3 (customer_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE gift_code_to_customer ADD CONSTRAINT FK_CDED996C9395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id)');
@@ -38,7 +38,7 @@ final class Version20220317082021 extends AbstractMigration
         $this->addSql('ALTER TABLE image ADD CONSTRAINT FK_C53D045F4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
         $this->addSql('ALTER TABLE `order` ADD CONSTRAINT FK_F52993989395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id)');
         $this->addSql('ALTER TABLE `order` ADD CONSTRAINT FK_F52993985D83CC1 FOREIGN KEY (state_id) REFERENCES state (id)');
-        $this->addSql('ALTER TABLE order_item ADD CONSTRAINT FK_52EA1F09DD4481AD FOREIGN KEY (id_order_id) REFERENCES `order` (id)');
+        $this->addSql('ALTER TABLE order_item ADD CONSTRAINT FK_52EA1F098D9F6D38 FOREIGN KEY (order_id) REFERENCES `order` (id)');
         $this->addSql('ALTER TABLE order_item ADD CONSTRAINT FK_52EA1F094584665A FOREIGN KEY (product_id) REFERENCES product (id)');
         $this->addSql('ALTER TABLE product ADD CONSTRAINT FK_D34A04AD12469DE2 FOREIGN KEY (category_id) REFERENCES product_category (id)');
         $this->addSql('ALTER TABLE refurbished_toy ADD CONSTRAINT FK_4533C8649395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id)');
@@ -55,7 +55,7 @@ final class Version20220317082021 extends AbstractMigration
         $this->addSql('ALTER TABLE refurbished_toy DROP FOREIGN KEY FK_4533C8649395C3F3');
         $this->addSql('ALTER TABLE voucher DROP FOREIGN KEY FK_1392A5D89395C3F3');
         $this->addSql('ALTER TABLE gift_code_to_customer DROP FOREIGN KEY FK_CDED996C4B80CDB8');
-        $this->addSql('ALTER TABLE order_item DROP FOREIGN KEY FK_52EA1F09DD4481AD');
+        $this->addSql('ALTER TABLE order_item DROP FOREIGN KEY FK_52EA1F098D9F6D38');
         $this->addSql('ALTER TABLE image DROP FOREIGN KEY FK_C53D045F4584665A');
         $this->addSql('ALTER TABLE order_item DROP FOREIGN KEY FK_52EA1F094584665A');
         $this->addSql('ALTER TABLE product DROP FOREIGN KEY FK_D34A04AD12469DE2');

@@ -22,9 +22,9 @@ class ImageCrudController extends AbstractCrudController
             ->setSearchFields(['label'])
             ->setEntityLabelInSingular('Image')
             ->setEntityLabelInPlural('Images')
+            ->setEntityPermission('ROLE_DEV')
             ;
     }
-
 
     public function configureFields(string $pageName): iterable
     {

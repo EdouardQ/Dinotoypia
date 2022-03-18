@@ -112,6 +112,11 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         $this->refurbishedToys = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->firstName.' '.$this->lastName;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -145,6 +150,8 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
+
+        $roles[] = 'ROLE_CUSTOMER';
 
         return array_unique($roles);
     }

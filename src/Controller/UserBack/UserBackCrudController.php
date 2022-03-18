@@ -28,6 +28,7 @@ class UserBackCrudController extends AbstractCrudController
             ->setSearchFields(['email', 'roles', 'firstName', 'lastName'])
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 
@@ -48,7 +49,7 @@ class UserBackCrudController extends AbstractCrudController
             ArrayField::new('roles')->onlyOnIndex()->setLabel('Roles'),
             ChoiceField::new('roles')
                 ->setChoices([
-                    //'UserBack' => "ROLE_USERBACK",
+                    'Dev' => "ROLE_DEV",
                     'Admin' => "ROLE_ADMIN",
                 ])
                 ->allowMultipleChoices()
@@ -56,14 +57,5 @@ class UserBackCrudController extends AbstractCrudController
             AssociationField::new('createdBy')->onlyOnIndex()->setLabel('Créé par'),
             DateField::new('createdAt')->onlyOnIndex()->setLabel('Créé le')
         ];
-    }
-
-    public function createEntity(string $entityFqcn)
-    {
-        $userBack = new UserBack();
-        $userBack->setCreatedBy($this->getUser());
-        $userBack->setCreatedAt(new \DateTimeImmutable());
-
-        return $userBack;
     }
 }

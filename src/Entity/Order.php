@@ -43,18 +43,23 @@ class Order
     private $trackingNumber;
 
     /**
-     * @ORM\Column(type="date_immutable", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $estimatedDelivery;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="idOrder")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order")
      */
     private $orderItems;
 
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->id.' - '.$this->customer;
     }
 
     public function getId(): ?int
@@ -110,12 +115,12 @@ class Order
         return $this;
     }
 
-    public function getEstimatedDelivery(): ?\DateTimeImmutable
+    public function getEstimatedDelivery(): ?\DateTime
     {
         return $this->estimatedDelivery;
     }
 
-    public function setEstimatedDelivery(?\DateTimeImmutable $estimatedDelivery): self
+    public function setEstimatedDelivery(?\DateTime $estimatedDelivery): self
     {
         $this->estimatedDelivery = $estimatedDelivery;
 

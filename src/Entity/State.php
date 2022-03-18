@@ -29,9 +29,19 @@ class State
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $code;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->label;
     }
 
     public function getId(): ?int
@@ -77,6 +87,18 @@ class State
                 $order->setState(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

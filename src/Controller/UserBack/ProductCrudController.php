@@ -21,13 +21,13 @@ class ProductCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label', 'description'])
+            ->setSearchFields(['label', 'description', 'category.label'])
             ->setDateFormat('d-m-Y')
             ->setEntityLabelInSingular('Produit')
             ->setEntityLabelInPlural('Produits')
+            ->setEntityPermission('ROLE_DEV')
             ;
     }
-
 
     public function configureFields(string $pageName): iterable
     {

@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Order;
 use App\Entity\UserBack;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -23,16 +24,22 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            BeforeEntityPersistedEvent::class => ['addUserBack'],
+            BeforeEntityPersistedEvent::class => ['beforePersist'],
         ];
     }
 
-    public function addUserBack(BeforeEntityPersistedEvent $event)
+    public function beforePersist(BeforeEntityPersistedEvent $event)
     {
         $entity = $event->getEntityInstance();
         if ($entity instanceof UserBack) {
+            $entity->setCreatedBy($this->getUser());
+            $entity->setCreatedAt(new \DateTimeImmutable());
             $this->setHashedPassword($entity);
-            //$entity->setRoles($entity->getRoles());
+        }
+        elseif ($entity instanceof Order) {
+            $entity->setCreatedAt(new \DateTimeImmutable());
+            $today = new \DateTime();
+            $entity->setEstimatedDelivery($today->add(new \DateInterval('P7D')));
         }
     }
 
