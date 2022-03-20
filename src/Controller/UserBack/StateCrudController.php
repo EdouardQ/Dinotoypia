@@ -19,7 +19,7 @@ class StateCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label'])
+            ->setSearchFields(['label', 'code'])
             ->setEntityLabelInSingular('État')
             ->setEntityLabelInPlural('États')
             ->setEntityPermission('ROLE_DEV')

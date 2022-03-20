@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class OrderCrudController extends AbstractCrudController
@@ -38,8 +39,13 @@ class OrderCrudController extends AbstractCrudController
             DateTimeField::new('createdAt')->setLabel("crée le")->onlyOnIndex(),
             DateField::new('estimatedDelivery')->setLabel('Date de livraison estimée')->hideWhenCreating(),
             ArrayField::new('orderItems')
-                ->setTemplatePath('user_back/dashboard/table.html.twig')
-                ->setLabel("Produit X Quantité")
+                ->setTemplatePath('user_back/dashboard/order_items_table.html.twig')
+                ->setLabel("Produit - Prix unitaire - Quantité")
+                ->onlyOnIndex(),
+            MoneyField::new('totalPriceOfOrderItems')
+                ->setCurrency('EUR')
+                ->setStoredAsCents(false)
+                ->setLabel('Prix total')
                 ->onlyOnIndex(),
         ];
     }

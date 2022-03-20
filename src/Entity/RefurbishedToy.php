@@ -38,6 +38,11 @@ class RefurbishedToy
      */
     private $state;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class RefurbishedToy
     public function setState(?RefurbishState $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

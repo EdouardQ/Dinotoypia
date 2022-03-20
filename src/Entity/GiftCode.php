@@ -54,6 +54,11 @@ class GiftCode
         $this->giftCodeToCustomers = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->label;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -147,5 +152,18 @@ class GiftCode
         }
 
         return $this;
+    }
+
+    public function getNumberRemainingUses(): int
+    {
+        $usesList = $this->giftCodeToCustomers->getValues();
+        if (empty($usesList)) {
+            return 0;
+        }
+        $remainingUses = $this->numberUsesLimit;
+        foreach ($usesList as $use) {
+            $remainingUses-=$use->getNumberUsed();
+        }
+        return $remainingUses;
     }
 }

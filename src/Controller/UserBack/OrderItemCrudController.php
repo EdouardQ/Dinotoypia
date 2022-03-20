@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 
 class OrderItemCrudController extends AbstractCrudController
 {
@@ -29,6 +30,11 @@ class OrderItemCrudController extends AbstractCrudController
         return [
             AssociationField::new('order')->setLabel('Commande'),
             AssociationField::new('product')->setLabel('Produit'),
+            MoneyField::new('price')
+                ->setCurrency('EUR')
+                ->setStoredAsCents(false)
+                ->setLabel('Prix unitaire')
+                ->onlyOnIndex(),
             IntegerField::new('quantity')->setLabel('Quantité')
         ];
     }

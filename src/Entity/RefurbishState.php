@@ -29,9 +29,19 @@ class RefurbishState
      */
     private $refurbishedToys;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $code;
+
     public function __construct()
     {
         $this->refurbishedToys = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->label;
     }
 
     public function getId(): ?int
@@ -77,6 +87,18 @@ class RefurbishState
                 $refurbishedToy->setState(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

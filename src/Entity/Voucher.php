@@ -39,9 +39,14 @@ class Voucher
     private $createdAt;
 
     /**
-     * @ORM\Column(type="date_immutable")
+     * @ORM\Column(type="date")
      */
     private $expiresOn;
+
+    /**
+     * @ORM\Column(type="decimal", precision=8, scale=2)
+     */
+    private $amount;
 
     public function getId(): ?int
     {
@@ -96,14 +101,26 @@ class Voucher
         return $this;
     }
 
-    public function getExpiresOn(): ?\DateTimeImmutable
+    public function getExpiresOn(): ?\DateTime
     {
         return $this->expiresOn;
     }
 
-    public function setExpiresOn(\DateTimeImmutable $expiresOn): self
+    public function setExpiresOn(\DateTime $expiresOn): self
     {
         $this->expiresOn = $expiresOn;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(string $amount): self
+    {
+        $this->amount = $amount;
 
         return $this;
     }

@@ -34,6 +34,11 @@ class OrderItem
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="decimal", precision=8, scale=2)
+     */
+    private $price;
+
     public function __toString(): string
     {
         return $this->product.' X '.$this->quantity;
@@ -76,6 +81,18 @@ class OrderItem
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }
