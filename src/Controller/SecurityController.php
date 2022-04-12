@@ -39,8 +39,14 @@ class SecurityController extends AbstractController
         return $this->render('security/login_userback.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route('/logout', name: 'security.logout')]
-    public function logout(): void
+    #[Route('/my-account/logout', name: 'security.customer.logout')]
+    public function customerLogout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    #[Route('/jurassicback/logout', name: 'security.user_back.logout')]
+    public function userBackLogout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }

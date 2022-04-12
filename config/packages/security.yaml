@@ -6,9 +6,6 @@ security:
             algorithm: auto
         App\Entity\UserBack:
             algorithm: auto
-        App\Entity\User:
-            algorithm: auto
-
 
     providers:
         customer_provider:
@@ -18,11 +15,6 @@ security:
         userBack_provider:
             entity:
                 class: App\Entity\UserBack
-                property: email
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            entity:
-                class: App\Entity\User
                 property: email
 
     firewalls:
@@ -37,25 +29,25 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 259200 # 3 days in seconds  #604800 # 1 week in seconds
-                path: /
+            logout:
+                path: security.customer.logout
 
         userBack:
             provider: userBack_provider
             pattern: ^/jurassicback
             custom_authenticator: App\Security\UserBackAuthenticator
             logout:
-                path: security.logout
-
-        main:
-            logout:
-                path: security.logout
+                path: security.user_back.logout
+                target: security.user_back.login
 
     access_control:
         # customer
         - { path: ^/my-account/login, roles: PUBLIC_ACCESS}
+        - { path: ^/my-account/logout, roles: PUBLIC_ACCESS}
         - { path: ^/my-account, roles: ROLE_CUSTOMER}
         # userBack
         - { path: ^/jurassicback/login, roles: PUBLIC_ACCESS}
+        - { path: ^/jurassicback/logout, roles: PUBLIC_ACCESS}
         - { path: ^/jurassicback, roles: ROLE_USERBACK}
 
 when@test:
