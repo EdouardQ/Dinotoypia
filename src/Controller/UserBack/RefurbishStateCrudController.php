@@ -36,7 +36,7 @@ class RefurbishStateCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Nom'),
+            TextField::new('name')->setLabel('Nom'),
             TextField::new('code')->setLabel('Code')
         ];
     }

@@ -27,8 +27,9 @@ class CustomerFixtures extends Fixture
                     ->setAddress($faker->address())
                     ->setCity($faker->city())
                     ->setCountry($faker->country())
-                    ->setZip($faker->postcode())
+                    ->setPostCode($faker->postcode())
                     ->setPhone($faker->phoneNumber())
+                    ->setStripeId("n/a")
                     ->setFidelityPoints($faker->numberBetween(0, 2000))
                     ->isVerified(true)
                 ;

@@ -4,16 +4,26 @@
         <meta charset="UTF-8">
         <title>Dinotoypia {% block title %}{% endblock %}</title>
         <link rel="icon" href="{{ asset('img/logo_dinotoypia_32.png') }}">
+
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/style_navbar.css') }}">
+
         {% block stylesheets %}
            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }} 
-        {% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        {# include stripe, to keep here to enable its security feature #}
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
+        {% include 'inc/nav.html.twig' %}
         {% block body %}{% endblock %}
+
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/live_search.js') }}"></script>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </body>
 </html>

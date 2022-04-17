@@ -19,7 +19,7 @@ class ProductCategoryCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label'])
+            ->setSearchFields(['name'])
             ->setEntityLabelInSingular('Catégorie')
             ->setEntityLabelInPlural('Catégories')
             ->setEntityPermission('ROLE_DEV')
@@ -36,7 +36,7 @@ class ProductCategoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Nom'),
+            TextField::new('name')->setLabel('Nom'),
         ];
     }
 }

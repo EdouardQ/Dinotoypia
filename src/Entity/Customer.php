@@ -62,7 +62,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $zip;
+    private $postCode;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -103,6 +103,11 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=RefurbishedToy::class, mappedBy="customer")
      */
     private $refurbishedToys;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $stripeId;
 
     public function __construct()
     {
@@ -235,14 +240,14 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getZip(): ?string
+    public function getPostCode(): ?string
     {
-        return $this->zip;
+        return $this->postCode;
     }
 
-    public function setZip(string $zip): self
+    public function setPostCode(string $postCode): self
     {
-        $this->zip = $zip;
+        $this->postCode = $postCode;
 
         return $this;
     }
@@ -411,6 +416,18 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
                 $refurbishedToy->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStripeId(): ?string
+    {
+        return $this->stripeId;
+    }
+
+    public function setStripeId(string $stripeId): self
+    {
+        $this->stripeId = $stripeId;
 
         return $this;
     }

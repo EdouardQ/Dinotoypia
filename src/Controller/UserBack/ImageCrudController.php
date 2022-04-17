@@ -19,7 +19,7 @@ class ImageCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label'])
+            ->setSearchFields(['name'])
             ->setEntityLabelInSingular('Image')
             ->setEntityLabelInPlural('Images')
             ->setEntityPermission('ROLE_DEV')
@@ -29,7 +29,7 @@ class ImageCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Nom'),
+            TextField::new('name')->setLabel('Nom'),
             ImageField::new('filename')
                 ->setBasePath('img/products/')
                 ->setUploadDir('public/img/products/')

@@ -12,17 +12,17 @@ class UserBackFixtures extends Fixture
     private UserPasswordHasherInterface $userPasswordHasher;
     private array $list = [
         [
-            'email' => "e.quilliou@dinotoypia.fr",
+            'email' => "e.quilliou@dino.fr",
             'firstName' => "Edouard",
             'lastName' => "Quilliou",
         ],
         [
-            'email' => "m.baribaud@dinotoypia.fr",
+            'email' => "m.baribaud@dino.fr",
             'firstName' => "Marc",
             'lastName' => "Baribaud",
         ],
         [
-            'email' => "j.groetschel@dinotoypia.fr",
+            'email' => "j.groetschel@dino.fr",
             'firstName' => "Jonas",
             'lastName' => "groetschel",
         ],

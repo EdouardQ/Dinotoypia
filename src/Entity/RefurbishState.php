@@ -22,7 +22,7 @@ class RefurbishState
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $label;
+    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity=RefurbishedToy::class, mappedBy="state")
@@ -41,7 +41,7 @@ class RefurbishState
 
     public function __toString(): string
     {
-        return $this->label;
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -49,14 +49,14 @@ class RefurbishState
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getName(): ?string
     {
-        return $this->label;
+        return $this->name;
     }
 
-    public function setLabel(string $label): self
+    public function setName(string $name): self
     {
-        $this->label = $label;
+        $this->name = $name;
 
         return $this;
     }

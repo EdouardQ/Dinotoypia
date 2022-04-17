@@ -21,7 +21,7 @@ class ProductCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label', 'description', 'category.label'])
+            ->setSearchFields(['name', 'description', 'category.label'])
             ->setDateFormat('d-m-Y')
             ->setEntityLabelInSingular('Produit')
             ->setEntityLabelInPlural('Produits')
@@ -32,7 +32,8 @@ class ProductCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Nom'),
+            TextField::new('name')->setLabel('Nom'),
+            TextField::new('urlName')->setLabel('url'),
             TextareaField::new('description')->setLabel('Description'),
             MoneyField::new('price')
                 ->setCurrency('EUR')

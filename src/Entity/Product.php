@@ -20,15 +20,9 @@ class Product
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProductCategory::class, inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
-    private $label;
+    private $name;
 
     /**
      * @ORM\Column(type="text")
@@ -50,15 +44,31 @@ class Product
      */
     private $orderItems;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=ProductCategory::class, inversedBy="products")
+     */
+    private $category;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $stripeId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $urlName;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->orderItems = new ArrayCollection();
+        $this->category = new ArrayCollection();
     }
 
     public function __toString(): string
     {
-        return $this->label;
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -66,26 +76,14 @@ class Product
         return $this->id;
     }
 
-    public function getCategory(): ?ProductCategory
+    public function getName(): ?string
     {
-        return $this->category;
+        return $this->name;
     }
 
-    public function setCategory(?ProductCategory $category): self
+    public function setName(string $name): self
     {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): self
-    {
-        $this->label = $label;
+        $this->name = $name;
 
         return $this;
     }
@@ -170,6 +168,54 @@ class Product
                 $orderItem->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductCategory>
+     */
+    public function getCategory(): Collection
+    {
+        return $this->category;
+    }
+
+    public function addCategory(ProductCategory $category): self
+    {
+        if (!$this->category->contains($category)) {
+            $this->category[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(ProductCategory $category): self
+    {
+        $this->category->removeElement($category);
+
+        return $this;
+    }
+
+    public function getStripeId(): ?string
+    {
+        return $this->stripeId;
+    }
+
+    public function setStripeId(string $stripeId): self
+    {
+        $this->stripeId = $stripeId;
+
+        return $this;
+    }
+
+    public function getUrlName(): ?string
+    {
+        return $this->urlName;
+    }
+
+    public function setUrlName(string $urlName): self
+    {
+        $this->urlName = $urlName;
 
         return $this;
     }
