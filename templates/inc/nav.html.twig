@@ -1,30 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<div class="container-fluid">
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-			<a class="navbar-brand" href="#"><img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt=""></a>
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="#">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Link</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-				</li>
-			</ul>
-			<form class="d-flex">
-				<input class="form-control me-2" type="search" id="search" placeholder="Search" aria-label="Search">
+<nav class="container-fluid">
+	<div class="nav-logo">
+		<a class="d-block" href="{{ url('homepage.index') }}"><img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt=""></a>
+	</div>
+	<div id="navbar-menu">
+		<div>
+			<a href="{{ url('homepage.index') }}">Accueil</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+		<br>
+		<div class="search">
+			<form>
+				<input class="form-control" type="search" id="searchBar" placeholder="Recherche" aria-label="Search">
 			</form>
-			<ul class="nav" id="side-menu">
-				<li>
-					<a href="#"> Entities<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level" id="searchNav">
-					</ul>
-				</li>
+			<ul class="searchResults" id="searchResults">
 			</ul>
 		</div>
 	</div>

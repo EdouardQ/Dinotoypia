@@ -1,10 +1,10 @@
 jQuery(document).ready(function() {
     var searchRequest = null;
-    $("#search").keyup(function() {
+    $("#searchBar").keyup(function() {
         var minlength = 3;
         var that = this;
         var value = $(this).val();
-        var entitySelector = $("#searchNav").html('');
+        var entitySelector = $("#searchResults").html('');
         if (value.length >= minlength ) {
             if (searchRequest != null)
                 searchRequest.abort();

@@ -31,7 +31,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         $this->barCodeService = $barCodeService;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityPersistedEvent::class => ['beforePersist'],

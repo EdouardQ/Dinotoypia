@@ -1,3 +1,45 @@
-.navbar {
-
+nav {
+    position: relative;
+    overflow: hidden;
+    background-color: #333;
+    text-align: center;
+    margin: auto;
 }
+
+.nav-logo {
+    display: inline-block;
+}
+
+#navbar-menu {
+    text-align: center;
+    margin: auto;
+    display: inline;
+}
+
+#navbar-menu div {
+    display: inline-block;
+}
+
+#navbar-menu a {
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.search {
+    padding-top: 1em;
+    width: 30%;
+}
+
+.searchResults li {
+    min-width: 160px;
+    padding-top: 1em;
+    z-index: 1;
+}
+
+.searchResults img {
+    max-width: 120px;
+}
+

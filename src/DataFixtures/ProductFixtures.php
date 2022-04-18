@@ -30,7 +30,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
             for ($i=0; $i < 100; $i++) {
                 $product = new Product;
-                $product->setName($faker->word())
+                $product->setName($faker->name())
                     ->setUrlName($product->getName())
                     ->setDescription($faker->text())
                     ->setPrice($faker->numberBetween(1, 99))
@@ -39,7 +39,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                     ->addCategory($this->getReference($this->categories[$i % sizeof($this->categories)]))
                 ;
 
-                $this->setReference($product->getName(), $product);
+                $this->addReference($product->getName(), $product);
                 $manager->persist($product);
             }
         }

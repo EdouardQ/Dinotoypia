@@ -21,7 +21,6 @@ class HomepageController extends AbstractController
     #[Route('/search/{requestString}', name: 'homepage.search')]
     public function search(string $requestString, Request $request, EntityManagerInterface $entityManager): Response
     {
-        //$requestString = $request->get('search');
         $products = $entityManager->getRepository(Product::class)->findProductsByString($requestString);
 
         if (!$products) {
