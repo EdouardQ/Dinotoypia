@@ -26,11 +26,13 @@ nav {
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+    display: inline-block;
 }
 
 .search {
     padding-top: 1em;
-    width: 30%;
+    width: 20%;
+    display: inline-block;
 }
 
 .searchResults li {

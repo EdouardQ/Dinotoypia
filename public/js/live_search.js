@@ -30,5 +30,9 @@ jQuery(document).ready(function() {
                 }
             });
         }
+        else {
+            // clean results
+            entitySelector.html('');
+        }
     });
 });
