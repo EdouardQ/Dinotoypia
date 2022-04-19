@@ -1,6 +1,5 @@
 nav {
     position: relative;
-    overflow: hidden;
     background-color: #333;
     text-align: center;
     margin: auto;
@@ -35,10 +34,22 @@ nav {
     display: inline-block;
 }
 
+.searchResults {
+    position: absolute;
+    border: black 1px solid;
+    border-radius: 12px;
+    background-color: white;
+    width: 20%;
+    overflow-y:scroll;
+    max-height: 50vh;
+}
+
 .searchResults li {
+    text-align: left;
     min-width: 160px;
     padding-top: 1em;
     z-index: 1;
+
 }
 
 .searchResults img {

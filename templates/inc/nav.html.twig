@@ -17,8 +17,8 @@
 		</div>
 	</div>
 	<div class="search">
-		<form>
-			<input class="form-control" type="search" id="searchBar" placeholder="Recherche" aria-label="Search">
+		<form method="post" action="{{ url('homepage.search') }}">
+			<input class="form-control" type="search" name="search" id="searchBar" placeholder="Recherche" aria-label="Search">
 		</form>
 		<ul class="searchResults" id="searchResults">
 		</ul>

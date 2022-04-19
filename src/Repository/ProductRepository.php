@@ -19,13 +19,16 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function findProductsByString(string $str)
+    public function findProductsByString(string $str, int $max = 0)
     {
-        return $this->createQueryBuilder('p')
+        $query = $this->createQueryBuilder('p')
             ->andWhere('p.name like :str')
             ->setParameter('str', '%'.$str.'%')
-            ->setMaxResults(10)
-            ->getQuery()
+        ;
+        if ($max != 0) {
+            $query->setMaxResults($max);
+        }
+        return $query->getQuery()
             ->getResult()
             ;
     }

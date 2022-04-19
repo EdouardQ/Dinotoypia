@@ -15,26 +15,39 @@ class HomepageController extends AbstractController
     public function index(): Response
     {
         return $this->render('homepage/index.html.twig');
-        
     }
 
     #[Route('/search/{requestString}', name: 'homepage.search')]
-    public function search(string $requestString, Request $request, EntityManagerInterface $entityManager): Response
+    public function search(string $requestString = null, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $products = $entityManager->getRepository(Product::class)->findProductsByString($requestString);
+        // if http method is GET with a parameter (jquery)
+        if ($request->getMethod() == "GET" && $requestString != null) {
+            $products = $entityManager->getRepository(Product::class)->findProductsByString($requestString, 10);
 
-        if (!$products) {
-            $result['error'] = "Aucun résultat";
-        }
-        else {
-            foreach ($products as $product) {
-                $result[$product->getId()] = [
-                    'name' => $product->getName(),
-                    'urlName' => $product->getUrlName(),
-                    'image' => $product->getImages()->getValues()[0]->getFileName(), // index 0 to get the first image
-                ];
+            if (!$products) {
+                $result['error'] = "Aucun résultat";
             }
+            else {
+                foreach ($products as $product) {
+                    $result[$product->getId()] = [
+                        'name' => $product->getName(),
+                        'urlName' => $product->getUrlName(),
+                        'image' => $product->getImages()->getValues()[0]->getFileName(), // index 0 to get the first image
+                    ];
+                }
+            }
+            return new Response(json_encode($result));
         }
-        return new Response(json_encode($result));
+        // if http method is POST
+        elseif ($request->getMethod() == "POST") {
+            $requestString = $request->request->get('search');
+            $products = $entityManager->getRepository(Product::class)->findProductsByString($requestString);
+
+            return $this->render('homepage/search.html.twig', [
+                'products' => $products,
+            ]);
+        }
+        // if user goes to this url by the wrong way -> redirect to the homepage
+        return $this->redirectToRoute('homepage.index');
     }
 }
