@@ -28,7 +28,7 @@ security:
             custom_authenticator: App\Security\CustomerAuthenticator
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 259200 # 3 days in seconds  #604800 # 1 week in seconds
+                lifetime: 259200 # 3 days in seconds
             logout:
                 path: security.customer.logout
 
@@ -36,6 +36,10 @@ security:
             provider: userBack_provider
             pattern: ^/jurassicback
             custom_authenticator: App\Security\UserBackAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 86400 # 24 hours in seconds
+                always_remember_me: true
             logout:
                 path: security.user_back.logout
                 target: security.user_back.login

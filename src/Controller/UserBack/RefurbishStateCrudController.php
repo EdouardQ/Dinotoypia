@@ -19,7 +19,7 @@ class RefurbishStateCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label', 'code'])
+            ->setSearchFields(['name', 'code'])
             ->setEntityLabelInSingular('État du reconditionnement')
             ->setEntityLabelInPlural('États du reconditionnement')
             ->setEntityPermission('ROLE_DEV')

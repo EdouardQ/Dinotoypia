@@ -19,7 +19,7 @@ class StateCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label', 'code'])
+            ->setSearchFields(['name', 'code'])
             ->setEntityLabelInSingular('État')
             ->setEntityLabelInPlural('États')
             ->setEntityPermission('ROLE_DEV')
@@ -36,7 +36,7 @@ class StateCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Nom'),
+            TextField::new('name')->setLabel('Nom'),
             TextField::new('code')->setLabel('Code')
         ];
     }

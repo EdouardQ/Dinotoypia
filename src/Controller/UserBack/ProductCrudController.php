@@ -21,7 +21,7 @@ class ProductCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['name', 'description', 'category.label'])
+            ->setSearchFields(['name', 'description', 'category.name'])
             ->setDateFormat('d-m-Y')
             ->setEntityLabelInSingular('Produit')
             ->setEntityLabelInPlural('Produits')

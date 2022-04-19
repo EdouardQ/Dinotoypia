@@ -22,7 +22,7 @@ class State
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Name;
+    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="state")

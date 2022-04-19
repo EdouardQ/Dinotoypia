@@ -2,50 +2,60 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Customer;
 use App\Entity\GiftCode;
 use App\Entity\GiftCodeToCustomer;
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Entity\Product;
 use App\Entity\RefurbishedToy;
 use App\Entity\UserBack;
 use App\Entity\Voucher;
 use App\Service\BarCodeService;
-use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityPersistedEvent;
-use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Service\StripeService;
+use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
-class EasyAdminSubscriber implements EventSubscriberInterface
+class EntitySubscriber implements EventSubscriberInterface
 {
-
-    private UserPasswordHasherInterface $userPasswordHasher;
-    private EntityManagerInterface $entityManager;
     private BarCodeService $barCodeService;
+    private Security $security;
+    private StripeService $stripeService;
+    private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, BarCodeService $barCodeService)
+    public function __construct(BarCodeService $barCodeService, Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
     {
-        $this->userPasswordHasher = $userPasswordHasher;
-        $this->entityManager = $entityManager;
         $this->barCodeService = $barCodeService;
+        $this->security = $security;
+        $this->stripeService = $stripeService;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    public static function getSubscribedEvents(): array
+    public function getSubscribedEvents(): array
     {
         return [
-            BeforeEntityPersistedEvent::class => ['beforePersist'],
-            AfterEntityPersistedEvent::class => ['afterPersist'],
+            Events::prePersist,
+            Events::postPersist,
         ];
     }
 
-    public function beforePersist(BeforeEntityPersistedEvent $event)
+    public function prePersist(LifecycleEventArgs $args): void
     {
-        $entity = $event->getEntityInstance();
-        if ($entity instanceof UserBack) {
-            $entity->setCreatedBy($this->getUser());
+        $entity = $args->getObject();
+
+        if ($entity instanceof Product) {
+            $this->stripeService->createProduct($entity);
+        }
+        elseif ($entity instanceof UserBack) {
+            $entity->setCreatedBy($this->security->getUser());
             $entity->setCreatedAt(new \DateTimeImmutable());
-            $this->setHashedPassword($entity);
+            $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $entity->getPassword()));
+        }
+        elseif ($entity instanceof Customer) {
+            $this->stripeService->createCustomer($entity);
         }
         elseif ($entity instanceof OrderItem) {
             $entity->setPrice($entity->getProduct()->getPrice());
@@ -72,17 +82,13 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function afterPersist(AfterEntityPersistedEvent $event) {
-        $entity = $event->getEntityInstance();
+    public function postPersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
+
         if ($entity instanceof RefurbishedToy) {
             $entity->setBarCodeNumber($this->barCodeService->generateBarCodeNumber($entity));
-            $this->entityManager->flush();
+            $args->getObjectManager()->flush();
         }
-    }
-
-    public function setHashedPassword(UserBack $entity): void
-    {
-        $password = $entity->getPassword();
-        $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $password));
     }
 }

@@ -21,7 +21,7 @@ class VoucherCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['customer.firstName', 'customer.lastName', 'label', 'code', 'createdAt', 'expiresOn',])
+            ->setSearchFields(['customer.firstName', 'customer.lastName', 'name', 'code', 'createdAt', 'expiresOn',])
             ->setEntityLabelInSingular("Bon d'achat")
             ->setEntityLabelInPlural("Bons d'achat")
             ;
@@ -31,7 +31,7 @@ class VoucherCrudController extends AbstractCrudController
     {
         return [
             AssociationField::new('customer')->setLabel('Client'),
-            TextField::new('label')->setLabel('Label'),
+            TextField::new('name')->setLabel('Label'),
             MoneyField::new('amount')
                 ->setCurrency('EUR')
                 ->setStoredAsCents(false)

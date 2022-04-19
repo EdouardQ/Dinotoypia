@@ -19,7 +19,7 @@ class OrderItemCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['order.id', 'product.label'])
+            ->setSearchFields(['order.id', 'product.name'])
             ->setEntityLabelInSingular('Object de commande')
             ->setEntityLabelInPlural('Objects de commande')
             ;

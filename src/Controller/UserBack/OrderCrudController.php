@@ -23,7 +23,7 @@ class OrderCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['id', 'trackingNumber', 'customer.firstName', 'customer.lastName', 'state.label', 'estimatedDelivery', 'orderItems.product.label'])
+            ->setSearchFields(['id', 'trackingNumber', 'customer.firstName', 'customer.lastName', 'state.name', 'estimatedDelivery', 'orderItems.product.name'])
             ->setEntityLabelInSingular('Commande')
             ->setEntityLabelInPlural('Commandes')
             ;

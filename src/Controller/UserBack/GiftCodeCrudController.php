@@ -19,7 +19,7 @@ class GiftCodeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['label', 'code', 'createdAt', 'expiresOn', 'numberUsesLimit'])
+            ->setSearchFields(['name', 'code', 'createdAt', 'expiresOn', 'numberUsesLimit'])
             ->setEntityLabelInSingular('Code cadeau')
             ->setEntityLabelInPlural('Codes cadeau')
             ;
@@ -28,7 +28,7 @@ class GiftCodeCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('label')->setLabel('Label'),
+            TextField::new('name')->setLabel('Label'),
             TextField::new('code')->setLabel('Code'),
             DateField::new('createdAt')->setLabel('Crée le')->onlyOnIndex(),
             DateField::new('expiresOn')->setLabel('Expire le'),

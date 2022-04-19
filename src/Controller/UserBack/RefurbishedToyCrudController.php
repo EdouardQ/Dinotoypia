@@ -19,7 +19,7 @@ class RefurbishedToyCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['name', 'barCodeNumber','customer.firstName', 'customer.lastName', 'createdAt', 'state.label'])
+            ->setSearchFields(['name', 'barCodeNumber','customer.firstName', 'customer.lastName', 'createdAt', 'state.name'])
             ->setEntityLabelInSingular('Jouet reconditionné')
             ->setEntityLabelInPlural('Jouet reconditionné')
             ;
