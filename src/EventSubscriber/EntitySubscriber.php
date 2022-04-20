@@ -44,41 +44,43 @@ class EntitySubscriber implements EventSubscriberInterface
 
     public function prePersist(LifecycleEventArgs $args): void
     {
-        $entity = $args->getObject();
+        if ('cli' != php_sapi_name()) {
+            $entity = $args->getObject();
 
-        if ($entity instanceof Product) {
-            $this->stripeService->createProduct($entity);
-        }
-        elseif ($entity instanceof UserBack) {
-            $entity->setCreatedBy($this->security->getUser());
-            $entity->setCreatedAt(new \DateTimeImmutable());
-            $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $entity->getPassword()));
-        }
-        elseif ($entity instanceof Customer) {
-            $this->stripeService->createCustomer($entity);
-        }
-        elseif ($entity instanceof OrderItem) {
-            $entity->setPrice($entity->getProduct()->getPrice());
-        }
-        elseif ($entity instanceof Order) {
-            $entity->setCreatedAt(new \DateTimeImmutable());
-            $today = new \DateTime();
-            $entity->setEstimatedDelivery($today->add(new \DateInterval('P7D')));
-        }
-        elseif ($entity instanceof RefurbishedToy) {
-            $entity->setCreatedAt(new \DateTimeImmutable());
-            $entity->setBarCodeNumber('pending');
-        }
-        elseif ($entity instanceof GiftCode) {
-            $entity->setCreatedAt(new \DateTimeImmutable());
-        }
-        elseif ($entity instanceof GiftCodeToCustomer) {
-            $entity->setNumberUsed(1);
-        }
-        elseif ($entity instanceof Voucher) {
-            $entity->setCreatedAt(new \DateTimeImmutable());
-            $today = new \DateTime();
-            $entity->setExpiresOn($today->add(new \DateInterval('P1Y')));
+            if ($entity instanceof Product) {
+                $this->stripeService->createProduct($entity);
+            }
+            elseif ($entity instanceof UserBack) {
+                $entity->setCreatedBy($this->security->getUser());
+                $entity->setCreatedAt(new \DateTimeImmutable());
+                $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $entity->getPassword()));
+            }
+            elseif ($entity instanceof Customer) {
+                $this->stripeService->createCustomer($entity);
+            }
+            elseif ($entity instanceof OrderItem) {
+                $entity->setPrice($entity->getProduct()->getPrice());
+            }
+            elseif ($entity instanceof Order) {
+                $entity->setCreatedAt(new \DateTimeImmutable());
+                $today = new \DateTime();
+                $entity->setEstimatedDelivery($today->add(new \DateInterval('P7D')));
+            }
+            elseif ($entity instanceof RefurbishedToy) {
+                $entity->setCreatedAt(new \DateTimeImmutable());
+                $entity->setBarCodeNumber('pending');
+            }
+            elseif ($entity instanceof GiftCode) {
+                $entity->setCreatedAt(new \DateTimeImmutable());
+            }
+            elseif ($entity instanceof GiftCodeToCustomer) {
+                $entity->setNumberUsed(1);
+            }
+            elseif ($entity instanceof Voucher) {
+                $entity->setCreatedAt(new \DateTimeImmutable());
+                $today = new \DateTime();
+                $entity->setExpiresOn($today->add(new \DateInterval('P1Y')));
+            }
         }
     }
 

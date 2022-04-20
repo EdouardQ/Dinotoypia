@@ -52,7 +52,12 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $stripeId;
+    private $productStripeId;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $priceStripeId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -196,14 +201,26 @@ class Product
         return $this;
     }
 
-    public function getStripeId(): ?string
+    public function getProductStripeId(): ?string
     {
-        return $this->stripeId;
+        return $this->productStripeId;
     }
 
-    public function setStripeId(string $stripeId): self
+    public function setProductStripeId(string $productStripeId): self
     {
-        $this->stripeId = $stripeId;
+        $this->productStripeId = $productStripeId;
+
+        return $this;
+    }
+
+    public function getPriceStripeId(): ?string
+    {
+        return $this->priceStripeId;
+    }
+
+    public function setPriceStripeId(string $priceStripeId): self
+    {
+        $this->priceStripeId = $priceStripeId;
 
         return $this;
     }

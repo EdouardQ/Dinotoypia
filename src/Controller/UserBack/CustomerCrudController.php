@@ -45,7 +45,7 @@ class CustomerCrudController extends AbstractCrudController
             TextField::new('lastName')->setLabel('Nom'),
             TextField::new('address')->setLabel('Adresse'),
             TextField::new('city')->setLabel('Ville'),
-            TextField::new('zip')->setLabel('Code postal'),
+            TextField::new('postCode')->setLabel('Code postal'),
             CountryField::new('country')->setLabel('Pays'),
             TelephoneField::new('phone')->setLabel('Téléphone'),
             IntegerField::new('fidelityPoints')

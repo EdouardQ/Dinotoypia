@@ -25,16 +25,29 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $product = new Product();
+        $product->setName("Figurine DIno")
+            ->setUrlName("figurine-dino")
+            ->setDescription("Figurine de dinosaure - 10 cm de hauteur")
+            ->addCategory($this->getReference("figurines"))
+            ->setPrice(19)
+            ->setProductStripeId("prod_LXhJouJAEZvQj7")
+            ->setPriceStripeId("price_1KqbumHowZnzDNfSWAFkk07V")
+        ;
+
+        $this->addReference($product->getName(), $product);
+        $manager->persist($product);
+
         $faker = \Faker\Factory::create('fr_FR');
         for ($i=0; $i < 3; $i++) {
-
             for ($i=0; $i < 100; $i++) {
                 $product = new Product;
                 $product->setName($faker->name())
                     ->setUrlName($product->getName())
                     ->setDescription($faker->text())
                     ->setPrice($faker->numberBetween(1, 99))
-                    ->setStripeId("n/a")
+                    ->setProductStripeId("n/a")
+                    ->setPriceStripeId("n/a")
                     ->addCategory($this->getReference($this->ages[$i % sizeof($this->ages)]))
                     ->addCategory($this->getReference($this->categories[$i % sizeof($this->categories)]))
                 ;

@@ -39,6 +39,7 @@ class StripeService
             'product' => $stripeProduct->id,
         ]);
 
-        $entity->setStripeId($stripePrice->id);
+        $entity->setProductStripeId($stripeProduct->id);
+        $entity->setPriceStripeId($stripePrice->id);
     }
 }
