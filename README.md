@@ -4,16 +4,6 @@
 
 composer install
 
-## Requires React
-
-yarn install
-
-yarn add react react-dom
-
-yarn add @babel/preset-react --dev
-
-Server de dev : yarn run dev-server
-
 ## Authors
 
 * **Edouard Quilliou** _alias_ [@EdouardQ](https://github.com/EdouardQ)
