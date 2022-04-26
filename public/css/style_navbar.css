@@ -56,3 +56,22 @@ nav {
     max-width: 120px;
 }
 
+.cart {
+    float: right;
+    text-align: center;
+    margin: auto;
+}
+
+.cart img {
+    width: 7em;
+}
+
+#cart-quantity {
+    color: white;
+    font-size: 2.5em;
+    position: absolute;
+    top: 0.4em;
+    right: 1.2em;
+}
+
+

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
@@ -31,6 +32,8 @@ class OrderItem
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\GreaterThanOrEqual(1)
      */
     private $quantity;
 
@@ -95,5 +98,10 @@ class OrderItem
         $this->price = $price;
 
         return $this;
+    }
+
+    public function equals(OrderItem $item): bool
+    {
+        return $this->getProduct()->getId() === $item->getProduct()->getId();
     }
 }

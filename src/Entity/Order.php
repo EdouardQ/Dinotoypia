@@ -21,12 +21,6 @@ class Order
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $customer;
-
-    /**
      * @ORM\ManyToOne(targetEntity=State::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -48,9 +42,14 @@ class Order
     private $estimatedDelivery;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $orderItems;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $updatedAt;
 
     public function __construct()
     {
@@ -59,24 +58,12 @@ class Order
 
     public function __toString(): string
     {
-        return $this->id.' - '.$this->customer;
+        return $this->id;
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
-
-        return $this;
     }
 
     public function getState(): ?State
@@ -137,10 +124,18 @@ class Order
 
     public function addOrderItem(OrderItem $orderItem): self
     {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setIdOrder($this);
+        foreach ($this->getOrderItems() as $existingOrderItem) {
+            // The item already exists, update the quantity
+            if ($existingOrderItem->equals($orderItem)) {
+                $existingOrderItem->setQuantity(
+                    $existingOrderItem->getQuantity() + $orderItem->getQuantity()
+                );
+                return $this;
+            }
         }
+
+        $this->$orderItem[] = $orderItem;
+        $orderItem->setOrder($this);
 
         return $this;
     }
@@ -149,8 +144,8 @@ class Order
     {
         if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getIdOrder() === $this) {
-                $orderItem->setIdOrder(null);
+            if ($orderItem->getOrder() === $this) {
+                $orderItem->setOrder(null);
             }
         }
 
@@ -168,5 +163,30 @@ class Order
             $total+=$item->getPrice()*$item->getQuantity();
         }
         return $total;
+    }
+
+    public function getTotalQuantity(): int
+    {
+        $orderItems = $this->getOrderItems()->getValues();
+        if (empty($orderItems)) {
+            return 0;
+        }
+        $total = 0;
+        foreach ($orderItems as $item) {
+            $total+=$item->getQuantity();
+        }
+        return $total;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

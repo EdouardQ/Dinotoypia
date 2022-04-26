@@ -80,11 +80,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $fidelityPoints;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="customer")
-     */
-    private $orders;
-
-    /**
      * @ORM\OneToMany(targetEntity=Voucher::class, mappedBy="customer")
      */
     private $vouchers;
@@ -111,7 +106,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
         $this->vouchers = new ArrayCollection();
         $this->giftCodeToCustomers = new ArrayCollection();
         $this->refurbishedToys = new ArrayCollection();
@@ -284,36 +278,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFidelityPoints(int $fidelityPoints): self
     {
         $this->fidelityPoints = $fidelityPoints;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Order[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getCustomer() === $this) {
-                $order->setCustomer(null);
-            }
-        }
 
         return $this;
     }
