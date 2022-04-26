@@ -42,4 +42,23 @@ class StripeService
         $entity->setProductStripeId($stripeProduct->id);
         $entity->setPriceStripeId($stripePrice->id);
     }
+
+    public function findAllPriceFromProduct(string $productStripeId): array
+    {
+        return $this->stripe->prices->all([
+            'active' => true,
+            'product' => $productStripeId
+            ])->data;
+    }
+
+    public function createPrice(Product $entity): void
+    {
+        $stripePrice = $this->stripe->prices->create([
+            'unit_amount' => $entity->getPrice()*100,
+            'currency' => 'eur',
+            'product' => $entity->getProductStripeId(),
+        ]);
+
+        $entity->setPriceStripeId($stripePrice->id);
+    }
 }

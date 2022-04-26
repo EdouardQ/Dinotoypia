@@ -3,15 +3,13 @@
 namespace App\Manager;
 
 use App\Entity\Order;
+use App\Entity\OrderItem;
+use App\Entity\Product;
 use App\Entity\State;
 use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 
-/**
- * Class OrderManager
- * @package App\Manager
- */
 class OrderManager
 {
     private EntityManagerInterface $entityManager;
@@ -44,6 +42,35 @@ class OrderManager
         $this->entityManager->flush();
 
         $this->orderSessionStorage->setOrder($order);
+    }
+
+    public function createOrderItem(Product $product): void
+    {
+        $order = $this->getCurrentOrder();
+        $this->save($order);
+
+        $productAlreadyExistsInOrder = false;
+
+        foreach ($order->getOrderItems()->getValues() as $orderItem) {
+            if ($orderItem->getProduct() == $product) {
+                $orderItem->setQuantity($orderItem->getQuantity()+1);
+                $productAlreadyExistsInOrder = true;
+            }
+        }
+
+        if (!$productAlreadyExistsInOrder) {
+            $orderItem = new OrderItem();
+            $orderItem->setProduct($product);
+            $orderItem->setPrice($product->getPrice());
+            $orderItem->setQuantity(1);
+            $orderItem->setOrder($order);
+
+            $order->addOrderItem($orderItem);
+
+            $this->entityManager->persist($orderItem);
+        }
+
+        $this->entityManager->flush();
     }
 
     public function createQuantityCookie(): Cookie

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/category')]
-class ProductCategory extends AbstractController
+class ProductCategoryController extends AbstractController
 {
     #[Route('/{id}')]
     public function index(): Response

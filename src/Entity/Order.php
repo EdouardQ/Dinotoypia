@@ -124,18 +124,10 @@ class Order
 
     public function addOrderItem(OrderItem $orderItem): self
     {
-        foreach ($this->getOrderItems() as $existingOrderItem) {
-            // The item already exists, update the quantity
-            if ($existingOrderItem->equals($orderItem)) {
-                $existingOrderItem->setQuantity(
-                    $existingOrderItem->getQuantity() + $orderItem->getQuantity()
-                );
-                return $this;
-            }
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems[] = $orderItem;
+            $orderItem->setOrder($this);
         }
-
-        $this->$orderItem[] = $orderItem;
-        $orderItem->setOrder($this);
 
         return $this;
     }

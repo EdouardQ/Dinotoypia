@@ -14,6 +14,7 @@ use App\Entity\Voucher;
 use App\Service\BarCodeService;
 use App\Service\StripeService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -39,6 +40,7 @@ class EntitySubscriber implements EventSubscriberInterface
         return [
             Events::prePersist,
             Events::postPersist,
+            Events::preUpdate,
         ];
     }
 
@@ -91,6 +93,27 @@ class EntitySubscriber implements EventSubscriberInterface
         if ($entity instanceof RefurbishedToy) {
             $entity->setBarCodeNumber($this->barCodeService->generateBarCodeNumber($entity));
             $args->getObjectManager()->flush();
+        }
+    }
+
+    public function preUpdate(PreUpdateEventArgs $args): void
+    {
+        $entity = $args->getEntity();
+
+        if ($entity instanceof Product && $args->hasChangedField('price')) {
+            $priceAlreadyExists = false;
+            $otherExistingPriceList = $this->stripeService->findAllPriceFromProduct($entity->getProductStripeId());
+
+            foreach ($otherExistingPriceList as $price) {
+                if (($price->unit_amount / 100) == $args->getNewValue('price')) {
+                    $entity->setPriceStripeId($price->id);
+                    $priceAlreadyExists = true;
+                }
+            }
+
+            if (!$priceAlreadyExists) {
+                $this->stripeService->createPrice($entity);
+            }
         }
     }
 }
