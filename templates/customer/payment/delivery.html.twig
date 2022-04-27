@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <!-- Librairie de Cartographie : Leaflet. -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block body %}
+    <br>
+    <section>
+
+        <div id="Zone_Widget"></div>
+
+
+        <div class="text-center">
+            <div style="display:inline-block; vertical-align:top;">
+
+                Point Relais Selectionné : <input type="text" id="TargetDisplay_Widget" /><br/>
+
+                {{ form_start(form) }}
+
+                {{ form_row(form.targetWidget, { 'id': 'Target_Widget' }) }}
+
+
+                <input type="submit" value="Confirmer et Payer">
+                {{ form_end(form) }}
+
+                InfosPR : <span id="TargetDisplayInfoPR_Widget"></span>
+
+            </div>
+
+            <hr>
+
+            <div style="display:inline-block;">
+                <!-- Balises HTML utilisées dans la fonction de CallBack pour reçevoir des données à afficher -->
+                <div style="font-weight:bold;text-decoration:underline;">Callback zone</div><br/>
+                <div>data.ID = <span id="cb_ID"></span></div>
+                <div>data.Nom = <span id="cb_Nom"></span></div>
+                <div>data.Adresse = <span id="cb_Adresse"></span></div>
+                <div>data.CP = <span id="cb_CP"></span></div>
+                <div>data.Ville = <span id="cb_Ville"></span></div>
+                <div>data.Pays = <span id="cb_Pays"></span></div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>
+    <script src="{{ asset('js/relay_point.js') }}"></script>
+{% endblock %}

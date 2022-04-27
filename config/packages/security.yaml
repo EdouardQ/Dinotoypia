@@ -24,7 +24,7 @@ security:
 
         customer:
             provider: customer_provider
-            pattern: ^/my-account
+            pattern: ^/(my-account|payment)/
             custom_authenticator: App\Security\CustomerAuthenticator
             remember_me:
                 secret: '%kernel.secret%'
@@ -49,6 +49,7 @@ security:
         - { path: ^/my-account/login, roles: PUBLIC_ACCESS}
         - { path: ^/my-account/logout, roles: PUBLIC_ACCESS}
         - { path: ^/my-account, roles: ROLE_CUSTOMER}
+        - { path: ^/payment, roles: ROLE_CUSTOMER}
         # userBack
         - { path: ^/jurassicback/login, roles: PUBLIC_ACCESS}
         - { path: ^/jurassicback/logout, roles: PUBLIC_ACCESS}

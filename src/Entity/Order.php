@@ -51,6 +51,21 @@ class Order
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="orders")
+     */
+    private $customer;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $relay_point_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $paymentStripeId;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -180,5 +195,61 @@ class Order
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getRelayPointId(): ?string
+    {
+        return $this->relay_point_id;
+    }
+
+    public function setRelayPointId(?string $relay_point_id): self
+    {
+        $this->relay_point_id = $relay_point_id;
+
+        return $this;
+    }
+
+    public function getPaymentStripeId(): ?string
+    {
+        return $this->paymentStripeId;
+    }
+
+    public function setPaymentStripeId(?string $paymentStripeId): self
+    {
+        $this->paymentStripeId = $paymentStripeId;
+
+        return $this;
+    }
+
+    public function getStripeLineItems(): ?array
+    {
+        $array = [];
+
+        foreach ($this->getOrderItems()->getValues() as $item) {
+            $array[] = [
+                'price' => $item->getProduct()->getPriceStripeId(),
+                'quantity' => $item->getQuantity()
+            ];
+        }
+
+        return $array;
+    }
+
+    public function calculEstimatedDeliveryDateTime(int $days = 5): \DateTime
+    {
+        $today = new \DateTime();
+        return $today->add(new \DateInterval('P'.$days.'D'));
     }
 }

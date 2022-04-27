@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <br>
+    <section>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nom</th>
+                            <th>Prix / unité</th>
+                            <th>Quantité</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderItems %}
+                            <tr>
+                                <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}"><img src="{{ asset('img/products/' ~ item.product.images[0].filename ) }}" alt="{{ item.product.images[0].filename }}"></a></td>
+                                <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}">{{ item.product.name }}</a></td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td><a href="{{ url('product.remove_to_order', {id: item.id}) }}" class="btn btn-danger">-</a></td>
+                            </tr>
+                        {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ order.totalPriceOfOrderItems }}€</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col">
+                {% for message in app.flashes('paymentFailedNotice') %}
+                    <p class="alert-success">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                <a href="{{ url('customer.payment.delivery') }}" class="btn btn-primary">Confirmer panier</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

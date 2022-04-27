@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Manager\OrderManager;
@@ -30,12 +29,21 @@ class ProductController extends AbstractController
     }
 
     #[Route('/add_to_order/{id}', name: 'product.add_to_order')]
-    public function addToOrder(Product $product, EntityManagerInterface $entityManager): Response
+    public function addToOrder(Product $product): Response
     {
         $this->orderManager->createOrderItem($product);
 
-
         $response = $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
+        $response->headers->setCookie($this->orderManager->createQuantityCookie());
+        $response->send();
+    }
+
+    #[Route('/remove_to_order/{id}', name: 'product.remove_to_order')]
+    public function removeToOrder(OrderItem $entity): Response
+    {
+        $this->orderManager->removeOrderItem($entity);
+
+        $response = $this->redirectToRoute('checkout.index');
         $response->headers->setCookie($this->orderManager->createQuantityCookie());
         $response->send();
     }

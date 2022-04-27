@@ -73,6 +73,18 @@ class OrderManager
         $this->entityManager->flush();
     }
 
+    public function removeOrderItem(OrderItem $orderItem): void
+    {
+        if ($orderItem->getQuantity() >= 2) {
+            $orderItem->setQuantity($orderItem->getQuantity() - 1);
+        }
+        else {
+            $orderItem->getOrder()->removeOrderItem($orderItem);
+            $this->entityManager->remove($orderItem);
+        }
+        $this->entityManager->flush();
+    }
+
     public function createQuantityCookie(): Cookie
     {
         return Cookie::create('order')
@@ -81,5 +93,21 @@ class OrderManager
             ->withSecure(false)
             ->withHttpOnly(false)
             ;
+    }
+
+    public function hasOrderItems(Order $order): bool
+    {
+        if ($order->getOrderItems()->getValues()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasBeenValidated(Order $order): bool
+    {
+        if ($order->getState() === $this->entityManager->getRepository(State::class)->findOneBy(['code' => "in_payment"])) {
+            return true;
+        }
+        return false;
     }
 }

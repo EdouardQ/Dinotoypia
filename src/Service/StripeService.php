@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Customer;
+use App\Entity\Order;
 use App\Entity\Product;
 
 class StripeService
@@ -60,5 +61,26 @@ class StripeService
         ]);
 
         $entity->setPriceStripeId($stripePrice->id);
+    }
+
+    /**
+     * @param Order $order
+     * @return \Stripe\Checkout\Session
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public function createSession(Order $order): \Stripe\Checkout\Session
+    {
+        $MY_DOMAIN = "https://".$_SERVER['HTTP_HOST'];
+
+        $sessionStripe = $this->stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'success_url' => $MY_DOMAIN.'/payment/payment-succeeded',
+            'cancel_url' => $MY_DOMAIN.'/payment/payment-failed',
+            'customer' => $order->getCustomer()->getStripeId(),
+            'line_items' => $order->getStripeLineItems(),
+            'payment_method_types' => ['card']
+        ]);
+
+        return $sessionStripe;
     }
 }

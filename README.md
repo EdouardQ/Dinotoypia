@@ -1,8 +1,8 @@
 # Dinotoypia
 
-## Requires PHP
+## Numéro de carte de crédit test
 
-composer install
+4242 4242 4242 42442 ou https://stripe.com/docs/testing
 
 ## Authors
 

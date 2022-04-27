@@ -115,5 +115,8 @@ class EntitySubscriber implements EventSubscriberInterface
                 $this->stripeService->createPrice($entity);
             }
         }
+        elseif ($entity instanceof Order) {
+            $entity->setUpdatedAt(new \DateTimeImmutable());
+        }
     }
 }
