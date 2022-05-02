@@ -39,4 +39,9 @@ class OrderSessionStorage
     {
         return $this->getSession()->get(self::ORDER_KEY_NAME);
     }
+
+    public function removeOrder(): void
+    {
+        $this->requestStack->getSession()->remove(self::ORDER_KEY_NAME);
+    }
 }

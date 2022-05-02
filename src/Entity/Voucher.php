@@ -48,6 +48,11 @@ class Voucher
      */
     private $amount;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $stripeId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +126,18 @@ class Voucher
     public function setAmount(string $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getStripeId(): ?string
+    {
+        return $this->stripeId;
+    }
+
+    public function setStripeId(string $stripeId): self
+    {
+        $this->stripeId = $stripeId;
 
         return $this;
     }

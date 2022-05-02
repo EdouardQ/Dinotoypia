@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use App\Entity\Customer;
 use App\Entity\GiftCode;
 use App\Entity\GiftCodeToCustomer;
+use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
@@ -74,6 +75,7 @@ class EntitySubscriber implements EventSubscriberInterface
             }
             elseif ($entity instanceof GiftCode) {
                 $entity->setCreatedAt(new \DateTimeImmutable());
+                $this->stripeService->createGiftCode($entity);
             }
             elseif ($entity instanceof GiftCodeToCustomer) {
                 $entity->setNumberUsed(1);
@@ -82,6 +84,9 @@ class EntitySubscriber implements EventSubscriberInterface
                 $entity->setCreatedAt(new \DateTimeImmutable());
                 $today = new \DateTime();
                 $entity->setExpiresOn($today->add(new \DateInterval('P1Y')));
+            }
+            elseif ($entity instanceof Image) {
+                $this->stripeService->updateImageToStripeProduct($entity);
             }
         }
     }
@@ -100,21 +105,30 @@ class EntitySubscriber implements EventSubscriberInterface
     {
         $entity = $args->getEntity();
 
-        if ($entity instanceof Product && $args->hasChangedField('price')) {
-            $priceAlreadyExists = false;
-            $otherExistingPriceList = $this->stripeService->findAllPriceFromProduct($entity->getProductStripeId());
+        if ($entity instanceof Product) {
+            if ($args->hasChangedField('price')) {
+                $priceAlreadyExists = false;
+                $otherExistingPriceList = $this->stripeService->findAllPriceFromProduct($entity->getProductStripeId());
 
-            foreach ($otherExistingPriceList as $price) {
-                if (($price->unit_amount / 100) == $args->getNewValue('price')) {
-                    $entity->setPriceStripeId($price->id);
-                    $priceAlreadyExists = true;
+                foreach ($otherExistingPriceList as $price) {
+                    if (($price->unit_amount / 100) == $args->getNewValue('price')) {
+                        $entity->setPriceStripeId($price->id);
+                        $priceAlreadyExists = true;
+                    }
+                }
+
+                if (!$priceAlreadyExists) {
+                    $this->stripeService->createPrice($entity);
                 }
             }
-
-            if (!$priceAlreadyExists) {
-                $this->stripeService->createPrice($entity);
+            if ($args->hasChangedField('name') || $args->hasChangedField('description')) {
+                $this->stripeService->updateProduct($entity);
             }
         }
+        elseif ($entity instanceof Image) {
+            $this->stripeService->updateImageToStripeProduct($entity);
+        }
+
         elseif ($entity instanceof Order) {
             $entity->setUpdatedAt(new \DateTimeImmutable());
         }
