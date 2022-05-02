@@ -37,7 +37,7 @@ class GiftCode
     /**
      * @ORM\Column(type="date_immutable")
      */
-    private $expiresOn;
+    private $expiresAt;
 
     /**
      * @ORM\Column(type="integer")
@@ -48,6 +48,26 @@ class GiftCode
      * @ORM\OneToMany(targetEntity=GiftCodeToCustomer::class, mappedBy="giftCode")
      */
     private $giftCodeToCustomers;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $giftCodeStripeId;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $couponStripeId;
+
+    /**
+     * @ORM\Column(type="decimal", precision=5, scale=2)
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
 
     public function __construct()
     {
@@ -100,14 +120,14 @@ class GiftCode
         return $this;
     }
 
-    public function getExpiresOn(): ?\DateTimeImmutable
+    public function getExpiresAt(): ?\DateTimeImmutable
     {
-        return $this->expiresOn;
+        return $this->expiresAt;
     }
 
-    public function setExpiresOn(\DateTimeImmutable $expiresOn): self
+    public function setExpiresAt(\DateTimeImmutable $expiresAt): self
     {
-        $this->expiresOn = $expiresOn;
+        $this->expiresAt = $expiresAt;
 
         return $this;
     }
@@ -165,5 +185,53 @@ class GiftCode
             $remainingUses-=$use->getNumberUsed();
         }
         return $remainingUses;
+    }
+
+    public function getGiftCodeStripeId(): ?string
+    {
+        return $this->getGiftCodeStripeId();
+    }
+
+    public function setGiftCodeStripeId(string $giftCodeStripeId): self
+    {
+        $this->giftCodeStripeId = $giftCodeStripeId;
+
+        return $this;
+    }
+
+    public function getCouponStripeId(): ?string
+    {
+        return $this->couponStripeId;
+    }
+
+    public function setCouponStripeId(string $couponStripeId): self
+    {
+        $this->couponStripeId = $couponStripeId;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(string $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

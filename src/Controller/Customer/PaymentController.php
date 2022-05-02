@@ -87,7 +87,11 @@ class PaymentController extends AbstractController
         $order->setEstimatedDelivery($order->calculEstimatedDeliveryDateTime());
         $entityManager->flush();
 
-        $this->redirectToRoute('homepage.index');
+        $this->orderManager->removeOrderFromSession();
+        $response = $this->redirectToRoute('homepage.index');
+        $response->headers->clearCookie('order');
+
+        return $response;
     }
 
     #[Route('/payment-failed', name: 'customer.payment.payment_failed')]

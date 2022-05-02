@@ -110,4 +110,9 @@ class OrderManager
         }
         return false;
     }
+
+    public function removeOrderFromSession(): void
+    {
+        $this->orderSessionStorage->removeOrder();
+    }
 }
