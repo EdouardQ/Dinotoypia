@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
 
 services:
     # default configuration for services in *this* file
@@ -21,5 +23,16 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    App\Service\StripeService:
+        arguments:
+            $stripe_secret_key: '%stripe_secret_key%'
+
+    App\EventSubscriber\EntitySubscriber:
+        tags:
+            - name: 'doctrine.event_subscriber'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+twig:
+    globals:
+        stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'

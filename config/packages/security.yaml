@@ -1,0 +1,69 @@
+security:
+    enable_authenticator_manager: true
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\Customer:
+            algorithm: auto
+        App\Entity\UserBack:
+            algorithm: auto
+
+    providers:
+        customer_provider:
+            entity:
+                class: App\Entity\Customer
+                property: email
+        userBack_provider:
+            entity:
+                class: App\Entity\UserBack
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        customer:
+            provider: customer_provider
+            pattern: ^/(my-account|payment)/
+            custom_authenticator: App\Security\CustomerAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 259200 # 3 days in seconds
+            logout:
+                path: security.customer.logout
+
+        userBack:
+            provider: userBack_provider
+            pattern: ^/jurassicback
+            custom_authenticator: App\Security\UserBackAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 86400 # 24 hours in seconds
+                always_remember_me: true
+            logout:
+                path: security.user_back.logout
+                target: security.user_back.login
+
+    access_control:
+        # customer
+        - { path: ^/my-account/login, roles: PUBLIC_ACCESS}
+        - { path: ^/my-account/logout, roles: PUBLIC_ACCESS}
+        - { path: ^/my-account, roles: ROLE_CUSTOMER}
+        - { path: ^/payment, roles: ROLE_CUSTOMER}
+        # userBack
+        - { path: ^/jurassicback/login, roles: PUBLIC_ACCESS}
+        - { path: ^/jurassicback/logout, roles: PUBLIC_ACCESS}
+        - { path: ^/jurassicback, roles: ROLE_USERBACK}
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

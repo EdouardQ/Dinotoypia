@@ -1,0 +1,32 @@
+<nav class="container-fluid">
+	<div class="nav-logo">
+		<a class="d-block" href="{{ url('homepage.index') }}"><img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt=""></a>
+	</div>
+	<div id="navbar-menu">
+		<div>
+			<a href="{{ url('homepage.index') }}">Accueil</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+		<div>
+			<a class="nav-link" href="#">Link</a>
+		</div>
+	</div>
+	<div class="search">
+		<form method="post" action="{{ url('homepage.search') }}">
+			<input class="form-control" type="search" name="search" id="searchBar" placeholder="Recherche" aria-label="Search">
+		</form>
+		<ul class="searchResults" id="searchResults">
+		</ul>
+	</div>
+	<div class="cart">
+		<a href="{{ url('checkout.index') }}">
+			<img src="{{ asset('img/cart.png') }}">
+			<div id="cart-quantity">0</div>
+		</a>
+	</div>
+</nav>

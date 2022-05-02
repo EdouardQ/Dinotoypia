@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ dump(product) }}
+
+    <section>
+        <div>
+            <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary">Ajouter au panier</a>
+        </div>
+    </section>
+
+{% endblock %}

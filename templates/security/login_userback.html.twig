@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dinotoypia {% block title %}{% endblock %}</title>
+    <link rel="icon" href="{{ asset('img/logo_dinotoypia_32.png') }}">
+
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+</head>
+<body>
+<br>
+    <section class="w-25 m-auto text-center">
+        <form method="post" id="userBackCustomer">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            <h1 class="h3 mb-3 font-weight-normal">Jurrasicback</h1>
+            <label for="inputEmail">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+            <br>
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+            <br>
+            <button class="g-recaptcha btn-primary"
+                    data-sitekey="{{ google_recaptcha_site_key }}"
+                    data-callback='onSubmit'
+                    data-action='submit'>
+                Connexion
+            </button>
+        </form>
+    </section>
+
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("userBackCustomer").submit();
+        }
+    </script>
+</body>
+</html>
