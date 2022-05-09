@@ -74,7 +74,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
-    public function paymentSucceeded(EntityManagerInterface $entityManager): Response
+    public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getCurrentOrder();
 

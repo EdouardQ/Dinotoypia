@@ -3,15 +3,13 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Customer;
-use App\Entity\GiftCode;
-use App\Entity\GiftCodeToCustomer;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
+use App\Entity\PromotionCode;
 use App\Entity\RefurbishedToy;
 use App\Entity\UserBack;
-use App\Entity\Voucher;
 use App\Service\BarCodeService;
 use App\Service\StripeService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
@@ -73,17 +71,8 @@ class EntitySubscriber implements EventSubscriberInterface
                 $entity->setCreatedAt(new \DateTimeImmutable());
                 $entity->setBarCodeNumber('pending');
             }
-            elseif ($entity instanceof GiftCode) {
+            elseif ($entity instanceof PromotionCode) {
                 $entity->setCreatedAt(new \DateTimeImmutable());
-                $this->stripeService->createGiftCode($entity);
-            }
-            elseif ($entity instanceof GiftCodeToCustomer) {
-                $entity->setNumberUsed(1);
-            }
-            elseif ($entity instanceof Voucher) {
-                $entity->setCreatedAt(new \DateTimeImmutable());
-                $today = new \DateTime();
-                $entity->setExpiresOn($today->add(new \DateInterval('P1Y')));
             }
             elseif ($entity instanceof Image) {
                 $this->stripeService->updateImageToStripeProduct($entity);

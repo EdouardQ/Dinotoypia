@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Customer;
-use App\Entity\GiftCode;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
@@ -18,6 +17,37 @@ class StripeService
         $this->stripe_secret_key = $stripe_secret_key;
         $this->stripe = new \Stripe\StripeClient($this->stripe_secret_key);
     }
+    
+    // Payment Part
+
+    /**
+     * @param Order $order
+     * @return \Stripe\Checkout\Session
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public function createSession(Order $order): \Stripe\Checkout\Session
+    {
+        $domain = "https://".$_SERVER['HTTP_HOST'];
+
+        $sessionStripe = $this->stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'success_url' => $domain.'/payment/payment-succeeded',
+            'cancel_url' => $domain.'/payment/payment-failed',
+            'customer' => $order->getCustomer()->getStripeId(),
+            'line_items' => $order->getStripeLineItems(),
+            'payment_method_types' => ['card'],
+            'shipping_options' => [
+                ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
+            ],
+            'discounts' => [
+                'promotion_code' => $order->getPromotionCode()->getStripeId()
+            ]
+        ]);
+
+        return $sessionStripe;
+    }
+    
+    // Entity Part
 
     public function createCustomer(Customer $entity): void
     {
@@ -84,70 +114,5 @@ class StripeService
                 $domain.'/img/products/'.$entity->getFileName()
             ]
         ]);
-    }
-
-    /**
-     * @param Order $order
-     * @return \Stripe\Checkout\Session
-     * @throws \Stripe\Exception\ApiErrorException
-     */
-    public function createSession(Order $order): \Stripe\Checkout\Session
-    {
-        $domain = "https://".$_SERVER['HTTP_HOST'];
-
-        $sessionStripe = $this->stripe->checkout->sessions->create([
-            'mode' => 'payment',
-            'success_url' => $domain.'/payment/payment-succeeded',
-            'cancel_url' => $domain.'/payment/payment-failed',
-            'customer' => $order->getCustomer()->getStripeId(),
-            'line_items' => $order->getStripeLineItems(),
-            'payment_method_types' => ['card']
-        ]);
-
-        return $sessionStripe;
-    }
-
-    public function createGiftCode(GiftCode $giftCode): void
-    {
-        $today = new \DateTime();
-        if ($today > $giftCode->getExpiresAt()) {
-            throw new \Exception("Invalid Expires At");
-        }
-
-        $duration_in_months = $today->diff($giftCode->getExpiresAt())->m;
-
-        if ($giftCode->getType() === 'percentage') {
-            if (floatval($giftCode->getAmount()) < 0 || floatval($giftCode->getAmount()) >= 100) {
-                throw new \Exception("Invalid Percentage");
-            }
-            $coupon = $this->stripe->coupons->create([
-                'name' => $giftCode->getName(),
-                'percent_off' => $giftCode->getAmount(),
-                'duration' => 'repeating',
-                'duration_in_months' => $duration_in_months
-            ]);
-        }
-        elseif ($giftCode->getType() === 'amount') {
-            if (floatval($giftCode->getAmount()) < 0) {
-                    throw new \Exception("Invalid Amount");
-            }
-            $coupon = $this->stripe->coupons->create([
-                'name' => $giftCode->getName(),
-                'amount_off' => $giftCode->getAmount()*100,
-                'currency' => 'EUR',
-                'duration' => 'repeating',
-                'duration_in_months' => $duration_in_months
-            ]);
-        }
-
-        $giftCode->setCouponStripeId($coupon->id);
-
-        $promotionCode = $this->stripe->promotionCodes->create([
-            'coupon' => $coupon->id,
-            'code' => $giftCode->getCode(),
-            'expires_at' => $giftCode->getExpiresAt()->format('U')
-        ]);
-
-        $giftCode->setGiftCodeStripeId($promotionCode->id);
     }
 }
