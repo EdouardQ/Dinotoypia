@@ -10,6 +10,7 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\ProductCategory;
+use App\Entity\PromotionCode;
 use App\Entity\RefurbishedToy;
 use App\Entity\RefurbishState;
 use App\Entity\State;
@@ -55,10 +56,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Jouets reconditionnés', 'fa fa-tags', RefurbishedToy::class),
             MenuItem::linkToCrud('États', 'fa fa-tags', RefurbishState::class)->setPermission('ROLE_DEV'),
 
-            MenuItem::section("Bons d'achat & Codes cadeau"),
-            MenuItem::linkToCrud('Code cadeau', 'fa fa-gift', GiftCode::class),
-            MenuItem::linkToCrud('Attribution des codes cadeau', 'fa fa-gift',GiftCodeToCustomer::class),
-            MenuItem::linkToCrud("Bons d'achat", 'fa fa-gift',Voucher::class),
+            MenuItem::section(""), // to keep empty
+            MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class),
 
             MenuItem::section('Admin')->setPermission('ROLE_ADMIN'),
             MenuItem::linkToCrud('Clients', 'fa fa-user', Customer::class)->setPermission('ROLE_ADMIN'),

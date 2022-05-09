@@ -66,6 +66,11 @@ class Order
      */
     private $paymentStripeId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PromotionCode::class, inversedBy="orders")
+     */
+    private $promotionCode;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -251,5 +256,17 @@ class Order
     {
         $today = new \DateTime();
         return $today->add(new \DateInterval('P'.$days.'D'));
+    }
+
+    public function getPromotionCode(): ?PromotionCode
+    {
+        return $this->promotionCode;
+    }
+
+    public function setPromotionCode(?PromotionCode $promotionCode): self
+    {
+        $this->promotionCode = $promotionCode;
+
+        return $this;
     }
 }

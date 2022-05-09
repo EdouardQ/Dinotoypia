@@ -80,16 +80,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $fidelityPoints;
 
     /**
-     * @ORM\OneToMany(targetEntity=Voucher::class, mappedBy="customer")
-     */
-    private $vouchers;
-
-    /**
-     * @ORM\OneToMany(targetEntity=GiftCodeToCustomer::class, mappedBy="customer")
-     */
-    private $giftCodeToCustomers;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
@@ -109,12 +99,16 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PromotionCode::class, mappedBy="customer")
+     */
+    private $promotionCodes;
+
     public function __construct()
     {
-        $this->vouchers = new ArrayCollection();
-        $this->giftCodeToCustomers = new ArrayCollection();
         $this->refurbishedToys = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->promotionCodes = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -288,66 +282,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Voucher[]
-     */
-    public function getVouchers(): Collection
-    {
-        return $this->vouchers;
-    }
-
-    public function addVoucher(Voucher $voucher): self
-    {
-        if (!$this->vouchers->contains($voucher)) {
-            $this->vouchers[] = $voucher;
-            $voucher->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVoucher(Voucher $voucher): self
-    {
-        if ($this->vouchers->removeElement($voucher)) {
-            // set the owning side to null (unless already changed)
-            if ($voucher->getCustomer() === $this) {
-                $voucher->setCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|GiftCodeToCustomer[]
-     */
-    public function getGiftCodeToCustomers(): Collection
-    {
-        return $this->giftCodeToCustomers;
-    }
-
-    public function addGiftCodeToCustomer(GiftCodeToCustomer $giftCodeToCustomer): self
-    {
-        if (!$this->giftCodeToCustomers->contains($giftCodeToCustomer)) {
-            $this->giftCodeToCustomers[] = $giftCodeToCustomer;
-            $giftCodeToCustomer->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGiftCodeToCustomer(GiftCodeToCustomer $giftCodeToCustomer): self
-    {
-        if ($this->giftCodeToCustomers->removeElement($giftCodeToCustomer)) {
-            // set the owning side to null (unless already changed)
-            if ($giftCodeToCustomer->getCustomer() === $this) {
-                $giftCodeToCustomer->setCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -426,6 +360,36 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PromotionCode>
+     */
+    public function getPromotionCodes(): Collection
+    {
+        return $this->promotionCodes;
+    }
+
+    public function addPromotionCode(PromotionCode $promotionCode): self
+    {
+        if (!$this->promotionCodes->contains($promotionCode)) {
+            $this->promotionCodes[] = $promotionCode;
+            $promotionCode->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionCode(PromotionCode $promotionCode): self
+    {
+        if ($this->promotionCodes->removeElement($promotionCode)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionCode->getCustomer() === $this) {
+                $promotionCode->setCustomer(null);
             }
         }
 

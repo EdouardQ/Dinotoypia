@@ -17,8 +17,8 @@ class HomepageController extends AbstractController
         return $this->render('homepage/index.html.twig');
     }
 
-    #[Route('/search/{requestString}', name: 'homepage.search')]
-    public function search(string $requestString = null, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/search/{requestString}', name: 'homepage.search', defaults: ['requestString' => null])]
+    public function search(?string $requestString, Request $request, EntityManagerInterface $entityManager): Response
     {
         // if http method is GET with a parameter (jquery)
         if ($request->getMethod() == "GET" && $requestString != null) {
