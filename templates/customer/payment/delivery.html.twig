@@ -9,43 +9,46 @@
 {% block body %}
     <br>
     <section>
+        {{ form_start(form) }}
+            <div class="text-center">
+                <div style="display:inline-block; vertical-align:top;">
 
-        <div id="Zone_Widget"></div>
+                    {{ form_row(form.type, { 'id': 'delivery_type' }) }}
 
+                    <br><br>
 
-        <div class="text-center">
-            <div style="display:inline-block; vertical-align:top;">
+                    <div id="mondial_relay">
+                        <div id="Zone_Widget"></div>
+                        {{ form_row(form.relais_id, { 'id': 'cb_id' }) }}
+                        {{ form_row(form.relais_address, { 'id': 'cb_address' }) }}
+                        {{ form_row(form.relais_post_code, { 'id': 'cb_post_code' }) }}
+                        {{ form_row(form.relais_city, { 'id': 'cb_city' }) }}
+                    </div>
 
-                Point Relais Selectionné : <input type="text" id="TargetDisplay_Widget" /><br/>
+                    <div id="poste">
+                        {{ form_label(form.address, "Adresse") }}
+                        {{ form_widget(form.address) }}
+                        <br>
+                        {{ form_label(form.post_code, "Code postal") }}
+                        {{ form_widget(form.post_code) }}
+                        <br>
+                        {{ form_label(form.city, "Ville") }}
+                        {{ form_widget(form.city) }}
 
-                {{ form_start(form) }}
+                        <br>
+                        <p>
+                            *Livraison uniquement disponible en France Métropolitaine
+                        </p>
+                    </div>
 
-                {{ form_row(form.targetWidget, { 'id': 'Target_Widget' }) }}
+                    <br>
 
-                {{ form_row(form.type, { 'id': 'delivery_type' }) }}
-
-
-                <input type="submit" value="Confirmer et Payer">
-                {{ form_end(form) }}
-
-                InfosPR : <span id="TargetDisplayInfoPR_Widget"></span>
+                    <input type="submit" value="Confirmer et Payer">
+                </div>
+                <p><br>Manque adresse de facturation</p>
 
             </div>
-
-            <hr>
-
-            <div style="display:inline-block;">
-                <!-- Balises HTML utilisées dans la fonction de CallBack pour reçevoir des données à afficher -->
-                <div style="font-weight:bold;text-decoration:underline;">Callback zone</div><br/>
-                <div>data.ID = <span id="cb_ID"></span></div>
-                <div>data.Nom = <span id="cb_Nom"></span></div>
-                <div>data.Adresse = <span id="cb_Adresse"></span></div>
-                <div>data.CP = <span id="cb_CP"></span></div>
-                <div>data.Ville = <span id="cb_Ville"></span></div>
-                <div>data.Pays = <span id="cb_Pays"></span></div>
-            </div>
-
-        </div>
+        {{ form_end(form) }}
     </section>
 
 {% endblock %}
@@ -53,4 +56,5 @@
 {% block javascripts %}
     <script src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>
     <script src="{{ asset('js/relay_point.js') }}"></script>
+    <script src="{{ asset('js/delivery.js') }}"></script>
 {% endblock %}

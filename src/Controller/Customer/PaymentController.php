@@ -5,6 +5,7 @@ namespace App\Controller\Customer;
 use App\Entity\State;
 use App\Form\DeliveryFormType;
 use App\Manager\OrderManager;
+use App\Service\DeliveryCheckerService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/delivery', name: 'customer.payment.delivery')]
-    public function delivery(EntityManagerInterface $entityManager, Request $request): Response
+    public function delivery(DeliveryCheckerService $deliveryCheckService, EntityManagerInterface $entityManager, Request $request): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
             return $this->redirectToRoute('checkout.index');
@@ -39,8 +40,10 @@ class PaymentController extends AbstractController
         $form = $this->createForm(DeliveryFormType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            //$order->setRelayPointId($form->getData()['targetWidget']);
+        if ($form->isSubmitted() && $form->isValid() && $deliveryCheckService->check($form->getData())) {
+
+            $deliveryCheckService->updateOrderDeliveryInfos($form->getData(), $order, $entityManager);
+
             // set new state of the order
             $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_payment"]));
             $entityManager->flush();
@@ -108,7 +111,6 @@ class PaymentController extends AbstractController
 
         $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "pending"]));
         $order->setPaymentStripeId(null);
-        $order->setRelayPointId(null);
 
         $entityManager->flush();
 

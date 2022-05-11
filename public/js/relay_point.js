@@ -8,9 +8,9 @@ $(document).ready(function() {
         // Selecteur de l'élément dans lequel est envoyé l'ID du Point Relais (ex: input hidden)
         Target: "#Target_Widget",
         // Selecteur de l'élément dans lequel est envoyé l'ID du Point Relais pour affichage
-        TargetDisplay: "#TargetDisplay_Widget",
+        // TargetDisplay: "#TargetDisplay_Widget",
         // Selecteur de l'élément dans lequel sont envoysé les coordonnées complètes du point relais
-        TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
+        // TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
         //
         // Paramétrage du widget pour obtention des point relais.
         //
@@ -32,18 +32,23 @@ $(document).ready(function() {
         ShowResultsOnMap: true,
         // Afficher les informations du point relais à la sélection sur la carte?
         DisplayMapInfo: true,
+        // Enable Responsive (nb: non responsive corresponds to the Widget used in older versions=
+        Responsive: true,
         // Fonction de callback déclenché lors de la selection d'un Point Relais
         OnParcelShopSelected:
         // Fonction de traitement à la sélection du point relais.
         // Remplace les données de cette page par le contenu de la variable data.
         // data: les informations du Point Relais
             function(data) {
-                $("#cb_ID").html(data.ID);
-                $("#cb_Nom").html(data.Nom);
-                $("#cb_Adresse").html(data.Adresse1 + ' ' + data.Adresse2);
-                $("#cb_CP").html(data.CP);
-                $("#cb_Ville").html(data.Ville);
-                $("#cb_Pays").html(data.Pays);
+                $("#cb_id").val(data.ID);
+                // $("#cb_Nom").html(data.Nom);
+                $("#cb_address").val(data.Adresse1);
+                if (data.Adresse2 != null) {
+                    $("#cb_address").val(data.Adresse1 + ' ' + data.Adresse2);
+                }
+                $("#cb_post_code").val(data.CP);
+                $("#cb_city").val(data.Ville);
+                // $("#cb_Pays").html(data.Pays);
             }
         //
         // Autres paramétrages.

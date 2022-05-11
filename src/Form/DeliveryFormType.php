@@ -6,8 +6,8 @@ use App\Entity\Shipping;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DeliveryFormType extends AbstractType
 {
@@ -20,13 +20,28 @@ class DeliveryFormType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
             ])
-            ->add('targetWidget', HiddenType::class, [
+            // Colissimo && Chronopost
+            ->add('address', TextType::class, [
                 'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => "Veuillez choisir un point relais sur la carte intéractive."
-                    ])
-                ]
+            ])
+            ->add('post_code', TextType::class, [
+                'required' => false,
+            ])
+            ->add('city', TextType::class, [
+                'required' => false,
+            ])
+            // Modial Relay
+            ->add('relais_id', HiddenType::class, [
+                'required' => false,
+            ])
+            ->add('relais_address', HiddenType::class, [
+                'required' => false,
+            ])
+            ->add('relais_post_code', HiddenType::class, [
+                'required' => false,
+            ])
+            ->add('relais_city', HiddenType::class, [
+                'required' => false
             ])
         ;
     }

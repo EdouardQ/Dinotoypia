@@ -13,3 +13,5 @@
 ## Todo
 
 bon de réduction
+
+infos livraison / facturation sur interface de paiement Stripe
