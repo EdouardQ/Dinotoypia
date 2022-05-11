@@ -9,6 +9,7 @@ use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\PromotionCode;
 use App\Entity\RefurbishedToy;
+use App\Entity\State;
 use App\Entity\UserBack;
 use App\Service\BarCodeService;
 use App\Service\StripeService;
@@ -63,9 +64,13 @@ class EntitySubscriber implements EventSubscriberInterface
                 $entity->setPrice($entity->getProduct()->getPrice());
             }
             elseif ($entity instanceof Order) {
-                $entity->setCreatedAt(new \DateTimeImmutable());
-                $today = new \DateTime();
-                $entity->setEstimatedDelivery($today->add(new \DateInterval('P7D')));
+                $now = new \DateTimeImmutable();
+                $entity->setCreatedAt($now)
+                    ->setUpdatedAt($now)
+                    ->setState($args->getObjectManager()
+                        ->getRepository(State::class)
+                        ->findOneBy(['code' => "pending"]))
+                ;
             }
             elseif ($entity instanceof RefurbishedToy) {
                 $entity->setCreatedAt(new \DateTimeImmutable());

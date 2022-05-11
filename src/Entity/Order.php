@@ -98,6 +98,11 @@ class Order
         return $this;
     }
 
+    public function inPaymentState(): bool
+    {
+        return ($this->getState()->getCode() === 'in_payment');
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -175,6 +180,13 @@ class Order
             $total+=$item->getPrice()*$item->getQuantity();
         }
         return $total;
+    }
+
+    public function hasOrderItems(): bool
+    {
+        $nb = count($this->getOrderItems()->getValues());
+
+        return !($nb === 0);
     }
 
     public function getTotalQuantity(): int
@@ -268,5 +280,21 @@ class Order
         $this->promotionCode = $promotionCode;
 
         return $this;
+    }
+
+    public function getTotal(): int|string
+    {
+        $orderItems = $this->getOrderItems()->getValues();
+        $total = 0;
+
+        if (!$orderItems) {
+            return $total;
+        }
+
+        foreach ($orderItems as $item) {
+            $total = $total + ($item->getPrice() * $item->getQuantity());
+        }
+
+        return $total;
     }
 }

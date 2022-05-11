@@ -26,7 +26,13 @@
 	<div class="cart">
 		<a href="{{ url('checkout.index') }}">
 			<img src="{{ asset('img/cart.png') }}">
-			<div id="cart-quantity">0</div>
+			<div id="cart-quantity">
+				{% if app.session.get('cart') is not null %}
+					{{ app.session.get('cart') }}
+				{% else %}
+					0
+				{% endif %}
+			</div>
 		</a>
 	</div>
 </nav>

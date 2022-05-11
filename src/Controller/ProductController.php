@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Manager\OrderManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,20 +30,16 @@ class ProductController extends AbstractController
     #[Route('/add_to_order/{id}', name: 'product.add_to_order')]
     public function addToOrder(Product $product): Response
     {
-        $this->orderManager->createOrderItem($product);
-
-        $response = $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
-        $response->headers->setCookie($this->orderManager->createQuantityCookie());
-        $response->send();
+        $this->orderManager->addItemToOrderSession($product->getId());
+        $this->orderManager->updateCart();
+        return $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
     }
 
     #[Route('/remove_to_order/{id}', name: 'product.remove_to_order')]
-    public function removeToOrder(OrderItem $entity): Response
+    public function removeToOrder(Product $product): Response
     {
-        $this->orderManager->removeOrderItem($entity);
-
-        $response = $this->redirectToRoute('checkout.index');
-        $response->headers->setCookie($this->orderManager->createQuantityCookie());
-        $response->send();
+        $this->orderManager->removeItemToOrderSession($product->getId());
+        $this->orderManager->updateCart();
+        return $this->redirectToRoute('checkout.index');
     }
 }

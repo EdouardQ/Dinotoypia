@@ -22,7 +22,7 @@
                                 <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}">{{ item.product.name }}</a></td>
                                 <td>{{ item.price }}</td>
                                 <td>{{ item.quantity }}</td>
-                                <td><a href="{{ url('product.remove_to_order', {id: item.id}) }}" class="btn btn-danger">-</a></td>
+                                <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger">-</a></td>
                             </tr>
                         {% endfor %}
                     <tr>
@@ -30,7 +30,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{{ order.totalPriceOfOrderItems }}€</td>
+                        <td>{{ order.total }}€</td>
                     </tr>
                     </tbody>
                 </table>

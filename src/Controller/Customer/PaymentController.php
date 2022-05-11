@@ -21,21 +21,19 @@ class PaymentController extends AbstractController
     {
         $this->orderManager = $orderManager;
     }
-
+        
     #[Route('/delivery', name: 'customer.payment.delivery')]
     public function delivery(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
-
-        // if the order is empty of orderItems
-        if (!$this->orderManager->hasOrderItems($order)) {
-            return $this->redirectToRoute('homepage.index');
+        if (empty($this->orderManager->getOrderSession())) {
+            return $this->redirectToRoute('checkout.index');
         }
 
-        // if the order hasn't a customer
-        if (!$order->getCustomer()) {
-            $order->setCustomer($this->getUser());
-            $entityManager->flush();
+        $order = $this->orderManager->getOrder($this->getUser());
+
+        // if the order is empty of orderItems
+        if (!$order->hasOrderItems()) {
+            return $this->redirectToRoute('homepage.index');
         }
 
         $form = $this->createForm(RelayPointFormType::class);
@@ -58,10 +56,16 @@ class PaymentController extends AbstractController
     #[Route('/payment-process', name: 'customer.payment.payment_process')]
     public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        if (empty($this->orderManager->getOrderSession())) {
+            return $this->redirectToRoute('checkout.index');
+        }
 
-        // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        $order = $this->orderManager->getOrder($this->getUser());
+
+        $this->orderManager->checkAndUpdateOrder($order);
+
+        // if the order is empty of orderItems
+        if (!$order->hasOrderItems()) {
             return $this->redirectToRoute('homepage.index');
         }
 
@@ -76,10 +80,10 @@ class PaymentController extends AbstractController
     #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
     public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        $order = $this->orderManager->getOrder($this->getUser());
 
         // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        if (!$order->hasOrderItems() && !$order->inPaymentState()) {
             return $this->redirectToRoute('homepage.index');
         }
 
@@ -87,20 +91,18 @@ class PaymentController extends AbstractController
         $order->setEstimatedDelivery($order->calculEstimatedDeliveryDateTime());
         $entityManager->flush();
 
-        $this->orderManager->removeOrderFromSession();
-        $response = $this->redirectToRoute('homepage.index');
-        $response->headers->clearCookie('order');
+        $this->orderManager->purgeOrderSession();
 
-        return $response;
+        return $this->redirectToRoute('homepage.index');
     }
 
     #[Route('/payment-failed', name: 'customer.payment.payment_failed')]
     public function paymentFailed(EntityManagerInterface $entityManager): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        $order = $this->orderManager->getOrder($this->getUser());
 
         // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        if (!$order->hasOrderItems() && !$order->inPaymentState()) {
             return $this->redirectToRoute('homepage.index');
         }
 

@@ -12,7 +12,4 @@
 
 ## Todo
 
-bon de réduction :
-- interface pour en faire des simples
-- sinon faire sur stripe
-- update bdd avec ce système
+bon de réduction

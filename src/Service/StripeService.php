@@ -29,6 +29,25 @@ class StripeService
     {
         $domain = "https://".$_SERVER['HTTP_HOST'];
 
+        if ($order->getPromotionCode()) {
+            $sessionStripe = $this->stripe->checkout->sessions->create([
+                'mode' => 'payment',
+                'success_url' => $domain.'/payment/payment-succeeded',
+                'cancel_url' => $domain.'/payment/payment-failed',
+                'customer' => $order->getCustomer()->getStripeId(),
+                'line_items' => $order->getStripeLineItems(),
+                'payment_method_types' => ['card'],
+                'shipping_options' => [
+                    ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
+                ],
+                'discounts' => [
+                    'promotion_code' => $order->getPromotionCode()->getStripeId()
+                ]
+            ]);
+
+            return $sessionStripe;
+        }
+
         $sessionStripe = $this->stripe->checkout->sessions->create([
             'mode' => 'payment',
             'success_url' => $domain.'/payment/payment-succeeded',
@@ -39,9 +58,6 @@ class StripeService
             'shipping_options' => [
                 ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
             ],
-            'discounts' => [
-                'promotion_code' => $order->getPromotionCode()->getStripeId()
-            ]
         ]);
 
         return $sessionStripe;
