@@ -20,7 +20,7 @@ $(document).ready(function() {
         // Pays utilisé pour la recherche: code ISO 2 lettres.
         Country: "FR",
         // Code postal pour lancer une recherche par défaut
-        PostCode: "59000",
+        PostCode: "92130",
         // Mode de livraison (Standard [24R], XL [24L], XXL [24X], Drive [DRI])
         ColLivMod: "24R",
         // Nombre de Point Relais à afficher

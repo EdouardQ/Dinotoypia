@@ -3,7 +3,7 @@
 namespace App\Controller\Customer;
 
 use App\Entity\State;
-use App\Form\RelayPointFormType;
+use App\Form\DeliveryFormType;
 use App\Manager\OrderManager;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +21,7 @@ class PaymentController extends AbstractController
     {
         $this->orderManager = $orderManager;
     }
-        
+
     #[Route('/delivery', name: 'customer.payment.delivery')]
     public function delivery(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -33,14 +33,14 @@ class PaymentController extends AbstractController
 
         // if the order is empty of orderItems
         if (!$order->hasOrderItems()) {
-            return $this->redirectToRoute('homepage.index');
+            return $this->redirectToRoute('checkout.index');
         }
 
-        $form = $this->createForm(RelayPointFormType::class);
+        $form = $this->createForm(DeliveryFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order->setRelayPointId($form->getData()['targetWidget']);
+            //$order->setRelayPointId($form->getData()['targetWidget']);
             // set new state of the order
             $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_payment"]));
             $entityManager->flush();

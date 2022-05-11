@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\Shipping;
 
 class StripeService
 {
@@ -38,7 +39,7 @@ class StripeService
                 'line_items' => $order->getStripeLineItems(),
                 'payment_method_types' => ['card'],
                 'shipping_options' => [
-                    ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
+                    ['shipping_rate' => $order->getShipping()->getStripeId()]
                 ],
                 'discounts' => [
                     'promotion_code' => $order->getPromotionCode()->getStripeId()
@@ -56,7 +57,7 @@ class StripeService
             'line_items' => $order->getStripeLineItems(),
             'payment_method_types' => ['card'],
             'shipping_options' => [
-                ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
+                ['shipping_rate' => $order->getShipping()->getStripeId()]
             ],
         ]);
 
@@ -130,5 +131,28 @@ class StripeService
                 $domain.'/img/products/'.$entity->getFileName()
             ]
         ]);
+    }
+
+    public function createShipping(Shipping $shipping): void
+    {
+        $shippingRates = $this->stripe->shippingRates->create([
+            'display_name' => $shipping->getName(),
+            'type' => 'fixed_amount',
+            'fixed_amount' => [
+                'amount' => $shipping->getFee()*100,
+                'currency' => 'eur',
+            ],
+        ]);
+        $shipping->setStripeId($shippingRates->id);
+    }
+
+    public function updateShipping(Shipping $shipping): void
+    {
+        $this->stripe->shippingRates->update(
+            $shipping->getStripeId(),
+            [
+                'active' => $shipping->isActive()
+            ]
+        );
     }
 }

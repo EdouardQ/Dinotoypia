@@ -9,6 +9,7 @@ use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\PromotionCode;
 use App\Entity\RefurbishedToy;
+use App\Entity\Shipping;
 use App\Entity\State;
 use App\Entity\UserBack;
 use App\Service\BarCodeService;
@@ -82,6 +83,10 @@ class EntitySubscriber implements EventSubscriberInterface
             elseif ($entity instanceof Image) {
                 $this->stripeService->updateImageToStripeProduct($entity);
             }
+            elseif ($entity instanceof Shipping) {
+                $entity->setActive(true);
+                $this->stripeService->createShipping($entity);
+            }
         }
     }
 
@@ -125,6 +130,9 @@ class EntitySubscriber implements EventSubscriberInterface
 
         elseif ($entity instanceof Order) {
             $entity->setUpdatedAt(new \DateTimeImmutable());
+        }
+        elseif ($entity instanceof Shipping && $args->hasChangedField('active')) {
+            $this->stripeService->updateShipping($entity);
         }
     }
 }
