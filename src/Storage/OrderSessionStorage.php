@@ -40,7 +40,6 @@ class OrderSessionStorage
         $this->getSession()->remove(self::CHECKOUT_STRIPE_ID);
         $this->getSession()->remove(self::ORDER_ID_KEY_NAME);
         $this->getSession()->remove(self::ORDER_KEY_NAME);
-
     }
 
     public function getCart(): ?int

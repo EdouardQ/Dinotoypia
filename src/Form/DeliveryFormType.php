@@ -2,47 +2,37 @@
 
 namespace App\Form;
 
+use App\Entity\Order;
 use App\Entity\Shipping;
+use App\Repository\ShippingRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DeliveryFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('type', EntityType::class, [
+            ->add('shipping', EntityType::class, [
                 'class' => Shipping::class,
                 'choice_label' => 'name',
+                'query_builder' => function (ShippingRepository $shippingRepository) {
+                    return $shippingRepository->createQueryBuilder('s')
+                        ->andWhere('s.active = 1')
+                        ;
+                },
                 'multiple' => false,
                 'expanded' => false,
             ])
-            // Colissimo && Chronopost
-            ->add('address', TextType::class, [
-                'required' => false,
-            ])
-            ->add('post_code', TextType::class, [
-                'required' => false,
-            ])
-            ->add('city', TextType::class, [
-                'required' => false,
-            ])
-            // Modial Relay
-            ->add('relais_id', HiddenType::class, [
-                'required' => false,
-            ])
-            ->add('relais_address', HiddenType::class, [
-                'required' => false,
-            ])
-            ->add('relais_post_code', HiddenType::class, [
-                'required' => false,
-            ])
-            ->add('relais_city', HiddenType::class, [
-                'required' => false
-            ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Order::class,
+        ]);
     }
 }

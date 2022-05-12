@@ -1,59 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    <!-- Librairie de Cartographie : Leaflet. -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-{% endblock %}
-
 {% block body %}
     <br>
     <section>
         {{ form_start(form) }}
-            <div class="text-center">
-                <div style="display:inline-block; vertical-align:top;">
-
-                    {{ form_row(form.type, { 'id': 'delivery_type' }) }}
-
-                    <br><br>
-
-                    <div id="mondial_relay">
-                        <div id="Zone_Widget"></div>
-                        {{ form_row(form.relais_id, { 'id': 'cb_id' }) }}
-                        {{ form_row(form.relais_address, { 'id': 'cb_address' }) }}
-                        {{ form_row(form.relais_post_code, { 'id': 'cb_post_code' }) }}
-                        {{ form_row(form.relais_city, { 'id': 'cb_city' }) }}
-                    </div>
-
-                    <div id="poste">
-                        {{ form_label(form.address, "Adresse") }}
-                        {{ form_widget(form.address) }}
-                        <br>
-                        {{ form_label(form.post_code, "Code postal") }}
-                        {{ form_widget(form.post_code) }}
-                        <br>
-                        {{ form_label(form.city, "Ville") }}
-                        {{ form_widget(form.city) }}
-
-                        <br>
-                        <p>
-                            *Livraison uniquement disponible en France Métropolitaine
-                        </p>
-                    </div>
-
-                    <br>
-
-                    <input type="submit" value="Confirmer et Payer">
-                </div>
-                <p><br>Manque adresse de facturation</p>
-
+            <div class="text-center w-50 m-auto">
+                <br>
+                {{ form_label(form.shipping, "Mode livraison") }}
+                {{ form_widget(form.shipping) }}
+                <br>
+                <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
+                <br><br>
             </div>
         {{ form_end(form) }}
     </section>
 
-{% endblock %}
-
-{% block javascripts %}
-    <script src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>
-    <script src="{{ asset('js/relay_point.js') }}"></script>
 {% endblock %}

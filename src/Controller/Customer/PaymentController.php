@@ -3,12 +3,12 @@
 namespace App\Controller\Customer;
 
 use App\Entity\State;
+use App\Form\DeliveryFormType;
 use App\Manager\OrderManager;
-use App\Service\DeliveryCheckerService;
 use App\Service\StripeService;
-use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,8 +22,20 @@ class PaymentController extends AbstractController
         $this->orderManager = $orderManager;
     }
 
+    #[Route('/delivery', name: 'customer.payment.delivery')]
+    public function delivery(Request $request): Response
+    {
+        $order = $this->orderManager->getOrder($this->getUser());
+        $form = $this->createForm(DeliveryFormType::class, $order);
+        $form->handleRequest($request);
+
+        return $this->render('customer/payment/delivery.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('/payment-process', name: 'customer.payment.payment_process')]
-    public function paymentProcess(EntityManagerInterface $entityManager, OrderSessionStorage $orderSessionStorage, StripeService $stripeService): Response
+    public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
             return $this->redirectToRoute('checkout.index');
