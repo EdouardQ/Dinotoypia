@@ -24,13 +24,6 @@
                             <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger">-</a></td>
                         </tr>
                     {% endfor %}
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ order.total }}€</td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -40,14 +33,7 @@
                     {{ message }}
                 </p>
             {% endfor %}
-            <a href="{{ url('customer.payment.delivery') }}" class="btn btn-primary">Confirmer panier</a>
-
-            <div>
-                <form>
-                    <label for="promo_code">Code Promo :</label>
-                    <input type="text" id="promo_code" name="promo_code">
-                </form>
-            </div>
+            <a href="{{ url('customer.payment.checkout') }}" class="btn btn-primary">Confirmer panier</a>
         </div>
     </section>
 {% endblock %}

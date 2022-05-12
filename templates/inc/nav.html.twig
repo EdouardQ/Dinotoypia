@@ -24,7 +24,7 @@
 		</ul>
 	</div>
 	<div class="cart">
-		<a href="{{ url('checkout.index') }}">
+		<a href="{{ url('summary.index') }}">
 			<img src="{{ asset('img/cart.png') }}">
 			<div id="cart-quantity">
 				{% if app.session.get('cart') is not null %}

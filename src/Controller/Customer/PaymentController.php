@@ -3,7 +3,7 @@
 namespace App\Controller\Customer;
 
 use App\Entity\State;
-use App\Form\DeliveryFormType;
+use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,14 +22,22 @@ class PaymentController extends AbstractController
         $this->orderManager = $orderManager;
     }
 
-    #[Route('/delivery', name: 'customer.payment.delivery')]
-    public function delivery(Request $request): Response
+    #[Route('/checkout', name: 'customer.payment.checkout')]
+    public function delivery(Request $request, EntityManagerInterface $entityManager): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
-        $form = $this->createForm(DeliveryFormType::class, $order);
+        $form = $this->createForm(CheckoutFormType::class);
         $form->handleRequest($request);
 
-        return $this->render('customer/payment/delivery.html.twig', [
+        if ($form->isSubmitted() && $form->isValid()) {
+            //dd($form->getData()['promotion_code']);
+            // create SERVICE
+            $order->setShipping($form->getData()['shipping']);
+            $entityManager->flush();
+            return $this->redirectToRoute('customer.payment.payment_process');
+        }
+
+        return $this->render('customer/payment/checkout.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -38,7 +46,7 @@ class PaymentController extends AbstractController
     public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
-            return $this->redirectToRoute('checkout.index');
+            return $this->redirectToRoute('summary.index');
         }
 
         $order = $this->orderManager->getOrder($this->getUser());
@@ -50,12 +58,12 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $stripeSession = $stripeService->createSession($order);
+        $sessionStripe = $stripeService->createSession($order);
 
-        $order->setPaymentStripeId($stripeSession->payment_intent);
+        $order->setPaymentStripeId($sessionStripe->payment_intent);
         $entityManager->flush();
 
-        return $this->redirect($stripeSession->url);
+        return $this->redirect($sessionStripe->url);
     }
 
     #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
@@ -90,6 +98,6 @@ class PaymentController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('paymentFailedNotice', "Le paiement a échoué.");
-        return $this->redirectToRoute('checkout.index');
+        return $this->redirectToRoute('summary.index');
     }
 }

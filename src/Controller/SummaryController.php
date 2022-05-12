@@ -7,12 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CheckoutController extends AbstractController
+class SummaryController extends AbstractController
 {
-    #[Route('/checkout', name: 'checkout.index')]
+    #[Route('/summary', name: 'summary.index')]
     public function index(OrderManager $orderManager): Response
     {
-        return $this->render('checkout/index.html.twig', [
+        return $this->render('summary/index.html.twig', [
             'order' => $orderManager->createCheckout(),
         ]);
     }
