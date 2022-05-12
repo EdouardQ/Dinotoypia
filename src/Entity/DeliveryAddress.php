@@ -32,22 +32,17 @@ class DeliveryAddress
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $country;
 
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="deliveryAddress")
      */
     private $orders;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $relayPointId;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $city;
 
     public function __construct()
     {
@@ -79,6 +74,18 @@ class DeliveryAddress
     public function setPostCode(string $postCode): self
     {
         $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
@@ -121,30 +128,6 @@ class DeliveryAddress
                 $order->setDeliveryAddress(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getRelayPointId(): ?string
-    {
-        return $this->relayPointId;
-    }
-
-    public function setRelayPointId(?string $relayPointId): self
-    {
-        $this->relayPointId = $relayPointId;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
 
         return $this;
     }

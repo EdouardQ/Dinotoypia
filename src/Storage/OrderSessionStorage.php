@@ -9,9 +9,10 @@ class OrderSessionStorage
 {
     private RequestStack $requestStack;
 
-    const ORDER_KEY_NAME = 'order';
-    const ORDER_ID_KEY_NAME = 'order_id';
     const CART_KEY_NAME = 'cart';
+    const CHECKOUT_STRIPE_ID = 'checkout_stripe_id';
+    const ORDER_ID_KEY_NAME = 'order_id';
+    const ORDER_KEY_NAME = 'order';
 
     public function __construct(RequestStack $requestStack)
     {
@@ -35,9 +36,11 @@ class OrderSessionStorage
 
     public function removeOrder(): void
     {
-        $this->requestStack->getSession()->remove(self::ORDER_KEY_NAME);
-        $this->requestStack->getSession()->remove(self::ORDER_ID_KEY_NAME);
-        $this->requestStack->getSession()->remove(self::CART_KEY_NAME);
+        $this->getSession()->remove(self::CART_KEY_NAME);
+        $this->getSession()->remove(self::CHECKOUT_STRIPE_ID);
+        $this->getSession()->remove(self::ORDER_ID_KEY_NAME);
+        $this->getSession()->remove(self::ORDER_KEY_NAME);
+
     }
 
     public function getCart(): ?int
@@ -58,5 +61,15 @@ class OrderSessionStorage
     public function setOrderId(int $id): void
     {
         $this->requestStack->getSession()->set(self::ORDER_ID_KEY_NAME, $id);
+    }
+
+    public function getCheckoutStripeId(): ?int
+    {
+        return $this->getSession()->get(self::CHECKOUT_STRIPE_ID);
+    }
+
+    public function setCheckoutStripeId(int $id): void
+    {
+        $this->requestStack->getSession()->set(self::CHECKOUT_STRIPE_ID, $id);
     }
 }

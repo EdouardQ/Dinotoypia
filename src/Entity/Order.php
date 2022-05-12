@@ -262,12 +262,6 @@ class Order
         return $array;
     }
 
-    public function calculEstimatedDeliveryDateTime(int $days = 5): \DateTime
-    {
-        $today = new \DateTime();
-        return $today->add(new \DateInterval('P'.$days.'D'));
-    }
-
     public function getPromotionCode(): ?PromotionCode
     {
         return $this->promotionCode;

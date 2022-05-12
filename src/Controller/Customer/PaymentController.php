@@ -3,13 +3,12 @@
 namespace App\Controller\Customer;
 
 use App\Entity\State;
-use App\Form\DeliveryFormType;
 use App\Manager\OrderManager;
 use App\Service\DeliveryCheckerService;
 use App\Service\StripeService;
+use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,41 +22,8 @@ class PaymentController extends AbstractController
         $this->orderManager = $orderManager;
     }
 
-    #[Route('/delivery', name: 'customer.payment.delivery')]
-    public function delivery(DeliveryCheckerService $deliveryCheckService, EntityManagerInterface $entityManager, Request $request): Response
-    {
-        if (empty($this->orderManager->getOrderSession())) {
-            return $this->redirectToRoute('checkout.index');
-        }
-
-        $order = $this->orderManager->getOrder($this->getUser());
-
-        // if the order is empty of orderItems
-        if (!$order->hasOrderItems()) {
-            return $this->redirectToRoute('checkout.index');
-        }
-
-        $form = $this->createForm(DeliveryFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $deliveryCheckService->check($form->getData())) {
-
-            $deliveryCheckService->updateOrderDeliveryInfos($form->getData(), $order, $entityManager);
-
-            // set new state of the order
-            $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_payment"]));
-            $entityManager->flush();
-
-            return $this->redirectToRoute('customer.payment.payment_process');
-        }
-
-        return $this->render('customer/payment/delivery.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
     #[Route('/payment-process', name: 'customer.payment.payment_process')]
-    public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
+    public function paymentProcess(EntityManagerInterface $entityManager, OrderSessionStorage $orderSessionStorage, StripeService $stripeService): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
             return $this->redirectToRoute('checkout.index');
@@ -90,17 +56,14 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_delevery"]));
-        $order->setEstimatedDelivery($order->calculEstimatedDeliveryDateTime());
-        $entityManager->flush();
-
+        $stripeService->createBillingAndDeliveryAddresses($order, $entityManager);
         $this->orderManager->purgeOrderSession();
 
         return $this->redirectToRoute('homepage.index');
     }
 
     #[Route('/payment-failed', name: 'customer.payment.payment_failed')]
-    public function paymentFailed(EntityManagerInterface $entityManager): Response
+    public function paymentFailed(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
 

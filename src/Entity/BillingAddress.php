@@ -32,17 +32,17 @@ class BillingAddress
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $country;
 
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="billingAddress")
      */
     private $orders;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $city;
 
     public function __construct()
     {
@@ -74,6 +74,18 @@ class BillingAddress
     public function setPostCode(string $postCode): self
     {
         $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
@@ -116,18 +128,6 @@ class BillingAddress
                 $order->setBillingAddress(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
 
         return $this;
     }
