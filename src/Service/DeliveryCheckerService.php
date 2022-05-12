@@ -69,7 +69,7 @@ class DeliveryCheckerService
         }
         $delivery->addOrder($order);
 
-        if ($order->getDeliveryAddress() === null) {
+        if ($delivery->getId() === null) {
             $entityManager->persist($delivery);
         }
 
