@@ -13,6 +13,7 @@ use App\Entity\ProductCategory;
 use App\Entity\PromotionCode;
 use App\Entity\RefurbishedToy;
 use App\Entity\RefurbishState;
+use App\Entity\Shipping;
 use App\Entity\State;
 use App\Entity\UserBack;
 use App\Entity\Voucher;
@@ -46,6 +47,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Commandes', 'fa fa-cart-plus', Order::class),
             MenuItem::linkToCrud('Objects des commandes', 'fa fa-cart-plus', OrderItem::class),
             MenuItem::linkToCrud('États', 'fa fa-cart-plus', State::class)->setPermission('ROLE_DEV'),
+            MenuItem::linkToCrud("Mode d'expédition", 'fa fa-cart-plus', Shipping::class)->setPermission('ROLE_ADMIN'),
 
             MenuItem::section('Produits')->setPermission('ROLE_DEV'),
             MenuItem::linkToCrud('Produits', 'fa fa-tags', Product::class)->setPermission('ROLE_DEV'),

@@ -12,10 +12,8 @@ class CheckoutController extends AbstractController
     #[Route('/checkout', name: 'checkout.index')]
     public function index(OrderManager $orderManager): Response
     {
-        $order = $orderManager->getCurrentOrder();
-
         return $this->render('checkout/index.html.twig', [
-            'order' => $order
+            'order' => $orderManager->createCheckout(),
         ]);
     }
 }

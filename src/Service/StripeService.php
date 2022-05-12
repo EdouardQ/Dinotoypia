@@ -2,10 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\BillingAddress;
 use App\Entity\Customer;
+use App\Entity\DeliveryAddress;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\Shipping;
+use App\Entity\State;
+use Doctrine\ORM\EntityManagerInterface;
 
 class StripeService
 {
@@ -29,6 +34,27 @@ class StripeService
     {
         $domain = "https://".$_SERVER['HTTP_HOST'];
 
+        if ($order->getPromotionCode()) {
+            $sessionStripe = $this->stripe->checkout->sessions->create([
+                'mode' => 'payment',
+                'success_url' => $domain.'/payment/payment-succeeded',
+                'cancel_url' => $domain.'/payment/payment-failed',
+                'customer' => $order->getCustomer()->getStripeId(),
+                'line_items' => $order->getStripeLineItems(),
+                'payment_method_types' => ['card'],
+                'shipping_options' => [
+                    ['shipping_rate' => $order->getShipping()->getStripeId()]
+                ],
+                'billing_address_collection' => 'required',
+                'shipping_address_collection' => ['allowed_countries' => ['FR']],
+                'discounts' => [
+                    'promotion_code' => $order->getPromotionCode()->getStripeId()
+                ]
+            ]);
+
+            return $sessionStripe;
+        }
+
         $sessionStripe = $this->stripe->checkout->sessions->create([
             'mode' => 'payment',
             'success_url' => $domain.'/payment/payment-succeeded',
@@ -37,14 +63,50 @@ class StripeService
             'line_items' => $order->getStripeLineItems(),
             'payment_method_types' => ['card'],
             'shipping_options' => [
-                ['shipping_rate' => 'shr_1KxX47HowZnzDNfSI0w3dtMP']
+                ['shipping_rate' => $order->getShipping()->getStripeId()]
             ],
-            'discounts' => [
-                'promotion_code' => $order->getPromotionCode()->getStripeId()
-            ]
+            'billing_address_collection' => 'required',
+            'shipping_address_collection' => ['allowed_countries' => ['FR']],
         ]);
 
         return $sessionStripe;
+    }
+
+    public function createBillingAndDeliveryAddresses(Order $order, EntityManagerInterface $entityManager): void
+    {
+        $payment = $this->stripe->paymentIntents->retrieve($order->getPaymentStripeId(), ['expand' => ['payment_method', 'shipping']]);
+
+        $delivery = new DeliveryAddress();
+        $delivery->setAddress($payment->payment_method->billing_details->address['line1']);
+        if ($payment->shipping->address['line2'] !== null) {
+            $delivery->setAddress($payment->shipping->address['line1'] . ' ' . $payment->shipping->address['line2']);
+        }
+        $delivery->setPostCode($payment->shipping->address['postal_code'])
+            ->setCity($payment->shipping->address['city'])
+            ->setCountry($payment->shipping->address['country'])
+            ->addOrder($order)
+        ;
+        $entityManager->persist($delivery);
+
+        $billing = new BillingAddress();
+        $billing->setAddress($payment->payment_method->billing_details->address['line1']);
+        if ($payment->payment_method->billing_details->address['line2'] !== null) {
+            $billing->setAddress($payment->payment_method->billing_details->address['line1'] . ' ' . $payment->payment_method->billing_details->address['line2']);
+        }
+        $billing->setPostCode($payment->payment_method->billing_details->address['postal_code'])
+            ->setCity($payment->payment_method->billing_details->address['city'])
+            ->setCountry($payment->payment_method->billing_details->address['country'])
+            ->addOrder($order)
+        ;
+        $entityManager->persist($billing);
+
+        $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_delevery"]));
+
+        $today = new \DateTime();
+        $estimatedDelivery = $today->add(new \DateInterval('P'.$order->getShipping()->getDeliveryEstimateMaximum().'D'));
+        $order->setEstimatedDelivery($estimatedDelivery);
+
+        $entityManager->flush();
     }
     
     // Entity Part
@@ -114,5 +176,28 @@ class StripeService
                 $domain.'/img/products/'.$entity->getFileName()
             ]
         ]);
+    }
+
+    public function createShipping(Shipping $shipping): void
+    {
+        $shippingRates = $this->stripe->shippingRates->create([
+            'display_name' => $shipping->getName(),
+            'type' => 'fixed_amount',
+            'fixed_amount' => [
+                'amount' => $shipping->getFee()*100,
+                'currency' => 'eur',
+            ],
+        ]);
+        $shipping->setStripeId($shippingRates->id);
+    }
+
+    public function updateShipping(Shipping $shipping): void
+    {
+        $this->stripe->shippingRates->update(
+            $shipping->getStripeId(),
+            [
+                'active' => $shipping->isActive()
+            ]
+        );
     }
 }

@@ -59,17 +59,27 @@ class Order
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $relay_point_id;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $paymentStripeId;
 
     /**
      * @ORM\ManyToOne(targetEntity=PromotionCode::class, inversedBy="orders")
      */
     private $promotionCode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Shipping::class, inversedBy="orders")
+     */
+    private $shipping;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=BillingAddress::class, inversedBy="orders")
+     */
+    private $billingAddress;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=DeliveryAddress::class, inversedBy="orders")
+     */
+    private $deliveryAddress;
 
     public function __construct()
     {
@@ -96,6 +106,11 @@ class Order
         $this->state = $state;
 
         return $this;
+    }
+
+    public function inPaymentState(): bool
+    {
+        return ($this->getState()->getCode() === 'in_payment');
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -177,6 +192,13 @@ class Order
         return $total;
     }
 
+    public function hasOrderItems(): bool
+    {
+        $nb = count($this->getOrderItems()->getValues());
+
+        return !($nb === 0);
+    }
+
     public function getTotalQuantity(): int
     {
         $orderItems = $this->getOrderItems()->getValues();
@@ -214,18 +236,6 @@ class Order
         return $this;
     }
 
-    public function getRelayPointId(): ?string
-    {
-        return $this->relay_point_id;
-    }
-
-    public function setRelayPointId(?string $relay_point_id): self
-    {
-        $this->relay_point_id = $relay_point_id;
-
-        return $this;
-    }
-
     public function getPaymentStripeId(): ?string
     {
         return $this->paymentStripeId;
@@ -252,12 +262,6 @@ class Order
         return $array;
     }
 
-    public function calculEstimatedDeliveryDateTime(int $days = 5): \DateTime
-    {
-        $today = new \DateTime();
-        return $today->add(new \DateInterval('P'.$days.'D'));
-    }
-
     public function getPromotionCode(): ?PromotionCode
     {
         return $this->promotionCode;
@@ -266,6 +270,58 @@ class Order
     public function setPromotionCode(?PromotionCode $promotionCode): self
     {
         $this->promotionCode = $promotionCode;
+
+        return $this;
+    }
+
+    public function getTotal(): int|string
+    {
+        $orderItems = $this->getOrderItems()->getValues();
+        $total = 0;
+
+        if (!$orderItems) {
+            return $total;
+        }
+
+        foreach ($orderItems as $item) {
+            $total = $total + ($item->getPrice() * $item->getQuantity());
+        }
+
+        return $total;
+    }
+
+    public function getShipping(): ?Shipping
+    {
+        return $this->shipping;
+    }
+
+    public function setShipping(?Shipping $shipping): self
+    {
+        $this->shipping = $shipping;
+
+        return $this;
+    }
+
+    public function getBillingAddress(): ?BillingAddress
+    {
+        return $this->billingAddress;
+    }
+
+    public function setBillingAddress(?BillingAddress $billingAddress): self
+    {
+        $this->billingAddress = $billingAddress;
+
+        return $this;
+    }
+
+    public function getDeliveryAddress(): ?DeliveryAddress
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(?DeliveryAddress $deliveryAddress): self
+    {
+        $this->deliveryAddress = $deliveryAddress;
 
         return $this;
     }

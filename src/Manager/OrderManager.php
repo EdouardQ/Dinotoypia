@@ -2,13 +2,13 @@
 
 namespace App\Manager;
 
+use App\Entity\Customer;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\State;
 use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 
 class OrderManager
 {
@@ -21,98 +21,162 @@ class OrderManager
         $this->orderSessionStorage = $orderSessionStorage;
     }
 
-    public function getCurrentOrder(): Order
+    public function getOrderSession(): array
     {
         $order = $this->orderSessionStorage->getOrder();
 
         if (!$order) {
-            $order = new Order();
-            $order->setCreatedAt(new \DateTimeImmutable())
-                ->setUpdatedAt(new \DateTimeImmutable())
-                ->setState($this->entityManager->getRepository(State::class)->findOneBy(['code' => 'pending']))
-            ;
+            $order = [];
+            $this->orderSessionStorage->setOrder($order);
         }
 
         return $order;
     }
 
-    public function save(Order $order): void
+    public function getOrder(Customer $customer): Order
     {
-        $this->entityManager->persist($order);
-        $this->entityManager->flush();
+        $order = $this->retrieveOrder();
+
+        if (!$order) {
+            $this->createOrder($customer);
+            $order = $this->retrieveOrder();
+        }
+
+        return $order;
+    }
+
+    public function addItemToOrderSession(int $id): void
+    {
+        $order = $this->getOrderSession();
+
+        if (array_key_exists($id, $order)) {
+            $order[$id] += 1;
+        }
+        else {
+            $order[$id] = 1;
+        }
 
         $this->orderSessionStorage->setOrder($order);
     }
 
-    public function createOrderItem(Product $product): void
+    public function removeItemToOrderSession(int $id): void
     {
-        $order = $this->getCurrentOrder();
-        $this->save($order);
+        $order = $this->getOrderSession();
 
-        $productAlreadyExistsInOrder = false;
-
-        foreach ($order->getOrderItems()->getValues() as $orderItem) {
-            if ($orderItem->getProduct() == $product) {
-                $orderItem->setQuantity($orderItem->getQuantity()+1);
-                $productAlreadyExistsInOrder = true;
-            }
+        if ($order[$id] >= 2) {
+            $order[$id] -= 1;
+        }
+        else {
+            unset($order[$id]);
         }
 
-        if (!$productAlreadyExistsInOrder) {
-            $orderItem = new OrderItem();
-            $orderItem->setProduct($product);
-            $orderItem->setPrice($product->getPrice());
-            $orderItem->setQuantity(1);
-            $orderItem->setOrder($order);
+        $this->orderSessionStorage->setOrder($order);
+    }
 
-            $order->addOrderItem($orderItem);
+    public function purgeOrderSession(): void
+    {
+        $this->orderSessionStorage->removeOrder();
+    }
+
+    public function createOrder(Customer $customer): void
+    {
+        $orderArray = $this->getOrderSession();
+        $productRepository = $this->entityManager->getRepository(Product::class);
+
+        $order = new Order();
+        $order->setCustomer($customer);
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+
+        foreach ($orderArray as $id => $quantity) {
+            $orderItem = new OrderItem();
+            $orderItem->setOrder($order)
+                ->setProduct($productRepository->find($id))
+                ->setQuantity($quantity)
+            ;
 
             $this->entityManager->persist($orderItem);
         }
 
         $this->entityManager->flush();
+        $this->orderSessionStorage->setOrderId($order->getId());
     }
 
-    public function removeOrderItem(OrderItem $orderItem): void
+    public function retrieveOrder(): ?Order
     {
-        if ($orderItem->getQuantity() >= 2) {
-            $orderItem->setQuantity($orderItem->getQuantity() - 1);
+        $id = $this->orderSessionStorage->getOrderId();
+        if ($id) {
+            return $this->entityManager->getRepository(Order::class)->find($id);
         }
-        else {
-            $orderItem->getOrder()->removeOrderItem($orderItem);
-            $this->entityManager->remove($orderItem);
-        }
-        $this->entityManager->flush();
+        return null;
     }
 
-    public function createQuantityCookie(): Cookie
+    public function updateCart(): void
     {
-        return Cookie::create('order')
-            ->withValue($this->getCurrentOrder()->getTotalQuantity())
-            ->withExpires(time() + 172800)
-            ->withSecure(false)
-            ->withHttpOnly(false)
+        $order = $this->getOrderSession();
+        $n = 0;
+
+        foreach ($order as $id => $quantity) {
+            $n += $quantity;
+        }
+        $this->orderSessionStorage->setCart($n);
+    }
+
+    public function createCheckout(): array
+    {
+        $orderSession = $this->getOrderSession();
+        $productRepository = $this->entityManager->getRepository(Product::class);
+        $orderItems = [];
+        $total = 0;
+
+        foreach ($orderSession as $id => $quantity) {
+            $entity = new OrderItem();
+            $product = $productRepository->find($id);
+            $entity->setProduct($product)
+                ->setQuantity($quantity)
+                ->setPrice($product->getPrice())
             ;
-    }
-
-    public function hasOrderItems(Order $order): bool
-    {
-        if ($order->getOrderItems()->getValues()) {
-            return true;
+            $orderItems[] = $entity;
+            $total += $entity->getPrice() * $entity->getQuantity();
         }
-        return false;
+
+        return [
+            'orderItems' => $orderItems,
+            'total' => $total,
+        ];
     }
 
-    public function hasBeenValidated(Order $order): bool
+    public function checkAndUpdateOrder(Order $order): void
     {
-        if ($order->getState() === $this->entityManager->getRepository(State::class)->findOneBy(['code' => "in_payment"])) {
-            return true;
+        $orderFromSession = $this->getOrderSession();
+
+        foreach ($order->getOrderItems()->getValues() as $orderItem) {
+            // when productId and quantity are ok
+            if (array_key_exists($orderItem->getProduct()->getId(), $orderFromSession) && $orderFromSession[$orderItem->getProduct()->getId()] === $orderItem->getQuantity()) {
+                unset($orderFromSession[$orderItem->getProduct()->getId()]);
+                $orderItem->setPrice($orderItem->getProduct()->getPrice());
+            }
+            // when productId is ok and not the quantity
+            elseif (array_key_exists($orderItem->getProduct()->getId(), $orderFromSession) && $orderFromSession[$orderItem->getProduct()->getId()] !== $orderItem->getQuantity()) {
+                $orderItem->setQuantity($orderFromSession[$orderItem->getProduct()->getId()]);
+                unset($orderFromSession[$orderItem->getProduct()->getId()]);
+                $orderItem->setPrice($orderItem->getProduct()->getPrice());
+            }
         }
-        return false;
-    }
 
-    public function removeOrderFromSession(): void
-    {
-        $this->orderSessionStorage->removeOrder();
+        // when productId is missing
+        if (!empty($orderFromSession)) {
+            foreach ($orderFromSession as $id => $quantity) {
+                $orderItem = new OrderItem();
+                $orderItem->setOrder($order)
+                    ->setProduct($this->entityManager->getRepository(Product::class)->find($id))
+                    ->setQuantity($quantity)
+                ;
+
+                $this->entityManager->persist($orderItem);
+            }
+        }
+
+        $this->entityManager->flush();
     }
 }

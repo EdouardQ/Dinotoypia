@@ -3,12 +3,12 @@
 namespace App\Controller\Customer;
 
 use App\Entity\State;
-use App\Form\RelayPointFormType;
 use App\Manager\OrderManager;
+use App\Service\DeliveryCheckerService;
 use App\Service\StripeService;
+use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,46 +22,19 @@ class PaymentController extends AbstractController
         $this->orderManager = $orderManager;
     }
 
-    #[Route('/delivery', name: 'customer.payment.delivery')]
-    public function delivery(EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/payment-process', name: 'customer.payment.payment_process')]
+    public function paymentProcess(EntityManagerInterface $entityManager, OrderSessionStorage $orderSessionStorage, StripeService $stripeService): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        if (empty($this->orderManager->getOrderSession())) {
+            return $this->redirectToRoute('checkout.index');
+        }
+
+        $order = $this->orderManager->getOrder($this->getUser());
+
+        $this->orderManager->checkAndUpdateOrder($order);
 
         // if the order is empty of orderItems
-        if (!$this->orderManager->hasOrderItems($order)) {
-            return $this->redirectToRoute('homepage.index');
-        }
-
-        // if the order hasn't a customer
-        if (!$order->getCustomer()) {
-            $order->setCustomer($this->getUser());
-            $entityManager->flush();
-        }
-
-        $form = $this->createForm(RelayPointFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order->setRelayPointId($form->getData()['targetWidget']);
-            // set new state of the order
-            $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_payment"]));
-            $entityManager->flush();
-
-            return $this->redirectToRoute('customer.payment.payment_process');
-        }
-
-        return $this->render('customer/payment/delivery.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    #[Route('/payment-process', name: 'customer.payment.payment_process')]
-    public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
-    {
-        $order = $this->orderManager->getCurrentOrder();
-
-        // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        if (!$order->hasOrderItems()) {
             return $this->redirectToRoute('homepage.index');
         }
 
@@ -76,37 +49,31 @@ class PaymentController extends AbstractController
     #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
     public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        $order = $this->orderManager->getOrder($this->getUser());
 
         // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        if (!$order->hasOrderItems() && !$order->inPaymentState()) {
             return $this->redirectToRoute('homepage.index');
         }
 
-        $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_delevery"]));
-        $order->setEstimatedDelivery($order->calculEstimatedDeliveryDateTime());
-        $entityManager->flush();
+        $stripeService->createBillingAndDeliveryAddresses($order, $entityManager);
+        $this->orderManager->purgeOrderSession();
 
-        $this->orderManager->removeOrderFromSession();
-        $response = $this->redirectToRoute('homepage.index');
-        $response->headers->clearCookie('order');
-
-        return $response;
+        return $this->redirectToRoute('homepage.index');
     }
 
     #[Route('/payment-failed', name: 'customer.payment.payment_failed')]
-    public function paymentFailed(EntityManagerInterface $entityManager): Response
+    public function paymentFailed(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
-        $order = $this->orderManager->getCurrentOrder();
+        $order = $this->orderManager->getOrder($this->getUser());
 
         // if the order is empty of orderItems and has the right state
-        if (!$this->orderManager->hasOrderItems($order) && !$this->orderManager->hasBeenValidated($order)) {
+        if (!$order->hasOrderItems() && !$order->inPaymentState()) {
             return $this->redirectToRoute('homepage.index');
         }
 
         $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "pending"]));
         $order->setPaymentStripeId(null);
-        $order->setRelayPointId(null);
 
         $entityManager->flush();
 
