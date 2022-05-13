@@ -2,9 +2,11 @@
 
 namespace App\Controller\Customer;
 
+use App\Entity\PromotionCode;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
+use App\Service\PromotionCodeService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,15 +25,24 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/checkout', name: 'customer.payment.checkout')]
-    public function delivery(Request $request, EntityManagerInterface $entityManager): Response
+    public function delivery(Request $request, EntityManagerInterface $entityManager, PromotionCodeService $promotionCodeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
         $form = $this->createForm(CheckoutFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($form->getData()['promotion_code']);
-            // create SERVICE
+            $order->setPromotionCode(null);
+            if ($form->getData()['promotion_code'] !== null) {
+                $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
+                if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
+                    $this->addFlash('checkoutNotice', "Code promo invalide ou expiré");
+                    return $this->redirectToRoute('customer.payment.checkout');
+                }
+
+                $order->setPromotionCode($promotionCode);
+            }
+
             $order->setShipping($form->getData()['shipping']);
             $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
@@ -46,7 +57,7 @@ class PaymentController extends AbstractController
     public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
-            return $this->redirectToRoute('summary.index');
+            return $this->redirectToRoute('homepage.summary');
         }
 
         $order = $this->orderManager->getOrder($this->getUser());
@@ -98,6 +109,6 @@ class PaymentController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('paymentFailedNotice', "Le paiement a échoué.");
-        return $this->redirectToRoute('summary.index');
+        return $this->redirectToRoute('homepage.summary');
     }
 }

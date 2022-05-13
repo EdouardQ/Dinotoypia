@@ -84,6 +84,21 @@ class PromotionCode
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="decimal", precision=6, scale=2, nullable=true)
+     */
+    private $minimumAmount;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $firstTimeTransaction;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $useLimitPerCustomer;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -159,9 +174,11 @@ class PromotionCode
         return $this->useLimit;
     }
 
-    public function setUseLimit($useLimit): self
+    public function setUseLimit(int $useLimit): self
     {
         $this->useLimit = $useLimit;
+
+        return $this;
     }
 
     public function getNumberTimeUsed(): int
@@ -287,6 +304,42 @@ class PromotionCode
                 $order->setPromotionCode(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMinimumAmount(): ?string
+    {
+        return $this->minimumAmount;
+    }
+
+    public function setMinimumAmount(?string $minimumAmount): self
+    {
+        $this->minimumAmount = $minimumAmount;
+
+        return $this;
+    }
+
+    public function isFirstTimeTransaction(): ?bool
+    {
+        return $this->firstTimeTransaction;
+    }
+
+    public function setFirstTimeTransaction(bool $firstTimeTransaction): self
+    {
+        $this->firstTimeTransaction = $firstTimeTransaction;
+
+        return $this;
+    }
+
+    public function getUseLimitPerCustomer(): ?int
+    {
+        return $this->useLimitPerCustomer;
+    }
+
+    public function setUseLimitPerCustomer(int $useLimitPerCustomer): self
+    {
+        $this->useLimitPerCustomer = $useLimitPerCustomer;
 
         return $this;
     }

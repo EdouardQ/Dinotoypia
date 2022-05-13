@@ -6,9 +6,11 @@ use App\Entity\PromotionCode;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -22,10 +24,9 @@ class PromotionCodeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['name', 'code', 'createdAt', 'expiresAt', 'type', 'amount', 'amountType', 'customer', 'stripeId', 'couponStripeId'])
+            ->setSearchFields(['name', 'code', 'createdAt', 'expiresAt', 'type', 'amount', 'amountType', 'customer', 'useLimit', 'useLimitPerCustomer'])
             ->setEntityLabelInSingular('Code promo')
             ->setEntityLabelInPlural('Codes promo')
-            ->setPageTitle('index', "<h1>Codes promo</h1><br><a href='https://dashboard.stripe.com/test/coupons' target='_blank'>À gérer au préalable ici</a>")
             ;
     }
 
@@ -41,9 +42,10 @@ class PromotionCodeCrudController extends AbstractCrudController
                 ->setLabel('Type'),
             AssociationField::new('customer')->setLabel('Client'),
             TextField::new('code')->setLabel('Code'),
-            TextField::new('stripeId')->setLabel('ID Stripe'),
-            TextField::new('couponStripeId')->setLabel('ID coupon Stripe'),
-            TextField::new('amount')->setLabel('Montant'),
+            MoneyField::new('amount')
+                ->setCurrency('EUR')
+                ->setStoredAsCents(false)
+                ->setLabel('Montant'),
             ChoiceField::new('amountType')
                 ->setChoices([
                     'Montant' => 'amount',
@@ -52,6 +54,18 @@ class PromotionCodeCrudController extends AbstractCrudController
                 ->setLabel('Type de réduction'),
             DateField::new('expiresAt')->setLabel('Expire le'),
             IntegerField::new('useLimit')->setLabel("Nombre d'utilisation maximal"),
+            IntegerField::new('useLimitPerCustomer')->setLabel("Nombre d'utilisation maximal par Client"),
+            MoneyField::new('minimumAmount')
+                ->setCurrency('EUR')
+                ->setStoredAsCents(false)
+                ->setLabel('Montant minimum'),
+            BooleanField::new('firstTimeTransaction')
+                ->setLabel('Utilisable uniquement pour la 1ère commande')
+                ->onlyOnIndex()
+                ->setFormTypeOption('disabled', 'disabled'),
+            BooleanField::new('firstTimeTransaction')
+                ->setLabel('Utilisable uniquement pour la 1ère commande')
+                ->hideOnIndex(),
             TextareaField::new('comments')->setLabel('Commentaire(s)')
         ];
     }

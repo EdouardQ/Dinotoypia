@@ -40,6 +40,6 @@ class ProductController extends AbstractController
     {
         $this->orderManager->removeItemToOrderSession($product->getId());
         $this->orderManager->updateCart();
-        return $this->redirectToRoute('summary.index');
+        return $this->redirectToRoute('homepage.summary');
     }
 }

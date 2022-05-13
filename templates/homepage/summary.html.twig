@@ -29,7 +29,7 @@
         </div>
         <div>
             {% for message in app.flashes('paymentFailedNotice') %}
-                <p class="alert-success">
+                <p class="alert-danger">
                     {{ message }}
                 </p>
             {% endfor %}

@@ -48,10 +48,6 @@ class CustomerCrudController extends AbstractCrudController
             TextField::new('postCode')->setLabel('Code postal'),
             CountryField::new('country')->setLabel('Pays'),
             TelephoneField::new('phone')->setLabel('Téléphone'),
-            IntegerField::new('fidelityPoints')
-                ->onlyOnIndex()
-                ->setLabel("Points de fidélités")
-
         ];
     }
 }

@@ -75,11 +75,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $phone;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $fidelityPoints;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
@@ -266,18 +261,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getFidelityPoints(): ?int
-    {
-        return $this->fidelityPoints;
-    }
-
-    public function setFidelityPoints(int $fidelityPoints): self
-    {
-        $this->fidelityPoints = $fidelityPoints;
 
         return $this;
     }
