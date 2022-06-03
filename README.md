@@ -33,6 +33,10 @@
 
  - reprise des vieux jouets à commencer
 
+ - tâche cron
+    
+ - serveur smtp
+
 ### Marc et Jonas
 
  - affichage complet des produits / catégories / page d'accueil
