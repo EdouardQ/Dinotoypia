@@ -12,6 +12,28 @@
 
 ## Todo
 
-bon de réduction
+### Marc: 
+ - panier : faire front
 
-infos livraison / facturation sur interface de paiement Stripe
+ - checkout : front + calc du total à payer
+
+### Jonas
+
+- mot de passe oublié
+
+- faire tout les mails (création de compte, passage de commande)
+
+- facture après paiement
+
+### Edouard
+
+ - espace client : à faire (infos perso + précédentes commandes)
+
+ - créer un compte client
+
+ - reprise des vieux jouets à commencer
+
+### Marc et Jonas
+
+ - affichage complet des produits / catégories / page d'accueil
+
