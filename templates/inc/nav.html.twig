@@ -28,7 +28,7 @@
 	</div>
 	<div class="cart">
 		<a href="{{ url('homepage.summary') }}">
-			<img src="{{ asset('img/cart.png') }}">
+			<img src="{{ asset('img/cart.png') }}" alt="">
 			<div id="cart-quantity">
 				{% if app.session.get('cart') is not null %}
 					{{ app.session.get('cart') }}
