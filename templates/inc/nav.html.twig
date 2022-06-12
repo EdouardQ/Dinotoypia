@@ -6,15 +6,18 @@
 		<div>
 			<a href="{{ url('homepage.index') }}">Accueil</a>
 		</div>
-		<div>
-			<a class="nav-link" href="#">Link</a>
-		</div>
-		<div>
-			<a class="nav-link" href="#">Link</a>
-		</div>
-		<div>
-			<a class="nav-link" href="#">Link</a>
-		</div>
+		{% if is_granted('ROLE_CUSTOMER') %}
+			<div>
+				<a class="nav-link" href="{{ url('customer.homepage.index') }}">Mon compte</a>
+			</div>
+			<div>
+				<a class="nav-link" href="{{ url('security.customer.logout') }}">Déconnexion</a>
+			</div>
+		{% else %}
+			<div>
+				<a class="nav-link" href="{{ url('security.customer.login') }}">Connexion</a>
+			</div>
+		{% endif %}
 	</div>
 	<div class="search">
 		<form method="post" action="{{ url('homepage.search') }}">

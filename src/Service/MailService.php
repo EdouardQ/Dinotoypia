@@ -16,7 +16,7 @@ class MailService
     {
         $this->env = $kernel->getEnvironment();
         $this->mailer = $mailer;
-        $this->prod = $this->env === "dev";
+        $this->prod = $this->env === "prod";
     }
 
     public function test(): void

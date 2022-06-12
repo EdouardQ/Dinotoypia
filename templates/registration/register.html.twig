@@ -3,19 +3,80 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
+<section class="w-50 m-auto text-center">
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1>Inscription</h1>
+    <br>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_start(form, {attr: {id: 'register_form'}}) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+    <div class="row g-3">
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_label(form.email, 'Adresse email: ') }}
+                {{ form_widget(form.email) }}
+
+                {{ form_label(form.lastName, 'Nom: ') }}
+                {{ form_widget(form.lastName) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.firstName, 'Prénom: ') }}
+                {{ form_widget(form.firstName) }}
+
+                {{ form_label(form.address, 'Adresse: ') }}
+                {{ form_widget(form.address) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.city, 'Ville: ') }}
+                {{ form_widget(form.city) }}
+
+                {{ form_label(form.postCode, 'Code postal: ') }}
+                {{ form_widget(form.postCode) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.country, 'Pays: ') }}
+                {{ form_widget(form.country) }}
+
+                {{ form_label(form.phone, 'Téléphone: ') }}
+                {{ form_widget(form.phone) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.plainPassword.first) }}
+
+            </div>
+            <div class="col-md-6">
+
+                {{ form_row(form.plainPassword.second) }}
+            </div>
+
+        </div>
+    </div>
+    <br>
+    <div class="w-25 m-auto">
+        {{ form_row(form.agreeTerms) }}
+    </div>
+    <br>
+    <button class="g-recaptcha btn-primary"
+            data-sitekey="{{ google_recaptcha_site_key }}"
+            data-callback='onSubmit'
+            data-action='submit'>
+        S'inscrire
+    </button>
+
+
+
+    {{ form_end(form) }}
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("register_form").submit();
+        }
+    </script>
 {% endblock %}

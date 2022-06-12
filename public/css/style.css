@@ -1,3 +1,4 @@
+/*
 body {
     background: url("../img/jungle_bg.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -7,9 +8,10 @@ body {
 }
 
 section div {
-    background: white; /* provisoire */
+    background: white;
 }
-
+ */
 ul {
     list-style-type: none;
 }
+
