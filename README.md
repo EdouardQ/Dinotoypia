@@ -29,7 +29,7 @@
 
  - espace client : à faire (infos perso + précédentes commandes)
 
- - créer un compte client
+ - ~~créer un compte client~~
 
  - reprise des vieux jouets à commencer
 
