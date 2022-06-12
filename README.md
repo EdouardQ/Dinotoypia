@@ -33,9 +33,9 @@
 
  - reprise des vieux jouets à commencer
 
- - tâche cron
+ - ~~tâches cron~~
     
- - serveur smtp
+ - ~~serveur smtp~~
 
 ### Marc et Jonas
 
