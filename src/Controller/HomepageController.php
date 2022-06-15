@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Manager\OrderManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ class HomepageController extends AbstractController
     #[Route('/', name: 'homepage.index')]
     public function index(): Response
     {
+        //dd($this->getUser());
         return $this->render('homepage/index.html.twig');
     }
 
@@ -49,5 +51,13 @@ class HomepageController extends AbstractController
         }
         // if user goes to this url by the wrong way -> redirect to the homepage
         return $this->redirectToRoute('homepage.index');
+    }
+
+    #[Route('/summary', name: 'homepage.summary')]
+    public function summary(OrderManager $orderManager): Response
+    {
+        return $this->render('homepage/summary.html.twig', [
+            'order' => $orderManager->createCheckout(),
+        ]);
     }
 }

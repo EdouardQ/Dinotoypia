@@ -17,7 +17,10 @@ class PromotionCodeFixtures extends Fixture
             'couponStrideId' => 'GCLK4LYv',
             'amount' => '10',
             'amountType' => 'amount',
+            'minimumAmount' => '20',
+            'firstTimeTransaction' => true,
             'expiresAt' => null,
+            'useLimitPerCustomer' => 1,
             'comments' => "Remise de 10€ sur le premier achat à partir de 20€ de commande."
         ],
         [
@@ -28,7 +31,10 @@ class PromotionCodeFixtures extends Fixture
             'couponStrideId' => 'AdvDy1qK',
             'amount' => '20',
             'amountType' => 'percentage',
+            'minimumAmount' => '20',
+            'firstTimeTransaction' => false,
             'expiresAt' => "2022-08-31 23:59",
+            'useLimitPerCustomer' => 1,
             'comments' => "Remise de 20% à partir de 20€."
         ],
 
@@ -46,6 +52,9 @@ class PromotionCodeFixtures extends Fixture
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setAmount($promotionCode['amount'])
                 ->setAmountType($promotionCode['amountType'])
+                ->setMinimumAmount($promotionCode['minimumAmount'])
+                ->setFirstTimeTransaction($promotionCode['firstTimeTransaction'])
+                ->setUseLimitPerCustomer($promotionCode['useLimitPerCustomer'])
                 ->setComments($promotionCode['comments'])
             ;
 

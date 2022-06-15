@@ -2,13 +2,15 @@
 
 namespace App\Controller\Customer;
 
+use App\Entity\PromotionCode;
 use App\Entity\State;
+use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
-use App\Service\DeliveryCheckerService;
+use App\Service\PromotionCodeService;
 use App\Service\StripeService;
-use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,11 +24,40 @@ class PaymentController extends AbstractController
         $this->orderManager = $orderManager;
     }
 
+    #[Route('/checkout', name: 'customer.payment.checkout')]
+    public function delivery(Request $request, EntityManagerInterface $entityManager, PromotionCodeService $promotionCodeService): Response
+    {
+        $order = $this->orderManager->getOrder($this->getUser());
+        $form = $this->createForm(CheckoutFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order->setPromotionCode(null);
+            if ($form->getData()['promotion_code'] !== null) {
+                $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
+                if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
+                    $this->addFlash('checkoutNotice', "Code promo invalide ou expiré");
+                    return $this->redirectToRoute('customer.payment.checkout');
+                }
+
+                $order->setPromotionCode($promotionCode);
+            }
+
+            $order->setShipping($form->getData()['shipping']);
+            $entityManager->flush();
+            return $this->redirectToRoute('customer.payment.payment_process');
+        }
+
+        return $this->render('customer/payment/checkout.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('/payment-process', name: 'customer.payment.payment_process')]
-    public function paymentProcess(EntityManagerInterface $entityManager, OrderSessionStorage $orderSessionStorage, StripeService $stripeService): Response
+    public function paymentProcess(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         if (empty($this->orderManager->getOrderSession())) {
-            return $this->redirectToRoute('checkout.index');
+            return $this->redirectToRoute('homepage.summary');
         }
 
         $order = $this->orderManager->getOrder($this->getUser());
@@ -38,12 +69,12 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $stripeSession = $stripeService->createSession($order);
+        $sessionStripe = $stripeService->createSession($order);
 
-        $order->setPaymentStripeId($stripeSession->payment_intent);
+        $order->setPaymentStripeId($sessionStripe->payment_intent);
         $entityManager->flush();
 
-        return $this->redirect($stripeSession->url);
+        return $this->redirect($sessionStripe->url);
     }
 
     #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
@@ -78,6 +109,6 @@ class PaymentController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('paymentFailedNotice', "Le paiement a échoué.");
-        return $this->redirectToRoute('checkout.index');
+        return $this->redirectToRoute('homepage.summary');
     }
 }

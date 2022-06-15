@@ -384,6 +384,9 @@
     "symfony/security-http": {
         "version": "v6.0.1"
     },
+    "symfony/serializer": {
+        "version": "v6.0.8"
+    },
     "symfony/service-contracts": {
         "version": "v3.0.0"
     },

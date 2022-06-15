@@ -28,7 +28,6 @@ class CustomerFixtures extends Fixture
             ->setCountry("FR")
             ->setPostCode("75015")
             ->setPhone("0777065063")
-            ->setFidelityPoints("200")
             ->setStripeId("cus_LXiBlG0MTCgmKZ")
             ->isVerified(true)
         ;
@@ -47,7 +46,6 @@ class CustomerFixtures extends Fixture
                     ->setPostCode($faker->postcode())
                     ->setPhone($faker->phoneNumber())
                     ->setStripeId("n/a")
-                    ->setFidelityPoints($faker->numberBetween(0, 2000))
                     ->isVerified(true)
                 ;
             $manager->persist($entity);

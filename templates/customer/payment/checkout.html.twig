@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <br>
+    <section>
+        {{ form_start(form) }}
+            <div class="text-center w-50 m-auto">
+                <br>
+                {{ form_label(form.shipping, "Mode livraison") }}
+                {{ form_widget(form.shipping) }}
+                <br>
+                {% for message in app.flashes('checkoutNotice') %}
+                    <p class="alert-danger">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                {{ form_label(form.promotion_code, "Code Promo") }}
+                {{ form_widget(form.promotion_code) }}
+                <br>
+                <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
+                <br><br>
+            </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+

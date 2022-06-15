@@ -12,7 +12,6 @@ use App\Entity\RefurbishedToy;
 use App\Entity\Shipping;
 use App\Entity\State;
 use App\Entity\UserBack;
-use App\Service\BarCodeService;
 use App\Service\StripeService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -23,14 +22,12 @@ use Symfony\Component\Security\Core\Security;
 
 class EntitySubscriber implements EventSubscriberInterface
 {
-    private BarCodeService $barCodeService;
     private Security $security;
     private StripeService $stripeService;
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(BarCodeService $barCodeService, Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
     {
-        $this->barCodeService = $barCodeService;
         $this->security = $security;
         $this->stripeService = $stripeService;
         $this->userPasswordHasher = $userPasswordHasher;
@@ -42,6 +39,7 @@ class EntitySubscriber implements EventSubscriberInterface
             Events::prePersist,
             Events::postPersist,
             Events::preUpdate,
+            Events::preRemove,
         ];
     }
 
@@ -79,6 +77,7 @@ class EntitySubscriber implements EventSubscriberInterface
             }
             elseif ($entity instanceof PromotionCode) {
                 $entity->setCreatedAt(new \DateTimeImmutable());
+                $this->stripeService->createPromotionCode($entity);
             }
             elseif ($entity instanceof Image) {
                 $this->stripeService->updateImageToStripeProduct($entity);
@@ -95,7 +94,7 @@ class EntitySubscriber implements EventSubscriberInterface
         $entity = $args->getObject();
 
         if ($entity instanceof RefurbishedToy) {
-            $entity->setBarCodeNumber($this->barCodeService->generateBarCodeNumber($entity));
+            $entity->setBarCodeNumber('dino-'.$entity->getId().'-'.time());
             $args->getObjectManager()->flush();
         }
     }
@@ -133,6 +132,15 @@ class EntitySubscriber implements EventSubscriberInterface
         }
         elseif ($entity instanceof Shipping && $args->hasChangedField('active')) {
             $this->stripeService->updateShipping($entity);
+        }
+    }
+
+    public function preRemove(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
+
+        if ($entity instanceof PromotionCode) {
+            $this->stripeService->deletePromotionCode($entity);
         }
     }
 }

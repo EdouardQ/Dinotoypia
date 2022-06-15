@@ -12,9 +12,9 @@ class SecurityController extends AbstractController
     #[Route('/my-account/login', name: 'security.customer.login')]
     public function customerLogin(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser() && in_array("ROLE_CUSTOMER", $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('customer.homepage.index');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

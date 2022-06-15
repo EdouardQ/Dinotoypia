@@ -8,6 +8,7 @@ use App\Entity\DeliveryAddress;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\PromotionCode;
 use App\Entity\Shipping;
 use App\Entity\State;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +49,7 @@ class StripeService
                 'billing_address_collection' => 'required',
                 'shipping_address_collection' => ['allowed_countries' => ['FR']],
                 'discounts' => [
-                    'promotion_code' => $order->getPromotionCode()->getStripeId()
+                    ['promotion_code' => $order->getPromotionCode()->getStripeId()]
                 ]
             ]);
 
@@ -200,4 +201,154 @@ class StripeService
             ]
         );
     }
+
+    public function createPromotionCode(PromotionCode $promotionCode): void
+    {
+        if ($promotionCode->getAmountType() === 'percentage') {
+            if ($promotionCode->getExpiresAt() === null) {
+                if ($promotionCode->getUseLimit() === null) {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'percent_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'forever',
+                    ]);
+                }
+                else {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'percent_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'forever',
+                        'max_redemptions' => $promotionCode->getUseLimit(),
+                    ]);
+                }
+
+            }
+            else {
+                if ($promotionCode->getUseLimit() === null) {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'percent_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'once',
+                        'redeem_by' => $promotionCode->getExpiresAt()->getTimestamp(),
+                    ]);
+                }
+                else {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'percent_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'once',
+                        'redeem_by' => $promotionCode->getExpiresAt()->getTimestamp(),
+                        'max_redemptions' => $promotionCode->getUseLimit(),
+                    ]);
+                }
+
+            }
+        }
+        elseif ($promotionCode->getAmountType() === 'amount') {
+            if ($promotionCode->getExpiresAt() === null) {
+                if ($promotionCode->getUseLimit() === null) {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'amount_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'forever',
+                    ]);
+                }
+                else {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'amount_off' => $promotionCode->getAmount(),
+                        'currency' => 'EUR',
+                        'duration' => 'forever',
+                        'max_redemptions' => $promotionCode->getUseLimit(),
+                    ]);
+                }
+
+            }
+            else {
+                if ($promotionCode->getUseLimit() === null) {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'amount_off' => $promotionCode->getAmount()*100,
+                        'currency' => 'EUR',
+                        'duration' => 'once',
+                        'redeem_by' => $promotionCode->getExpiresAt()->getTimestamp(),
+                    ]);
+                }
+                else {
+                    $coupon = $this->stripe->coupons->create([
+                        'name' => $promotionCode->getName(),
+                        'amount_off' => $promotionCode->getAmount()*100,
+                        'currency' => 'EUR',
+                        'duration' => 'once',
+                        'redeem_by' => $promotionCode->getExpiresAt()->getTimestamp(),
+                        'max_redemptions' => $promotionCode->getUseLimit(),
+                    ]);
+                }
+            }
+        }
+
+        $promotionCode->setCouponStripeId($coupon->id);
+
+        if ($promotionCode->getCustomer() === null) {
+            if ($promotionCode->isFirstTimeTransaction()) {
+                $stripePromotionCode = $this->stripe->promotionCodes->create([
+                    'coupon' => $coupon->id,
+                    'code' => $promotionCode->getCode(),
+                    'restrictions' => [
+                        'minimum_amount' => $promotionCode->getMinimumAmount()*100,
+                        'minimum_amount_currency' => 'EUR',
+                        'first_time_transaction' => true,
+                    ],
+                ]);
+            }
+            else {
+                $stripePromotionCode = $this->stripe->promotionCodes->create([
+                    'coupon' => $coupon->id,
+                    'code' => $promotionCode->getCode(),
+                    'restrictions' => [
+                        'minimum_amount' => $promotionCode->getMinimumAmount()*100,
+                        'minimum_amount_currency' => 'EUR',
+                    ],
+                ]);
+            }
+        }
+        else {
+            if ($promotionCode->isFirstTimeTransaction()) {
+                $stripePromotionCode = $this->stripe->promotionCodes->create([
+                    'coupon' => $coupon->id,
+                    'code' => $promotionCode->getCode(),
+                    'customer' => $promotionCode->getCustomer()->getStripeId(),
+                    'restrictions' => [
+                        'minimum_amount' => $promotionCode->getMinimumAmount()*100,
+                        'minimum_amount_currency' => 'EUR',
+                        'first_time_transaction' => true,
+                    ],
+                ]);
+            }
+            else {
+                $stripePromotionCode = $this->stripe->promotionCodes->create([
+                    'coupon' => $coupon->id,
+                    'code' => $promotionCode->getCode(),
+                    'customer' => $promotionCode->getCustomer()->getStripeId(),
+                    'restrictions' => [
+                        'minimum_amount' => $promotionCode->getMinimumAmount()*100,
+                        'minimum_amount_currency' => 'EUR',
+                    ],
+                ]);
+            }
+        }
+
+        $promotionCode->setStripeId($stripePromotionCode->id);
+    }
+
+    public function deletePromotionCode(PromotionCode $promotionCode): void
+    {
+        $this->stripe->coupons->delete($promotionCode->getCouponStripeId(), []);
+    }
+
 }
