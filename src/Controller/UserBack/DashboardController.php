@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Entity\GiftCode;
 use App\Entity\GiftCodeToCustomer;
 use App\Entity\Image;
+use App\Entity\Log;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
@@ -19,9 +20,11 @@ use App\Entity\UserBack;
 use App\Entity\Voucher;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -38,6 +41,16 @@ class DashboardController extends AbstractDashboardController
             ->setFaviconPath('img/logo_dinotoypia_32.png')
             ->renderContentMaximized()
             ;
+    }
+
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
+        return UserMenu::new()
+            ->setName($user)
+            ->setAvatarUrl("/img/logo_dinotoypia_32.png")
+            ->addMenuItems([
+                MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out'),
+            ]);
     }
 
     public function configureMenuItems(): iterable
@@ -64,6 +77,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::section('Admin')->setPermission('ROLE_ADMIN'),
             MenuItem::linkToCrud('Clients', 'fa fa-user', Customer::class)->setPermission('ROLE_ADMIN'),
             MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', UserBack::class)->setPermission('ROLE_ADMIN'),
+            MenuItem::linkToCrud('Logs', 'fa fa-address-card-o', Log::class)->setPermission('ROLE_ADMIN'),
         ];
     }
 }
