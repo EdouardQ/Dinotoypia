@@ -20,11 +20,15 @@
            value="{{ csrf_token('authenticate') }}"
     >
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="_remember_me"> Remember me
+        </label>
+    </div>
+
+    <div>
+        <a href="{{ url('registration.register') }}">Vous n'avez pas de compte</a>
+    </div>
 
 
     <button class="g-recaptcha btn-primary"

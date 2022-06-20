@@ -5,7 +5,7 @@
         <h1>Votre Compte</h1>
         <br><br><br>
         <div class="col-md-3">
-            <a href="#">
+            <a href="{{ url('customer.orders.index') }}">
                 <div class="card">
                     <h3 class="card-title">Vos commandes</h3>
                     <div class="card-body">Suivi des commandes</div>
@@ -29,7 +29,6 @@
             </a>
         </div>
     </div>
-
 </section>
 
 {% endblock %}
