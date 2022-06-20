@@ -25,6 +25,7 @@ class LogCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Log')
             ->setEntityLabelInPlural('Logs')
             ->setEntityPermission('ROLE_ADMIN')
+            ->setDefaultSort(['logedAt' => 'DESC'])
             ;
     }
 
@@ -38,10 +39,11 @@ class LogCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            //IdField::new('id'),
             TextField::new('user')->setLabel('Utilisateur'),
             TextField::new('entity')->setLabel('Entité'),
             IdField::new('entityId')->setLabel("Id de l'entité"),
+            TextField::new('action')->setLabel('Action'),
             DateTimeField::new('logedAt')->setLabel("fait le"),
         ];
     }

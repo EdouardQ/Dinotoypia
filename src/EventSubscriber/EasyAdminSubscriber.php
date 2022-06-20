@@ -4,9 +4,9 @@ namespace App\EventSubscriber;
 
 use App\Entity\Log;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityDeletedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityPersistedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityUpdatedEvent;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityDeletedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -26,7 +26,7 @@ class EasyAdminSubscriber implements EventSubscriberInterface
         return [
             AfterEntityPersistedEvent::class => ['afterPersist'],
             AfterEntityUpdatedEvent::class => ['afterUpdate'],
-            AfterEntityDeletedEvent::class => ['afterDelete'],
+            BeforeEntityDeletedEvent::class => ['beforeDelete'],
         ];
     }
 
@@ -40,8 +40,8 @@ class EasyAdminSubscriber implements EventSubscriberInterface
             ->setEntity(get_class($entity))
             ->setEntityId($entity->getId())
             ->setLogedAt(new \DateTimeImmutable())
+            ->setAction('insert')
         ;
-        $log->setAction($user->getId() ." - " . $user . " a ajouté un " . $log->getEntity() .'.');
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
@@ -57,14 +57,14 @@ class EasyAdminSubscriber implements EventSubscriberInterface
             ->setEntity(get_class($entity))
             ->setEntityId($entity->getId())
             ->setLogedAt(new \DateTimeImmutable())
+            ->setAction('update')
         ;
-        $log->setAction($user->getId() ." - " . $user . " a modifié un " . $log->getEntity() .'.');
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
     }
 
-    public function afterDelete(AfterEntityDeletedEvent $event): void
+    public function beforeDelete(BeforeEntityDeletedEvent $event): void
     {
         $entity = $event->getEntityInstance();
         $user = $this->security->getUser();
@@ -74,8 +74,8 @@ class EasyAdminSubscriber implements EventSubscriberInterface
             ->setEntity(get_class($entity))
             ->setEntityId($entity->getId())
             ->setLogedAt(new \DateTimeImmutable())
+            ->setAction('delete')
         ;
-        $log->setAction($user->getId() ." - " . $user . " a supprimé un " . $log->getEntity() .'.');
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
