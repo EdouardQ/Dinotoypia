@@ -37,6 +37,8 @@
     
  - ~~serveur smtp~~
 
+ - ~~logs~~
+
 ### Marc et Jonas
 
  - affichage complet des produits / catégories / page d'accueil
