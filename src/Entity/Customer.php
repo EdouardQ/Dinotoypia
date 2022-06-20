@@ -52,26 +52,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $postCode;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $country;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $phone;
 
     /**
@@ -98,6 +78,12 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=PromotionCode::class, mappedBy="customer")
      */
     private $promotionCodes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Civility::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $civility;
 
     public function __construct()
     {
@@ -201,54 +187,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getPostCode(): ?string
-    {
-        return $this->postCode;
-    }
-
-    public function setPostCode(string $postCode): self
-    {
-        $this->postCode = $postCode;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): self
-    {
-        $this->country = $country;
 
         return $this;
     }
@@ -375,6 +313,31 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
                 $promotionCode->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsedPromotionCodes(): array
+    {
+        $usedPromotionCodes = [];
+
+        foreach ($this->orders->getValues() as $order) {
+            if ($order->getState()->getName() != 'pending' && $order->getPromotionCode() != null) {
+                $usedPromotionCodes[] = $order->getPromotionCode();
+            }
+        }
+
+        return $usedPromotionCodes;
+    }
+
+    public function getCivility(): ?Civility
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?Civility $civility): self
+    {
+        $this->civility = $civility;
 
         return $this;
     }

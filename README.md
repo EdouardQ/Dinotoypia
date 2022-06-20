@@ -27,7 +27,7 @@
 
 ### Edouard
 
- - espace client : à faire (infos perso + précédentes commandes)
+ - ~~espace client : à faire (infos perso + précédentes commandes)~~
 
  - ~~créer un compte client~~
 
