@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -63,6 +64,17 @@ class Product
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $urlName;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $visible;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
+     */
+    private $stock;
 
     public function __construct()
     {
@@ -233,6 +245,30 @@ class Product
     public function setUrlName(string $urlName): self
     {
         $this->urlName = $urlName;
+
+        return $this;
+    }
+
+    public function isVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): self
+    {
+        $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): self
+    {
+        $this->stock = $stock;
 
         return $this;
     }

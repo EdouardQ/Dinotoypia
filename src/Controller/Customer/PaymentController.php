@@ -28,6 +28,12 @@ class PaymentController extends AbstractController
     public function delivery(Request $request, EntityManagerInterface $entityManager, PromotionCodeService $promotionCodeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
+
+        if ($this->orderManager->checkUpdateAndFixOrder($order)) {
+            $this->addFlash('outOfStockNotice', "Une erreur est survenue dans votre commande");
+            return $this->redirectToRoute('homepage.summary');
+        }
+
         $form = $this->createForm(CheckoutFormType::class);
         $form->handleRequest($request);
 
@@ -62,7 +68,10 @@ class PaymentController extends AbstractController
 
         $order = $this->orderManager->getOrder($this->getUser());
 
-        $this->orderManager->checkAndUpdateOrder($order);
+        if ($this->orderManager->checkUpdateAndFixOrder($order)) {
+            $this->addFlash('outOfStockNotice', "Une erreur est survenue dans votre commande");
+            return $this->redirectToRoute('homepage.summary');
+        }
 
         // if the order is empty of orderItems
         if (!$order->hasOrderItems()) {
@@ -77,7 +86,7 @@ class PaymentController extends AbstractController
         return $this->redirect($sessionStripe->url);
     }
 
-    #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
+    #[Route('/succeeded-payment', name: 'customer.payment.payment_succeeded')]
     public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
@@ -87,13 +96,17 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
+        // if the payment is not succeeded, return an error 500
         $stripeService->createBillingAndDeliveryAddresses($order, $entityManager);
+
+        $stripeService->checkAfterSucceededPayment($order, $entityManager);
+
         $this->orderManager->purgeOrderSession();
 
         return $this->redirectToRoute('homepage.index');
     }
 
-    #[Route('/payment-failed', name: 'customer.payment.payment_failed')]
+    #[Route('/failed-payment', name: 'customer.payment.payment_failed')]
     public function paymentFailed(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());

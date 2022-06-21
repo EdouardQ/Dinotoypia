@@ -33,7 +33,7 @@ class ImageCrudController extends AbstractCrudController
             ImageField::new('filename')
                 ->setBasePath('img/products/')
                 ->setUploadDir('public/img/products/')
-                ->setUploadedFileNamePattern('[name]_[timestamp].[extension]')
+                ->setUploadedFileNamePattern('[randomhash].[extension]')
                 ->setLabel('Fichier'),
             AssociationField::new('product')->setLabel('Produit'),
         ];

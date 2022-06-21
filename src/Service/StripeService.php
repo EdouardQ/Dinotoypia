@@ -34,12 +34,15 @@ class StripeService
     public function createSession(Order $order): \Stripe\Checkout\Session
     {
         $domain = "https://".$_SERVER['HTTP_HOST'];
+        $expireAt = 3600;
+
 
         if ($order->getPromotionCode()) {
             $sessionStripe = $this->stripe->checkout->sessions->create([
                 'mode' => 'payment',
-                'success_url' => $domain.'/payment/payment-succeeded',
-                'cancel_url' => $domain.'/payment/payment-failed',
+                'success_url' => $domain.'/payment/succeeded-payment',
+                'cancel_url' => $domain.'/payment/failed-payment',
+                'expires_at' => time()+$expireAt,
                 'customer' => $order->getCustomer()->getStripeId(),
                 'line_items' => $order->getStripeLineItems(),
                 'payment_method_types' => ['card'],
@@ -58,8 +61,9 @@ class StripeService
 
         $sessionStripe = $this->stripe->checkout->sessions->create([
             'mode' => 'payment',
-            'success_url' => $domain.'/payment/payment-succeeded',
-            'cancel_url' => $domain.'/payment/payment-failed',
+            'success_url' => $domain.'/payment/succeeded-payment',
+            'cancel_url' => $domain.'/payment/failed-payment',
+            'expires_at' => time()+$expireAt,
             'customer' => $order->getCustomer()->getStripeId(),
             'line_items' => $order->getStripeLineItems(),
             'payment_method_types' => ['card'],
@@ -106,6 +110,28 @@ class StripeService
         $today = new \DateTime();
         $estimatedDelivery = $today->add(new \DateInterval('P'.$order->getShipping()->getDeliveryEstimateMaximum().'D'));
         $order->setEstimatedDelivery($estimatedDelivery);
+
+        $entityManager->flush();
+    }
+
+    public function checkAfterSucceededPayment(Order $order, EntityManagerInterface $entityManager): void
+    {
+        $paymentIntent = $this->stripe->paymentIntents->retrieve($order->getPaymentStripeId());
+
+        if ($order->isInStock()) {
+            foreach ($order->getOrderItems()->getValues() as $orderItem) {
+                $product = $orderItem->getProduct();
+                $product->setStock($product->getStock() - $orderItem->getQuantity());
+            }
+        }
+        else {
+            $refund = $this->stripe->refunds->create([
+                'payment_intent' => $paymentIntent->id,
+            ]);
+
+            $order->setRefundStripeId($refund->id);
+            $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "cancel"]));
+        }
 
         $entityManager->flush();
     }

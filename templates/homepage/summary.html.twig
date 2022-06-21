@@ -29,9 +29,10 @@
         </div>
         <div>
             {% for message in app.flashes('paymentFailedNotice') %}
-                <p class="alert-danger">
-                    {{ message }}
-                </p>
+                <p class="alert-danger">{{ message }}</p>
+            {% endfor %}
+            {% for message in app.flashes('outOfStockNotice') %}
+                <p class="alert-danger">{{ message }}</p>
             {% endfor %}
             <a href="{{ url('customer.payment.checkout') }}" class="btn btn-primary">Confirmer panier</a>
         </div>

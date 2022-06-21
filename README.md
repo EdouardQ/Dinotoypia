@@ -39,6 +39,10 @@
 
  - ~~logs~~
 
+ - ~~contraintes stock~~
+
+ - stripe stock
+
 ### Marc et Jonas
 
  - affichage complet des produits / catégories / page d'accueil

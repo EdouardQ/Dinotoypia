@@ -33,7 +33,7 @@ class OrderManager
         return $order;
     }
 
-    public function getOrder(Customer $customer): Order
+    public function getOrder(Customer $customer = null): Order
     {
         $order = $this->retrieveOrder();
 
@@ -86,7 +86,6 @@ class OrderManager
         $order = new Order();
         $order->setCustomer($customer);
         $this->entityManager->persist($order);
-        $this->entityManager->flush();
 
         foreach ($orderArray as $id => $quantity) {
             $orderItem = new OrderItem();
@@ -146,37 +145,54 @@ class OrderManager
         ];
     }
 
-    public function checkAndUpdateOrder(Order $order): void
+    public function checkUpdateAndFixOrder(Order $order): bool
     {
-        $orderFromSession = $this->getOrderSession();
+        $this->entityManager->refresh($order);
+        $orderItemArray = $order->getOrderItems()->getValues();
+        $orderSession = $this->getOrderSession();
+        $orderSessionCalc = $orderSession;
+        $isOutOfStock = false;
 
-        foreach ($order->getOrderItems()->getValues() as $orderItem) {
-            // when productId and quantity are ok
-            if (array_key_exists($orderItem->getProduct()->getId(), $orderFromSession) && $orderFromSession[$orderItem->getProduct()->getId()] === $orderItem->getQuantity()) {
-                unset($orderFromSession[$orderItem->getProduct()->getId()]);
-                $orderItem->setPrice($orderItem->getProduct()->getPrice());
+        foreach ($orderItemArray as $orderItem) {
+            // if an orderItem has been removed
+            if (!array_key_exists($orderItem->getProduct()->getId(), $orderSession)) {
+                $this->entityManager->remove($orderItem);
+                unset($orderSessionCalc[$orderItem->getProduct()->getId()]);
             }
-            // when productId is ok and not the quantity
-            elseif (array_key_exists($orderItem->getProduct()->getId(), $orderFromSession) && $orderFromSession[$orderItem->getProduct()->getId()] !== $orderItem->getQuantity()) {
-                $orderItem->setQuantity($orderFromSession[$orderItem->getProduct()->getId()]);
-                unset($orderFromSession[$orderItem->getProduct()->getId()]);
-                $orderItem->setPrice($orderItem->getProduct()->getPrice());
+            // remove out of stock orderItem
+            elseif ($orderItem->getProduct()->getStock() < $orderItem->getQuantity()) {
+                unset($orderSession[$orderItem->getProduct()->getId()]);
+                $this->entityManager->remove($orderItem);
+                unset($orderSessionCalc[$orderItem->getProduct()->getId()]);
+                $isOutOfStock = true;
+            }
+            // if the quantity has changed
+            elseif ($orderSession[$orderItem->getProduct()->getId()] != $orderItem->getQuantity()) {
+                $orderSession[$orderItem->getProduct()->getId()] = $orderItem->getQuantity();
+                unset($orderSessionCalc[$orderItem->getProduct()->getId()]);
+            }
+            // if the orderItem didn't change
+            else {
+                unset($orderSessionCalc[$orderItem->getProduct()->getId()]);
             }
         }
 
-        // when productId is missing
-        if (!empty($orderFromSession)) {
-            foreach ($orderFromSession as $id => $quantity) {
+        // if orderItem has been added
+        if (!empty($orderSessionCalc)) {
+            foreach ($orderSessionCalc as $id => $quantity) {
                 $orderItem = new OrderItem();
                 $orderItem->setOrder($order)
                     ->setProduct($this->entityManager->getRepository(Product::class)->find($id))
                     ->setQuantity($quantity)
                 ;
-
                 $this->entityManager->persist($orderItem);
             }
         }
 
+        $this->orderSessionStorage->setOrder($orderSession);
         $this->entityManager->flush();
+
+        $this->updateCart();
+        return $isOutOfStock;
     }
 }

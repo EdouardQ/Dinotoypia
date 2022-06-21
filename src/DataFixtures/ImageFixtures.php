@@ -14,6 +14,14 @@ class ImageFixtures extends Fixture implements DependentFixtureInterface
     {
         $allProducts = $manager->getRepository(Product::class)->findAll();
 
+        $image = new Image();
+        $product = $this->getReference("Flipper JurassicPark");
+        $image->setProduct($this->getReference($product->getName()));
+        $image->setName($product->getName() . "01");
+        $image->setFileName("test_image_product_120.png");
+
+        $manager->persist($image);
+
         foreach ($allProducts as $product) {
             $image = new Image();
             $product = $this->getReference($product->getName());

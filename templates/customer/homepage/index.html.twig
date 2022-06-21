@@ -4,7 +4,7 @@
     <div class="row m-auto">
         <h1>Votre Compte</h1>
         <br><br><br>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <a href="{{ url('customer.orders.index') }}">
                 <div class="card">
                     <h3 class="card-title">Vos commandes</h3>
@@ -12,11 +12,19 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <a href="{{ url('customer.customer.index') }}">
                 <div class="card">
                     <h3 class="card-title">Mes Infos</h3>
                     <div class="card-body">Consulter et modifier mes informations</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url('customer.refurbished_toy.index') }}">
+                <div class="card">
+                    <h3 class="card-title">Donner un vieux jouet</h3>
+                    <div class="card-body">Envoyer nous un vieux jouet pour le reconditionner</div>
                 </div>
             </a>
         </div>
