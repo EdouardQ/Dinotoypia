@@ -85,18 +85,16 @@ class OrderManager
 
         $order = new Order();
         $order->setCustomer($customer);
-        $this->entityManager->persist($order);
 
         foreach ($orderArray as $id => $quantity) {
             $orderItem = new OrderItem();
-            $orderItem->setOrder($order)
-                ->setProduct($productRepository->find($id))
+            $orderItem->setProduct($productRepository->find($id))
                 ->setQuantity($quantity)
             ;
-
-            $this->entityManager->persist($orderItem);
+            $order->addOrderItem($orderItem);
         }
 
+        $this->entityManager->persist($order);
         $this->entityManager->flush();
         $this->orderSessionStorage->setOrderId($order->getId());
     }
@@ -147,7 +145,6 @@ class OrderManager
 
     public function checkUpdateAndFixOrder(Order $order): bool
     {
-        $this->entityManager->refresh($order);
         $orderItemArray = $order->getOrderItems()->getValues();
         $orderSession = $this->getOrderSession();
         $orderSessionCalc = $orderSession;
@@ -168,7 +165,7 @@ class OrderManager
             }
             // if the quantity has changed
             elseif ($orderSession[$orderItem->getProduct()->getId()] != $orderItem->getQuantity()) {
-                $orderSession[$orderItem->getProduct()->getId()] = $orderItem->getQuantity();
+                $orderItem->setQuantity($orderSession[$orderItem->getProduct()->getId()]);
                 unset($orderSessionCalc[$orderItem->getProduct()->getId()]);
             }
             // if the orderItem didn't change
@@ -181,11 +178,11 @@ class OrderManager
         if (!empty($orderSessionCalc)) {
             foreach ($orderSessionCalc as $id => $quantity) {
                 $orderItem = new OrderItem();
-                $orderItem->setOrder($order)
-                    ->setProduct($this->entityManager->getRepository(Product::class)->find($id))
+                $orderItem->setProduct($this->entityManager->getRepository(Product::class)->find($id))
                     ->setQuantity($quantity)
                 ;
-                $this->entityManager->persist($orderItem);
+                $order->addOrderItem($orderItem);
+                // $this->entityManager->persist($orderItem);
             }
         }
 
