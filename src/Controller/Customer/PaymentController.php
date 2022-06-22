@@ -2,10 +2,12 @@
 
 namespace App\Controller\Customer;
 
+use App\Entity\DeliveryAddress;
 use App\Entity\PromotionCode;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
+use App\Service\AddressesService;
 use App\Service\PromotionCodeService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class PaymentController extends AbstractController
 {
+    private AddressesService $addressesService;
     private OrderManager $orderManager;
 
-    public function __construct(OrderManager $orderManager)
+    public function __construct(AddressesService $addressesService, OrderManager $orderManager)
     {
+        $this->addressesService = $addressesService;
         $this->orderManager = $orderManager;
     }
 
@@ -39,6 +43,12 @@ class PaymentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $order->setPromotionCode(null);
+
+            $order->setShipping($form->getData()['shipping']);
+            if ($order->getShipping()->getName() === "Livraison Mondial Relais") {
+               $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
+            }
+
             if ($form->getData()['promotion_code'] !== null) {
                 $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
                 if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
@@ -49,7 +59,6 @@ class PaymentController extends AbstractController
                 $order->setPromotionCode($promotionCode);
             }
 
-            $order->setShipping($form->getData()['shipping']);
             $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
         }
@@ -97,7 +106,7 @@ class PaymentController extends AbstractController
         }
 
         // if the payment is not succeeded, return an error 500
-        $stripeService->createBillingAndDeliveryAddresses($order, $entityManager);
+        $stripeService->createBillingAndDeliveryAddresses($order, $this->addressesService, $entityManager);
 
         $stripeService->checkAfterSucceededPayment($order, $entityManager);
 

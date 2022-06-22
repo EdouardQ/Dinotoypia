@@ -1,5 +1,20 @@
 // Initialiser le widget après le chargement complet de la page
 $(document).ready(function() {
+    // Toggle le div contenant le widget
+    var widget = $('#mondial_relais_widget')[0]; // get the div
+    var shipping_input = $('#checkout_form_shipping');
+
+    widget.style.display = 'none';
+
+    shipping_input.change(function () {
+        if (shipping_input.val() === '3') {
+           widget.style.display = 'block';
+        }
+        else {
+            widget.style.display = 'none';
+        }
+    })
+
     // Charge le widget dans la DIV d'id "Zone_Widget" avec les paramètres indiqués
     $("#Zone_Widget").MR_ParcelShopPicker({
         //
@@ -8,9 +23,9 @@ $(document).ready(function() {
         // Selecteur de l'élément dans lequel est envoyé l'ID du Point Relais (ex: input hidden)
         Target: "#Target_Widget",
         // Selecteur de l'élément dans lequel est envoyé l'ID du Point Relais pour affichage
-        // TargetDisplay: "#TargetDisplay_Widget",
+        TargetDisplay: "#TargetDisplay_Widget",
         // Selecteur de l'élément dans lequel sont envoysé les coordonnées complètes du point relais
-        // TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
+        TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
         //
         // Paramétrage du widget pour obtention des point relais.
         //
@@ -32,23 +47,21 @@ $(document).ready(function() {
         ShowResultsOnMap: true,
         // Afficher les informations du point relais à la sélection sur la carte?
         DisplayMapInfo: true,
-        // Enable Responsive (nb: non responsive corresponds to the Widget used in older versions=
-        Responsive: true,
+        // Activer la recherche de la position lorsque le navigateur de l'utilisateur le supporte?
+        EnableGeolocalisatedSearch: "true",
         // Fonction de callback déclenché lors de la selection d'un Point Relais
         OnParcelShopSelected:
         // Fonction de traitement à la sélection du point relais.
         // Remplace les données de cette page par le contenu de la variable data.
         // data: les informations du Point Relais
             function(data) {
-                $("#cb_id").val(data.ID);
-                // $("#cb_Nom").html(data.Nom);
                 $("#cb_address").val(data.Adresse1);
                 if (data.Adresse2 != null) {
                     $("#cb_address").val(data.Adresse1 + ' ' + data.Adresse2);
                 }
                 $("#cb_post_code").val(data.CP);
                 $("#cb_city").val(data.Ville);
-                // $("#cb_Pays").html(data.Pays);
+                $("#cb_country").val(data.Pays);
             }
         //
         // Autres paramétrages.
@@ -63,8 +76,6 @@ $(document).ready(function() {
         // AllowedCountries: "FR,ES",
         // Force l'utilisation de Google Map si la librairie est présente?
         // EnableGmap: true,
-        // Activer la recherche de la position lorsque le navigateur de l'utilisateur le supporte?
-        // EnableGeolocalisatedSearch: "true",
         // Spécifier l'utilisation de votre feuille de style CSS lorsque vous lui donnez la valeur "0"
         // CSS: "1",
         // Activer le zoom on scroll sur la carte des résultats?
@@ -72,4 +83,5 @@ $(document).ready(function() {
         // Activer le mode Street View sur la carte des résultats (attention aux quotas imposés par Google)
         // MapStreetView: "false"
     });
+
 });

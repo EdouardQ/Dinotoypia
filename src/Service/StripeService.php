@@ -38,6 +38,27 @@ class StripeService
 
 
         if ($order->getPromotionCode()) {
+            if ($order->getShipping()->getName() == "Livraison Mondial Relais") {
+                $sessionStripe = $this->stripe->checkout->sessions->create([
+                    'mode' => 'payment',
+                    'success_url' => $domain.'/payment/succeeded-payment',
+                    'cancel_url' => $domain.'/payment/failed-payment',
+                    'expires_at' => time()+$expireAt,
+                    'customer' => $order->getCustomer()->getStripeId(),
+                    'line_items' => $order->getStripeLineItems(),
+                    'payment_method_types' => ['card'],
+                    'shipping_options' => [
+                        ['shipping_rate' => $order->getShipping()->getStripeId()]
+                    ],
+                    'billing_address_collection' => 'required',
+                    'discounts' => [
+                        ['promotion_code' => $order->getPromotionCode()->getStripeId()]
+                    ]
+                ]);
+
+                return $sessionStripe;
+            }
+            // else
             $sessionStripe = $this->stripe->checkout->sessions->create([
                 'mode' => 'payment',
                 'success_url' => $domain.'/payment/succeeded-payment',
@@ -58,7 +79,26 @@ class StripeService
 
             return $sessionStripe;
         }
+        // else
 
+        if ($order->getShipping()->getName() == "Livraison Mondial Relais") {
+            $sessionStripe = $this->stripe->checkout->sessions->create([
+                'mode' => 'payment',
+                'success_url' => $domain.'/payment/succeeded-payment',
+                'cancel_url' => $domain.'/payment/failed-payment',
+                'expires_at' => time()+$expireAt,
+                'customer' => $order->getCustomer()->getStripeId(),
+                'line_items' => $order->getStripeLineItems(),
+                'payment_method_types' => ['card'],
+                'shipping_options' => [
+                    ['shipping_rate' => $order->getShipping()->getStripeId()]
+                ],
+                'billing_address_collection' => 'required',
+            ]);
+
+            return $sessionStripe;
+        }
+        // else
         $sessionStripe = $this->stripe->checkout->sessions->create([
             'mode' => 'payment',
             'success_url' => $domain.'/payment/succeeded-payment',
@@ -77,33 +117,33 @@ class StripeService
         return $sessionStripe;
     }
 
-    public function createBillingAndDeliveryAddresses(Order $order, EntityManagerInterface $entityManager): void
+    public function createBillingAndDeliveryAddresses(Order $order, AddressesService $addressesService, EntityManagerInterface $entityManager): void
     {
         $payment = $this->stripe->paymentIntents->retrieve($order->getPaymentStripeId(), ['expand' => ['payment_method', 'shipping']]);
 
-        $delivery = new DeliveryAddress();
-        $delivery->setAddress($payment->payment_method->billing_details->address['line1']);
-        if ($payment->shipping->address['line2'] !== null) {
-            $delivery->setAddress($payment->shipping->address['line1'] . ' ' . $payment->shipping->address['line2']);
-        }
-        $delivery->setPostCode($payment->shipping->address['postal_code'])
-            ->setCity($payment->shipping->address['city'])
-            ->setCountry($payment->shipping->address['country'])
-            ->addOrder($order)
-        ;
-        $entityManager->persist($delivery);
+        if (!$order->getDeliveryAddress()) {
+            $dataDelivery['address'] = $payment->shipping->address['line1'];
+            if ($payment->shipping->address['line2'] !== null) {
+                $dataDelivery['address'] = $payment->shipping->address['line1'] . ' ' . $payment->shipping->address['line2'];
+            }
+            $dataDelivery['postCode'] = $payment->shipping->address['postal_code'];
+            $dataDelivery['city'] = $payment->shipping->address['city'];
+            $dataDelivery['country'] = $payment->shipping->address['country'];
 
-        $billing = new BillingAddress();
-        $billing->setAddress($payment->payment_method->billing_details->address['line1']);
-        if ($payment->payment_method->billing_details->address['line2'] !== null) {
-            $billing->setAddress($payment->payment_method->billing_details->address['line1'] . ' ' . $payment->payment_method->billing_details->address['line2']);
+            $addressesService->addDeliveryAddressToOrder($order, $dataDelivery, $entityManager);
         }
-        $billing->setPostCode($payment->payment_method->billing_details->address['postal_code'])
-            ->setCity($payment->payment_method->billing_details->address['city'])
-            ->setCountry($payment->payment_method->billing_details->address['country'])
-            ->addOrder($order)
-        ;
-        $entityManager->persist($billing);
+
+
+        $dataBilling['address'] = $payment->payment_method->billing_details->address['line1'];
+        if ($payment->payment_method->billing_details->address['line2'] !== null) {
+            $dataBilling['address'] = $payment->payment_method->billing_details->address['line1'] . ' ' . $payment->payment_method->billing_details->address['line2'];
+        }
+        $dataBilling['postCode'] = $payment->payment_method->billing_details->address['postal_code'];
+        $dataBilling['city'] = $payment->payment_method->billing_details->address['city'];
+        $dataBilling['country'] = $payment->payment_method->billing_details->address['country'];
+
+        $addressesService->addBillingAddressToOrder($order, $dataBilling, $entityManager);
+
 
         $order->setState($entityManager->getRepository(State::class)->findOneBy(["code" => "in_delevery"]));
 

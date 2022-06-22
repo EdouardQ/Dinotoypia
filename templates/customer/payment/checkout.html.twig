@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
 {% block body %}
     <br>
     <section>
@@ -20,7 +24,23 @@
                 <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
                 <br><br>
             </div>
+
+            <div id="mondial_relais_widget" class="m-auto text-center">
+                <div id="Zone_Widget" class="d-inline-block"></div>
+                <div class="text-center m-auto d-inline-block">
+                    Point Relais sélectionné : <br> <span id="TargetDisplayInfoPR_Widget"></span>
+                    <input type="hidden" id="cb_address" name="address" />
+                    <input type="hidden" id="cb_post_code" name="post_code" />
+                    <input type="hidden" id="cb_city" name="city" />
+                    <input type="hidden" id="cb_country" name="country" />
+                </div>
+            </div>
         {{ form_end(form) }}
     </section>
 {% endblock %}
 
+{% block javascripts %}
+    <script src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{{ asset('js/relay_point.js') }}"></script>
+{% endblock %}
