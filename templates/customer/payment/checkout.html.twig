@@ -9,6 +9,11 @@
     <section>
         {{ form_start(form) }}
             <div class="text-center w-50 m-auto">
+                {% for message in app.flashes('mondialRelaisNotice') %}
+                    <p class="alert-danger">
+                        {{ message }}
+                    </p>
+                {% endfor %}
                 <br>
                 {{ form_label(form.shipping, "Mode livraison") }}
                 {{ form_widget(form.shipping) }}
@@ -29,6 +34,7 @@
                 <div id="Zone_Widget" class="d-inline-block"></div>
                 <div class="text-center m-auto d-inline-block">
                     Point Relais sélectionné : <br> <span id="TargetDisplayInfoPR_Widget"></span>
+                    <input type="hidden" id="cb_id" name="id" />
                     <input type="hidden" id="cb_address" name="address" />
                     <input type="hidden" id="cb_post_code" name="post_code" />
                     <input type="hidden" id="cb_city" name="city" />

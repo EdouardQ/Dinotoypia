@@ -2,7 +2,6 @@
 
 namespace App\Controller\Customer;
 
-use App\Entity\DeliveryAddress;
 use App\Entity\PromotionCode;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
@@ -46,6 +45,10 @@ class PaymentController extends AbstractController
 
             $order->setShipping($form->getData()['shipping']);
             if ($order->getShipping()->getName() === "Livraison Mondial Relais") {
+                if ($request->request->get('id') === "") {
+                    $this->addFlash('mondialRelaisNotice', "Veuillez sélectionner un point relais");
+                    return $this->redirectToRoute('customer.payment.checkout');
+                }
                $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
             }
 

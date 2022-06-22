@@ -55,6 +55,7 @@ $(document).ready(function() {
         // Remplace les données de cette page par le contenu de la variable data.
         // data: les informations du Point Relais
             function(data) {
+                $("#cb_id").val(data.ID);
                 $("#cb_address").val(data.Adresse1);
                 if (data.Adresse2 != null) {
                     $("#cb_address").val(data.Adresse1 + ' ' + data.Adresse2);
