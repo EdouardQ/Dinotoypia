@@ -23,7 +23,7 @@ class CustomerCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['email', 'roles', 'firstName', 'lastName'])
+            ->setSearchFields(['email', 'firstName', 'lastName'])
             ->setEntityLabelInSingular('Client')
             ->setEntityLabelInPlural('Clients')
             ->setEntityPermission('ROLE_ADMIN')
