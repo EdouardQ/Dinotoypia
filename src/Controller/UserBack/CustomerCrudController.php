@@ -43,10 +43,6 @@ class CustomerCrudController extends AbstractCrudController
             EmailField::new('email'),
             TextField::new('firstName')->setLabel('Prénom'),
             TextField::new('lastName')->setLabel('Nom'),
-            TextField::new('address')->setLabel('Adresse'),
-            TextField::new('city')->setLabel('Ville'),
-            TextField::new('postCode')->setLabel('Code postal'),
-            CountryField::new('country')->setLabel('Pays'),
             TelephoneField::new('phone')->setLabel('Téléphone'),
         ];
     }
