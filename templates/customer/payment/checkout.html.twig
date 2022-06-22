@@ -7,7 +7,7 @@
 {% block body %}
     <br>
     <section>
-        {{ form_start(form) }}
+        {{ form_start(form, {attr: {id: "checkout_form"}}) }}
             <div class="text-center w-50 m-auto">
                 {% for message in app.flashes('mondialRelaisNotice') %}
                     <p class="alert-danger">
@@ -26,13 +26,14 @@
                 {{ form_label(form.promotion_code, "Code Promo") }}
                 {{ form_widget(form.promotion_code) }}
                 <br>
-                <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
+                    <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
                 <br><br>
             </div>
 
             <div id="mondial_relais_widget" class="m-auto text-center">
                 <div id="Zone_Widget" class="d-inline-block"></div>
                 <div class="text-center m-auto d-inline-block">
+                    <span id="widgetFormError"></span>
                     Point Relais sélectionné : <br> <span id="TargetDisplayInfoPR_Widget"></span>
                     <input type="hidden" id="cb_id" name="id" />
                     <input type="hidden" id="cb_address" name="address" />
