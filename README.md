@@ -41,7 +41,7 @@
 
  - ~~contraintes stock~~
 
- - stripe stock
+ - ~~stripe stock~~
 
 ### Marc et Jonas
 

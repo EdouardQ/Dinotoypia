@@ -14,6 +14,7 @@ use App\Entity\RefurbishedToy;
 use App\Entity\RefurbishState;
 use App\Entity\Shipping;
 use App\Entity\State;
+use App\Entity\ToyCondition;
 use App\Entity\UserBack;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -57,6 +58,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::section('Reconditionnement'),
             MenuItem::linkToCrud('Jouets reconditionnés', 'fa fa-tags', RefurbishedToy::class),
             MenuItem::linkToCrud('États', 'fa fa-tags', RefurbishState::class)->setPermission('ROLE_DEV'),
+            MenuItem::linkToCrud('Condition', 'fa fa-tags', ToyCondition::class)->setPermission('ROLE_DEV'),
 
             MenuItem::section(""), // to keep empty
             MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class),

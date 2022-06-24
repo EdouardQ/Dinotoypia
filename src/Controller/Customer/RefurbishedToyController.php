@@ -21,6 +21,7 @@ class RefurbishedToyController extends AbstractController
         $form = $this->createForm(RefurbishedToyFormType::class, $entity)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setCustomer($this->getUser());
             $entity->setState($entityManager->getRepository(RefurbishState::class)->findOneBy(['code' => 'waiting_deposit']));
             $entityManager->persist($entity);
             $entityManager->flush();

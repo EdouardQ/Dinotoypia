@@ -1,0 +1,9 @@
+{% if field.value %}
+    {% if ea.crud.currentAction == 'detail' %}
+        <a target="_blank" rel="noopener" href="{{ url('user_back.refurbished_toy.image', {fileName: field.value}) }}">{{ field.value }}</a>
+    {% else %}
+        <a target="_blank" rel="noopener" href="{{ url('user_back.refurbished_toy.image', {fileName: field.value}) }}">{{ field.formattedValue }}</a>
+    {% endif %}
+{% else %}
+
+{% endif %}
