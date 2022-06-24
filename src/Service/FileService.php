@@ -29,6 +29,6 @@ class FileService
         $this->fileName = "$name.$extension";
 
         // file transfer
-        $refurbishedToy->getImage()->move($this->kernel->getProjectDir() . "/src/RefurbishedToyImage/", $this->fileName);
+        $refurbishedToy->getImage()->move($this->kernel->getProjectDir() . "/var/img/", $this->fileName);
     }
 }

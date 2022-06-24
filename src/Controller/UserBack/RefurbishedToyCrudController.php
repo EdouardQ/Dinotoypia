@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
@@ -33,7 +34,10 @@ class RefurbishedToyCrudController extends AbstractCrudController
             TextField::new('barCodeNumber')->setLabel('Numéro - code barre')->onlyOnIndex(),
             AssociationField::new('customer')->setLabel('Client'),
             DateTimeField::new('createdAt')->setLabel('Créé le')->onlyOnIndex(),
-            UrlField::new('image')->setTemplatePath('user_back/refurbished_toy_crud/url_field.html.twig'),
+            ImageField::new('image')
+                ->setTemplatePath('user_back/refurbished_toy_crud/image_field.html.twig')
+                ->setLabel('Image')
+                ->onlyOnIndex(),
             AssociationField::new('state')->setLabel('État'),
         ];
     }
