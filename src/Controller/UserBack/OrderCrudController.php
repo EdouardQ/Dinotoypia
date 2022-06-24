@@ -39,7 +39,7 @@ class OrderCrudController extends AbstractCrudController
             DateTimeField::new('createdAt')->setLabel("crée le")->onlyOnIndex(),
             DateField::new('estimatedDelivery')->setLabel('Date de livraison estimée')->hideWhenCreating(),
             ArrayField::new('orderItems')
-                ->setTemplatePath('user_back/dashboard/order_items_table.html.twig')
+                ->setTemplatePath('user_back/order_crud/order_items_table.html.twig')
                 ->setLabel("Produit - Prix unitaire - Quantité")
                 ->onlyOnIndex(),
             MoneyField::new('totalPriceOfOrderItems')

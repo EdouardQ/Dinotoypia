@@ -3,6 +3,10 @@
 ## Numéro de carte de crédit test
 
 4242 4242 4242 42442 ou https://stripe.com/docs/testing
+
+## barcode.tec-it.com
+
+https://barcode.tec-it.com/fr/
     
 ## Authors
 

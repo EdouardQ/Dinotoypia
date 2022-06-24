@@ -5,6 +5,7 @@ namespace App\Controller\Customer;
 use App\Entity\RefurbishedToy;
 use App\Entity\RefurbishState;
 use App\Form\RefurbishedToyFormType;
+use App\Repository\RefurbishedToyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,16 +29,22 @@ class RefurbishedToyController extends AbstractController
 
             return $this->redirectToRoute('customer.refurbished_toy.validation', ['id' => $entity->getId()]);
         }
-        
+
         return $this->render('customer/refurbished_toy/form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     #[Route('/refurbishment/validation/{id}', name: 'customer.refurbished_toy.validation')]
-    public function validation(RefurbishedToy $refurbishedToy): Response
+    public function validation(int $id = null, RefurbishedToyRepository $refurbishedToyRepository): Response
     {
-        dd($refurbishedToy);
+        $refurbishedToy = $refurbishedToyRepository->find($id);
+        if ($refurbishedToy === null || $refurbishedToy->getCustomer() !== $this->getUser()) {
+            return $this->redirectToRoute('homepage.index');
+        }
+        return $this->render('customer/refurbished_toy/validation.html.twig', [
+            'refurbishedToy' => $refurbishedToy
+        ]);
     }
 
 }
