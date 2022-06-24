@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220621162735 extends AbstractMigration
+final class Version20220624122626 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -33,10 +33,11 @@ final class Version20220621162735 extends AbstractMigration
         $this->addSql('CREATE TABLE product_category (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE promotion_code (id INT AUTO_INCREMENT NOT NULL, customer_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', expires_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', use_limit INT DEFAULT NULL, amount NUMERIC(5, 2) NOT NULL, amount_type VARCHAR(255) NOT NULL, stripe_id VARCHAR(255) NOT NULL, coupon_stripe_id VARCHAR(255) NOT NULL, comments LONGTEXT DEFAULT NULL, type VARCHAR(255) NOT NULL, minimum_amount NUMERIC(6, 2) DEFAULT NULL, first_time_transaction TINYINT(1) NOT NULL, use_limit_per_customer INT NOT NULL, INDEX IDX_C1EFB8079395C3F3 (customer_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE refurbish_state (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE refurbished_toy (id INT AUTO_INCREMENT NOT NULL, customer_id INT DEFAULT NULL, state_id INT NOT NULL, bar_code_number VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', name VARCHAR(255) NOT NULL, INDEX IDX_4533C8649395C3F3 (customer_id), INDEX IDX_4533C8645D83CC1 (state_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE refurbished_toy (id INT AUTO_INCREMENT NOT NULL, customer_id INT DEFAULT NULL, state_id INT NOT NULL, toy_condition_id INT NOT NULL, bar_code_number VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', name VARCHAR(255) NOT NULL, image VARCHAR(255) DEFAULT NULL, INDEX IDX_4533C8649395C3F3 (customer_id), INDEX IDX_4533C8645D83CC1 (state_id), INDEX IDX_4533C864683BC92D (toy_condition_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE reset_password_request (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, selector VARCHAR(20) NOT NULL, hashed_token VARCHAR(100) NOT NULL, requested_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', expires_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_7CE748AA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE shipping (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, stripe_id VARCHAR(255) NOT NULL, fee NUMERIC(5, 2) NOT NULL, active TINYINT(1) NOT NULL, delivery_estimate_minimum INT NOT NULL, delivery_estimate_maximum INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE state (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE toy_condition (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user_back (id INT AUTO_INCREMENT NOT NULL, created_by_id INT DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON DEFAULT NULL, password VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', UNIQUE INDEX UNIQ_174F8DFEE7927C74 (email), INDEX IDX_174F8DFEB03A8386 (created_by_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE customer ADD CONSTRAINT FK_81398E0923D6A298 FOREIGN KEY (civility_id) REFERENCES civility (id)');
         $this->addSql('ALTER TABLE image ADD CONSTRAINT FK_C53D045F4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
@@ -54,6 +55,7 @@ final class Version20220621162735 extends AbstractMigration
         $this->addSql('ALTER TABLE promotion_code ADD CONSTRAINT FK_C1EFB8079395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id)');
         $this->addSql('ALTER TABLE refurbished_toy ADD CONSTRAINT FK_4533C8649395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id)');
         $this->addSql('ALTER TABLE refurbished_toy ADD CONSTRAINT FK_4533C8645D83CC1 FOREIGN KEY (state_id) REFERENCES refurbish_state (id)');
+        $this->addSql('ALTER TABLE refurbished_toy ADD CONSTRAINT FK_4533C864683BC92D FOREIGN KEY (toy_condition_id) REFERENCES toy_condition (id)');
         $this->addSql('ALTER TABLE reset_password_request ADD CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES customer (id)');
         $this->addSql('ALTER TABLE user_back ADD CONSTRAINT FK_174F8DFEB03A8386 FOREIGN KEY (created_by_id) REFERENCES user_back (id)');
     }
@@ -77,6 +79,7 @@ final class Version20220621162735 extends AbstractMigration
         $this->addSql('ALTER TABLE refurbished_toy DROP FOREIGN KEY FK_4533C8645D83CC1');
         $this->addSql('ALTER TABLE `order` DROP FOREIGN KEY FK_F52993984887F3F8');
         $this->addSql('ALTER TABLE `order` DROP FOREIGN KEY FK_F52993985D83CC1');
+        $this->addSql('ALTER TABLE refurbished_toy DROP FOREIGN KEY FK_4533C864683BC92D');
         $this->addSql('ALTER TABLE log DROP FOREIGN KEY FK_8F3F68C5A76ED395');
         $this->addSql('ALTER TABLE user_back DROP FOREIGN KEY FK_174F8DFEB03A8386');
         $this->addSql('DROP TABLE billing_address');
@@ -96,6 +99,7 @@ final class Version20220621162735 extends AbstractMigration
         $this->addSql('DROP TABLE reset_password_request');
         $this->addSql('DROP TABLE shipping');
         $this->addSql('DROP TABLE state');
+        $this->addSql('DROP TABLE toy_condition');
         $this->addSql('DROP TABLE user_back');
     }
 }

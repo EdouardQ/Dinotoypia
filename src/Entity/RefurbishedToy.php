@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RefurbishedToyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass=RefurbishedToyRepository::class)
@@ -42,6 +43,17 @@ class RefurbishedToy
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ToyCondition::class, inversedBy="refurbishedToys")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $toyCondition;
 
     public function getId(): ?int
     {
@@ -104,6 +116,30 @@ class RefurbishedToy
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getImage(): null|string|UploadedFile
+    {
+        return $this->image;
+    }
+
+    public function setImage(null|string|UploadedFile $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getToyCondition(): ?ToyCondition
+    {
+        return $this->toyCondition;
+    }
+
+    public function setToyCondition(?ToyCondition $toyCondition): self
+    {
+        $this->toyCondition = $toyCondition;
 
         return $this;
     }

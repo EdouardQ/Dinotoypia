@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <br>
+    <section>
+        <div class="row w-50 m-auto">
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_label(form.name, "Nom") }}
+            {{ form_widget(form.name) }}
+            <br>
+            {{ form_label(form.toyCondition, "État") }}
+            {{ form_widget(form.toyCondition) }}
+            <br>
+            {{ form_label(form.image, "Image") }}
+            {{ form_widget(form.image) }}
+            <br>
+            <input type="submit" class="btn btn-primary" value="Confirmer">
+
+        {{ form_end(form) }}
+
+        </div>
+    </section>
+{% endblock %}

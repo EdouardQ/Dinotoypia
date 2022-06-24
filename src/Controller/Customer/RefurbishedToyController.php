@@ -2,17 +2,34 @@
 
 namespace App\Controller\Customer;
 
+use App\Entity\RefurbishedToy;
+use App\Entity\RefurbishState;
+use App\Form\RefurbishedToyFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/my-account')]
 class RefurbishedToyController extends AbstractController
 {
-    #[Route('/refurbishment', name: 'customer.refurbished_toy.index')]
-    public function index(): Response
+    #[Route('/refurbishment', name: 'customer.refurbished_toy.form')]
+    public function form(EntityManagerInterface $entityManager, Request $request): Response
     {
-        return $this->render('customer/refurbished_toy/index.html.twig');
+        $entity = new RefurbishedToy();
+        $form = $this->createForm(RefurbishedToyFormType::class, $entity)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setState($entityManager->getRepository(RefurbishState::class)->findOneBy(['code' => 'waiting_deposit']));
+            $entityManager->persist($entity);
+            $entityManager->flush();
+        }
+
+
+        return $this->render('customer/refurbished_toy/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
 }
