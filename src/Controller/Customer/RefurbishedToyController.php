@@ -25,12 +25,19 @@ class RefurbishedToyController extends AbstractController
             $entity->setState($entityManager->getRepository(RefurbishState::class)->findOneBy(['code' => 'waiting_deposit']));
             $entityManager->persist($entity);
             $entityManager->flush();
+
+            return $this->redirectToRoute('customer.refurbished_toy.validation', ['id' => $entity->getId()]);
         }
-
-
+        
         return $this->render('customer/refurbished_toy/form.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/refurbishment/validation/{id}', name: 'customer.refurbished_toy.validation')]
+    public function validation(RefurbishedToy $refurbishedToy): Response
+    {
+        dd($refurbishedToy);
     }
 
 }

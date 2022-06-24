@@ -31,4 +31,9 @@ class FileService
         // file transfer
         $refurbishedToy->getImage()->move($this->kernel->getProjectDir() . "/var/img/", $this->fileName);
     }
+
+    public function ImageFromRefurbishedToyForm(string $fileName): void
+    {
+        @unlink($this->kernel->getProjectDir() . "/var/img/" . $fileName);
+    }
 }

@@ -138,6 +138,12 @@ class EntitySubscriber implements EventSubscriberInterface
         elseif ($entity instanceof Shipping && $args->hasChangedField('active')) {
             $this->stripeService->updateShipping($entity);
         }
+        elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
+            if ($entity->getState()->getCode() === 'refurbish' || $entity->getState()->getCode() === 're-sale') {
+                $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
+                $entity->setImage(null);
+            }
+        }
     }
 
     public function preRemove(LifecycleEventArgs $args): void
