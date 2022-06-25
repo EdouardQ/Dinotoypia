@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <br>
+    <section class="w-25 text-center m-auto">
+        <h2>Modifier ses informations</h2>
+
+        {% for message in app.flashes('customerEmailNotice') %}
+            <p class="alert alert-success">{{ message }}</p>
+        {% endfor %}
+        {% for message in app.flashes('customerNotice') %}
+            <p class="alert alert-success">{{ message }}</p>
+        {% endfor %}
+
+        {{ form_start(form) }}
+        <div class="col">
+            {{ form_label(form.email, 'Adresse email: ') }}
+            {{ form_widget(form.email) }}
+            <br>
+            {{ form_label(form.civility, 'Civilité: ') }}
+            {{ form_widget(form.civility) }}
+            <br>
+            {{ form_label(form.lastName, 'Nom: ') }}
+            {{ form_widget(form.lastName) }}
+            <br>
+            {{ form_label(form.firstName, 'Prénom: ') }}
+            {{ form_widget(form.firstName) }}
+            <br>
+            {{ form_label(form.phone, 'Téléphone: ') }}
+            {{ form_widget(form.phone) }}
+            <br>
+            <input type="submit" class="btn btn-primary" value="Modifier">
+        </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

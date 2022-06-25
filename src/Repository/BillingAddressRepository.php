@@ -39,6 +39,13 @@ class BillingAddressRepository extends ServiceEntityRepository
         }
     }
 
+    public function findUnusedBillingAddress(): array
+    {
+        $sql = "SELECT ba FROM App\Entity\BillingAddress ba WHERE NOT EXISTS (SELECT o FROM App\Entity\Order o WHERE o.billingAddress = ba.id)";
+        $query = $this->getEntityManager()->createQuery($sql);
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return BillingAddress[] Returns an array of BillingAddress objects
 //     */

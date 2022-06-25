@@ -1,2 +1,26 @@
 {% extends "base.html.twig" %}
-{% block body %}OK{% endblock %}
+{% block body %}
+<section class="m-auto text-center">
+    <div class="row m-auto">
+        <h1>Votre Compte</h1>
+        <br><br><br>
+        <div class="col-md-6">
+            <a href="{{ url('customer.orders.index') }}">
+                <div class="card">
+                    <h3 class="card-title">Vos commandes</h3>
+                    <div class="card-body">Suivi des commandes</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{{ url('customer.customer.index') }}">
+                <div class="card">
+                    <h3 class="card-title">Mes Infos</h3>
+                    <div class="card-body">Consulter et modifier mes informations</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

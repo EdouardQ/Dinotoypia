@@ -1,8 +1,11 @@
 nav {
     position: relative;
-    background-color: #333;
+    /*background-color: #540b0e;*/
+    background-color: #5B3C11;
     text-align: center;
     margin: auto;
+    border-bottom: solid 1px black;
+    box-shadow: 1px 1px 5px black;
 }
 
 .nav-logo {

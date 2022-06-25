@@ -22,8 +22,12 @@ class StateFixtures extends Fixture
             'code' => 'in_delevery'
         ],
         [
-            'name' => "Livré",
+            'name' => "Livrée",
             'code' => 'delivered'
+        ],
+        [
+            'name' => 'Annulée / Remboursée',
+            'code' => 'cancel'
         ]
     ];
 

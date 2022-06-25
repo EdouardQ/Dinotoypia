@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class RefurbishedToyCrudController extends AbstractCrudController
@@ -21,7 +22,7 @@ class RefurbishedToyCrudController extends AbstractCrudController
         return $crud
             ->setSearchFields(['name', 'barCodeNumber','customer.firstName', 'customer.lastName', 'createdAt', 'state.name'])
             ->setEntityLabelInSingular('Jouet reconditionné')
-            ->setEntityLabelInPlural('Jouet reconditionné')
+            ->setEntityLabelInPlural('Jouets reconditionnés')
             ;
     }
 
@@ -32,8 +33,11 @@ class RefurbishedToyCrudController extends AbstractCrudController
             TextField::new('barCodeNumber')->setLabel('Numéro - code barre')->onlyOnIndex(),
             AssociationField::new('customer')->setLabel('Client'),
             DateTimeField::new('createdAt')->setLabel('Créé le')->onlyOnIndex(),
+            ImageField::new('image')
+                ->setTemplatePath('user_back/refurbished_toy_crud/image_field.html.twig')
+                ->setLabel('Image')
+                ->onlyOnIndex(),
             AssociationField::new('state')->setLabel('État'),
         ];
     }
-
 }

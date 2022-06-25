@@ -44,7 +44,6 @@ class EmailVerifier
 
         $email->context($context);
 
-        dd($this->prod);
         // send mail if prod env
         if ($this->prod) {
             $this->mailer->send($email);

@@ -81,6 +81,11 @@ class Order
      */
     private $deliveryAddress;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $refundStripeId;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -325,4 +330,27 @@ class Order
 
         return $this;
     }
+
+    public function isInStock(): bool
+    {
+        foreach ($this->getOrderItems()->getValues() as $orderItem) {
+            if ($orderItem->getProduct()->getStock() < $orderItem->getQuantity()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function getRefundStripeId(): ?string
+    {
+        return $this->refundStripeId;
+    }
+
+    public function setRefundStripeId(?string $refundStripeId): self
+    {
+        $this->refundStripeId = $refundStripeId;
+
+        return $this;
+    }
+
 }

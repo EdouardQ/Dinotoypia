@@ -23,6 +23,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.name like :str')
+            ->andWhere('p.visible = 1')
             ->setParameter('str', '%'.$str.'%')
         ;
         if ($max != 0) {

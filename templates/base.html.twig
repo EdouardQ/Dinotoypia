@@ -17,8 +17,18 @@
         <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
-        {% include 'inc/nav.html.twig' %}
-        {% block body %}{% endblock %}
+        <header>
+            {% include 'inc/nav.html.twig' %}
+        </header>
+
+        {% block body %}
+
+        {% endblock %}
+
+        <footer>
+
+        </footer>
+
 
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('js/live_search.js') }}"></script>

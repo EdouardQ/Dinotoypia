@@ -2,10 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Civility;
 use App\Entity\Customer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -49,34 +50,9 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('address', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir une adresse'
-                    ])
-                ]
-            ])
-            ->add('city', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir une ville'
-                    ])
-                ]
-            ])
-            ->add('postCode', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un code postal'
-                    ])
-                ]
-            ])
-            ->add('country', CountryType::class, [
-                'preferred_choices' => ['FR', 'DE', 'BE', 'ES', 'CH'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un pays'
-                    ])
-                ]
+            ->add('civility', EntityType::class, [
+                'class' => Civility::class,
+                'choice_label' => 'name'
             ])
             ->add('phone', TelType::class, [
                 'constraints' => [
@@ -101,12 +77,11 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'invalid_message' => "Les deux mots de passe doivent être identiques",
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez saisir un mot de passe',
@@ -116,7 +91,7 @@ class RegistrationFormType extends AbstractType
                     ),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),

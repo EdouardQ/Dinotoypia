@@ -6,6 +6,7 @@ use App\Entity\PromotionCode;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
+use App\Service\AddressesService;
 use App\Service\PromotionCodeService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class PaymentController extends AbstractController
 {
+    private AddressesService $addressesService;
     private OrderManager $orderManager;
 
-    public function __construct(OrderManager $orderManager)
+    public function __construct(AddressesService $addressesService, OrderManager $orderManager)
     {
+        $this->addressesService = $addressesService;
         $this->orderManager = $orderManager;
     }
 
@@ -28,11 +31,27 @@ class PaymentController extends AbstractController
     public function delivery(Request $request, EntityManagerInterface $entityManager, PromotionCodeService $promotionCodeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
+
+        if ($this->orderManager->checkUpdateAndFixOrder($order)) {
+            $this->addFlash('outOfStockNotice', "Une erreur est survenue dans votre commande");
+            return $this->redirectToRoute('homepage.summary');
+        }
+
         $form = $this->createForm(CheckoutFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $order->setPromotionCode(null);
+
+            $order->setShipping($form->getData()['shipping']);
+            if ($order->getShipping()->getName() === "Livraison Mondial Relais") {
+                if ($request->request->get('id') === "") {
+                    $this->addFlash('mondialRelaisNotice', "Veuillez sélectionner un point relais");
+                    return $this->redirectToRoute('customer.payment.checkout');
+                }
+               $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
+            }
+
             if ($form->getData()['promotion_code'] !== null) {
                 $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
                 if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
@@ -43,7 +62,6 @@ class PaymentController extends AbstractController
                 $order->setPromotionCode($promotionCode);
             }
 
-            $order->setShipping($form->getData()['shipping']);
             $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
         }
@@ -62,7 +80,10 @@ class PaymentController extends AbstractController
 
         $order = $this->orderManager->getOrder($this->getUser());
 
-        $this->orderManager->checkAndUpdateOrder($order);
+        if ($this->orderManager->checkUpdateAndFixOrder($order)) {
+            $this->addFlash('outOfStockNotice', "Une erreur est survenue dans votre commande");
+            return $this->redirectToRoute('homepage.summary');
+        }
 
         // if the order is empty of orderItems
         if (!$order->hasOrderItems()) {
@@ -77,7 +98,7 @@ class PaymentController extends AbstractController
         return $this->redirect($sessionStripe->url);
     }
 
-    #[Route('/payment-succeeded', name: 'customer.payment.payment_succeeded')]
+    #[Route('/succeeded-payment', name: 'customer.payment.payment_succeeded')]
     public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
@@ -87,13 +108,17 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $stripeService->createBillingAndDeliveryAddresses($order, $entityManager);
+        // if the payment is not succeeded, return an error 500
+        $stripeService->createBillingAndDeliveryAddresses($order, $this->addressesService, $entityManager);
+
+        $stripeService->checkAfterSucceededPayment($order, $entityManager);
+
         $this->orderManager->purgeOrderSession();
 
         return $this->redirectToRoute('homepage.index');
     }
 
-    #[Route('/payment-failed', name: 'customer.payment.payment_failed')]
+    #[Route('/failed-payment', name: 'customer.payment.payment_failed')]
     public function paymentFailed(EntityManagerInterface $entityManager, StripeService $stripeService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());

@@ -1,0 +1,20 @@
+{% set images = field.formattedValue %}
+{% if images is not iterable %}
+    {% set images = [images] %}
+{% endif %}
+
+{% if field.value %}
+    {% for image in images %}
+        {% set html_id = 'ea-lightbox-' ~ field.uniqueId ~ '-' ~ loop.index %}
+        <a href="#" class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#{{ html_id }}">
+            <img src="{{ url('user_back.refurbished_toy.image', {fileName: field.value}) }}" class="img-fluid">
+        </a>
+
+        <div id="{{ html_id }}" class="ea-lightbox">
+            <img src="{{ url('user_back.refurbished_toy.image', {fileName: field.value}) }}">
+        </div>
+    {% endfor %}
+{% else %}
+    <span class="badge badge-secondary">{{ 'label.null'|trans(domain = 'EasyAdminBundle') }}</span>
+{% endif %}
+

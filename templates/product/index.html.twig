@@ -5,7 +5,16 @@
 
     <section>
         <div>
-            <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary">Ajouter au panier</a>
+            {% if product.stock > 0 %}
+                <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary">Ajouter au panier</a>
+            {% else %}
+                <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary disabled">Ajouter au panier</a>
+            {% endif %}
+
+            <p>Stock : {{ product.stock }}</p>
+            {% for message in app.flashes('addToOrderNotice') %}
+                <p class="alert-danger">{{ message }}</p>
+            {% endfor %}
         </div>
     </section>
 

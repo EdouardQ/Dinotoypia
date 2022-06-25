@@ -3,6 +3,10 @@
 ## Numéro de carte de crédit test
 
 4242 4242 4242 42442 ou https://stripe.com/docs/testing
+
+## barcode.tec-it.com
+
+https://barcode.tec-it.com/fr/
     
 ## Authors
 
@@ -27,7 +31,7 @@
 
 ### Edouard
 
- - espace client : à faire (infos perso + précédentes commandes)
+ - ~~espace client : à faire (infos perso + précédentes commandes)~~
 
  - ~~créer un compte client~~
 
@@ -36,6 +40,12 @@
  - ~~tâches cron~~
     
  - ~~serveur smtp~~
+
+ - ~~logs~~
+
+ - ~~contraintes stock~~
+
+ - ~~stripe stock~~
 
 ### Marc et Jonas
 

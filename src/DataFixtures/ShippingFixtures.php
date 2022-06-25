@@ -28,7 +28,7 @@ class ShippingFixtures extends Fixture
         [
             'name' => 'Livraison Mondial Relais',
             'fee' => 5,
-            'active' => false,
+            'active' => true,
             'deliveryEstimateMinimum' => 3,
             'deliveryEstimateMaximum' => 5,
             'stripeId' => 'shr_1KxX47HowZnzDNfSI0w3dtMP'

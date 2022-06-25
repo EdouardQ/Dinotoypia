@@ -26,13 +26,30 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $product = new Product();
-        $product->setName("Figurine DIno")
+        $product->setName("Figurine Dino")
             ->setUrlName("figurine-dino")
             ->setDescription("Figurine de dinosaure - 10 cm de hauteur")
             ->addCategory($this->getReference("figurines"))
             ->setPrice(19)
             ->setProductStripeId("prod_LXhJouJAEZvQj7")
             ->setPriceStripeId("price_1KqbumHowZnzDNfSWAFkk07V")
+            ->setVisible(true)
+            ->setStock(42)
+        ;
+
+        $this->addReference($product->getName(), $product);
+        $manager->persist($product);
+
+        $product = new Product();
+        $product->setName("Flipper JurassicPark")
+            ->setUrlName("flipper-jurassicpark")
+            ->setDescription("Flipper Jurasic Park")
+            ->addCategory($this->getReference("12+"))
+            ->setPrice(250)
+            ->setProductStripeId("prod_Luaopl7ghHmcbb")
+            ->setPriceStripeId("price_1LClckHowZnzDNfSIHuGLniK")
+            ->setVisible(true)
+            ->setStock(10)
         ;
 
         $this->addReference($product->getName(), $product);
@@ -50,6 +67,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                     ->setPriceStripeId("n/a")
                     ->addCategory($this->getReference($this->ages[$i % sizeof($this->ages)]))
                     ->addCategory($this->getReference($this->categories[$i % sizeof($this->categories)]))
+                    ->setVisible(true)
+                    ->setStock($faker->numberBetween(0, 200))
                 ;
 
                 $this->addReference($product->getName(), $product);

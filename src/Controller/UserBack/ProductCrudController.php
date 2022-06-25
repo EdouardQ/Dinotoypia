@@ -6,7 +6,10 @@ use App\Entity\Product;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -39,7 +42,10 @@ class ProductCrudController extends AbstractCrudController
                 ->setCurrency('EUR')
                 ->setStoredAsCents(false)
                 ->setLabel('Prix'),
-            AssociationField::new('category')->setLabel('Catégorie'),
+            IntegerField::new('stock')->setLabel('Stock'),
+            AssociationField::new('category')->setLabel('Catégorie(s)')->onlyOnForms(),
+            ArrayField::new('category',)->setLabel('Catégorie(s)')->onlyOnIndex(),
+            BooleanField::new('visible')->setLabel('Visible')
         ];
     }
 }

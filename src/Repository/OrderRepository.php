@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Customer;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,6 +31,22 @@ class OrderRepository extends ServiceEntityRepository
                 'code' => "pending"
             ])
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findCompleteOrdersForCustomer(Customer $customer): array
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.state', 's', 'o.state = state.id')
+            ->andWhere('s.code != :code')
+            ->andWhere('o.customer = :customer')
+            ->setParameters([
+                'code' => 'pending',
+                'customer' => $customer
+            ])
+            ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
             ;

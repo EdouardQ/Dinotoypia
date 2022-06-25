@@ -39,6 +39,13 @@ class DeliveryAddressRepository extends ServiceEntityRepository
         }
     }
 
+    public function findUnusedDeliveryAddress(): array
+    {
+        $sql = "SELECT da FROM App\Entity\DeliveryAddress da WHERE NOT EXISTS (SELECT o FROM App\Entity\Order o WHERE o.deliveryAddress = da.id)";
+        $query = $this->getEntityManager()->createQuery($sql);
+        return $query->getResult();
+    }
+
 //    /**
 //     * @return DeliveryAddress[] Returns an array of DeliveryAddress objects
 //     */

@@ -12,6 +12,7 @@ use App\Entity\RefurbishedToy;
 use App\Entity\Shipping;
 use App\Entity\State;
 use App\Entity\UserBack;
+use App\Service\FileService;
 use App\Service\StripeService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -22,12 +23,14 @@ use Symfony\Component\Security\Core\Security;
 
 class EntitySubscriber implements EventSubscriberInterface
 {
+    private FileService $fileService;
     private Security $security;
     private StripeService $stripeService;
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(FileService $fileService, Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
     {
+        $this->fileService = $fileService;
         $this->security = $security;
         $this->stripeService = $stripeService;
         $this->userPasswordHasher = $userPasswordHasher;
@@ -95,6 +98,8 @@ class EntitySubscriber implements EventSubscriberInterface
 
         if ($entity instanceof RefurbishedToy) {
             $entity->setBarCodeNumber('dino-'.$entity->getId().'-'.time());
+            $this->fileService->uploadImageFromRefurbishedToyForm($entity);
+            $entity->setImage($this->fileService->getfileName());
             $args->getObjectManager()->flush();
         }
     }
@@ -132,6 +137,12 @@ class EntitySubscriber implements EventSubscriberInterface
         }
         elseif ($entity instanceof Shipping && $args->hasChangedField('active')) {
             $this->stripeService->updateShipping($entity);
+        }
+        elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
+            if ($entity->getState()->getCode() === 'refurbish' || $entity->getState()->getCode() === 're-sale') {
+                $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
+                $entity->setImage(null);
+            }
         }
     }
 

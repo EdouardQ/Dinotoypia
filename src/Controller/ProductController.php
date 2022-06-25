@@ -30,8 +30,14 @@ class ProductController extends AbstractController
     #[Route('/add_to_order/{id}', name: 'product.add_to_order')]
     public function addToOrder(Product $product): Response
     {
-        $this->orderManager->addItemToOrderSession($product->getId());
-        $this->orderManager->updateCart();
+        if ($product->getStock() > 0) {
+            $this->orderManager->addItemToOrderSession($product->getId());
+            $this->orderManager->updateCart();
+        }
+        else {
+            $this->addFlash('addToOrderNotice', "Le produit est actuellement en rupture de stock, veuillez réessayer ultérieurement");
+        }
+
         return $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
     }
 

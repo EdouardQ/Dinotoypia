@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section>
+        <div>
+            <h3>Informations</h3>
+            <ul>
+                <li>{{ app.user.email }}</li>
+                <li>{{ app.user.civility.name }}</li>
+                <li>{{ app.user.firstName }}</li>
+                <li>{{ app.user.lastName }}</li>
+                <li>{{ app.user.phone }}</li>
+            </ul>
+            <br><br>
+            <div>
+                <a href="{{ url('customer.customer.form') }}">Modifier ses informations</a>
+                <br>
+                <a href="{{ url('customer.customer.form_password') }}">Modifier votre mot de passe</a>
+            </div>
+        </div>
+
+        <br><br><br>
+
+        <h3>Codes promo utilisés</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for promotionCode in app.user.getUsedPromotionCodes %}
+                <tr>
+                    <td>{{ promotionCode.name }}</td>
+                    <td>
+                        {{ promotionCode.amount }}
+                        {% if promotionCode.amountType == 'percentage' %}
+                            %
+                        {% else %}
+                            €
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

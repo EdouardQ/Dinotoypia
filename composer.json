@@ -11,7 +11,7 @@
         "doctrine/doctrine-bundle": "^2.6",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
-        "easycorp/easyadmin-bundle": "^4.0",
+        "easycorp/easyadmin-bundle": "^4.3",
         "google/recaptcha": "^1.2",
         "sensio/framework-extra-bundle": "^6.2",
         "stripe/stripe-php": "^7.108",
@@ -31,12 +31,12 @@
         "symfony/serializer": "6.0.*",
         "symfony/translation": "6.0.*",
         "symfony/twig-bundle": "6.0.*",
-        "symfony/ux-chartjs": "^2.1",
         "symfony/validator": "6.0.*",
         "symfony/yaml": "6.0.*",
-        "symfonycasts/reset-password-bundle": "^1.11",
+        "symfonycasts/reset-password-bundle": "^1.13",
         "symfonycasts/verify-email-bundle": "^1.7",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/intl-extra": "^3.4",
         "twig/twig": "^2.12|^3.0"
     },
     "config": {

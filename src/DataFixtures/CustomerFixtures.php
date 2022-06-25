@@ -3,11 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Customer;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class CustomerFixtures extends Fixture
+class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     private UserPasswordHasherInterface $userPasswordHasher;
 
@@ -23,10 +24,7 @@ class CustomerFixtures extends Fixture
             ->setPassword($this->userPasswordHasher->hashPassword($entity, "azerty"))
             ->setLastName("Quilliou")
             ->setFirstName("Edouard")
-            ->setAddress("40 av Barthom")
-            ->setCity("Paris")
-            ->setCountry("FR")
-            ->setPostCode("75015")
+            ->setCivility($this->getReference('m'))
             ->setPhone("0777065063")
             ->setStripeId("cus_LXiBlG0MTCgmKZ")
             ->isVerified(true)
@@ -40,10 +38,7 @@ class CustomerFixtures extends Fixture
                     ->setPassword($this->userPasswordHasher->hashPassword($entity, "azerty"))
                     ->setLastName($faker->lastName())
                     ->setFirstName($faker->firstName())
-                    ->setAddress($faker->address())
-                    ->setCity($faker->city())
-                    ->setCountry("FR")
-                    ->setPostCode($faker->postcode())
+                    ->setCivility($this->getReference($faker->randomElement(['m', 'mrs', 'other'])))
                     ->setPhone($faker->phoneNumber())
                     ->setStripeId("n/a")
                     ->isVerified(true)
@@ -51,5 +46,13 @@ class CustomerFixtures extends Fixture
             $manager->persist($entity);
         }
         $manager->flush();
+    }
+
+
+    public function getDependencies(): array
+    {
+        return [
+            CivilityFixtures::class,
+        ];
     }
 }
