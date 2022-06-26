@@ -7,6 +7,7 @@ use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
 use App\Service\AddressesService;
+use App\Service\MailService;
 use App\Service\PromotionCodeService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,7 +100,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/succeeded-payment', name: 'customer.payment.payment_succeeded')]
-    public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
+    public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService, MailService $mailService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
 
@@ -115,7 +116,9 @@ class PaymentController extends AbstractController
 
         $this->orderManager->purgeOrderSession();
 
-        return $this->redirectToRoute('homepage.index');
+        $mailService->sendEmailOrder($order);
+
+        return $this->render('order/order_confirm.html.twig');
     }
 
     #[Route('/failed-payment', name: 'customer.payment.payment_failed')]
