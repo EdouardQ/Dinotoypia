@@ -1,0 +1,25 @@
+{{ include('./style/email_style.html.twig') }}
+
+<body class="body">
+    <div class="container-mail">
+        <header class="header">
+            <div class="container-base">
+                Bonjour {{ order.customer.firstname }} {{ order.customer.lastname}},
+            </div>
+        </header>
+
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container"><h2>Confirmation de votre commande N°{{ order.trackingNumber }}</h2></div>
+
+            <div class="container">Votre commande contient:</div>
+
+            {% for entry in order.orderItems %}
+                <div class="container ml-40">- {{ entry.product.name }} au prix de {{ entry.price }}€</div>
+            {% endfor %}
+
+            <div class="container">Le prix total de votre commande est de {{ totalPrice }}€</div>
+        </div>
+    </div>
+</body>
