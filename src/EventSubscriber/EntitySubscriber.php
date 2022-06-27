@@ -153,5 +153,10 @@ class EntitySubscriber implements EventSubscriberInterface
         if ($entity instanceof PromotionCode) {
             $this->stripeService->deletePromotionCode($entity);
         }
+        elseif ($entity instanceof RefurbishedToy) {
+            if ($entity->getImage() != null) {
+                $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
+            }
+        }
     }
 }

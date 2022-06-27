@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section class="text-center">
+        <br>
+        {% if not refurbishedToyList %}
+            <div class="">
+                Vous nous avez envoyer aucun jouet.
+            </div>
+        {% endif %}
+
+        {% for refurbishedToy in refurbishedToyList %}
+            <table class="table table-striped w-75 m-auto">
+                <tbody>
+                <tr>
+                    <td>Numéro de demande <br> {{ refurbishedToy.id }}</td>
+                    <td>Nom <br> {{ refurbishedToy.name }}</td>
+                    <td>État <br> {{ refurbishedToy.toyCondition.name }} </td>
+                    <td>Demande passée le <br> {{ refurbishedToy.createdAt | date('d M Y') }}</td>
+                    <td>Statut <br> {{ refurbishedToy.state.name }}</td>
+                    <div>
+                        <table class="table m-auto w-75">
+                            <tr>
+                                <td>
+                                    <img alt='Barcode Generator TEC-IT'
+                                         src='https://barcode.tec-it.com/barcode.ashx?data={{ refurbishedToy.barCodeNumber }}&code=&translate-esc=true'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </tr>
+                </tbody>
+            </table>
+            <br><br><br>
+        {% endfor %}
+        
+    </section>
+{% endblock %}

@@ -20,14 +20,6 @@ class MailService
         $this->prod = $this->env === "prod";
     }
 
-    public function test(): void
-    {
-        if ($this->prod) {
-            dd('ok');
-        }
-        dd('pas ok');
-    }
-
     public function sendEmailOrder(Order $order): void
     {
         if($this->prod) {
@@ -38,7 +30,6 @@ class MailService
                 ->htmlTemplate('emails/order.html.twig')
                 ->context([
                     'order' => $order,
-                    'totalPrice' => $order->getTotalPriceOfOrderItems()
                 ]);
 
             $this->mailer->send($email);

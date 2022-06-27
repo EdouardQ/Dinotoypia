@@ -32,6 +32,9 @@
 		<div>
 			<a href="{{ url('homepage.index') }}">Accueil</a>
 		</div>
+		<div>
+			<a href="{{ url('homepage.refurbished_toy') }}">Reconditionnement</a>
+		</div>
 		{% if is_granted('ROLE_CUSTOMER') %}
 			<div>
 				<a class="nav-link" href="{{ url('customer.homepage.index') }}">Mon compte</a>

@@ -19,7 +19,7 @@
                 <div class="container ml-40">- {{ entry.product.name }} au prix de {{ entry.price }}€</div>
             {% endfor %}
 
-            <div class="container">Le prix total de votre commande est de {{ totalPrice }}€</div>
+            <div class="container">Le prix total de votre commande est de {{ order.getTotalPriceOfOrderItems }}€</div>
         </div>
     </div>
 </body>
