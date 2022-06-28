@@ -24,7 +24,7 @@ class PromotionCodeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setSearchFields(['name', 'code', 'createdAt', 'expiresAt', 'type', 'amount', 'amountType', 'customer', 'useLimit', 'useLimitPerCustomer'])
+            ->setSearchFields(['name', 'code', 'createdAt', 'expiresAt', 'type', 'amount', 'amountType', 'refurbishedToy.name', 'refurbishedToy.barCodeNumber', 'refurbishedToy.customer.firstName', 'refurbishedToy.customer.lastName', 'useLimit', 'useLimitPerCustomer'])
             ->setEntityLabelInSingular('Code promo')
             ->setEntityLabelInPlural('Codes promo')
             ;
@@ -40,7 +40,7 @@ class PromotionCodeCrudController extends AbstractCrudController
                     'Code Promo' => 'giftcode',
                 ])
                 ->setLabel('Type'),
-            AssociationField::new('customer')->setLabel('Client'),
+            AssociationField::new('refurbishedToy')->setLabel('Jouet'),
             TextField::new('code')->setLabel('Code'),
             MoneyField::new('amount')
                 ->setCurrency('EUR')

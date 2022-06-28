@@ -1,11 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <br>
     <section class="text-center">
         <div class="w75 m-auto">
-            BLABLABLA
-            <br>
-            <a href="{{ url('customer.refurbished_toy.request') }}">ICI</a>
+            <h5>Dinotoypia vous propose de reprendre vos anciens jouets pour les reconditionner.</h5> <br>
+            <p>
+                En collaboration avec des artisans, vos anciens jouets peuvent nous être envoyé pour que nous les reconditionnons.
+                <br>
+                Selon leur état, soit nous les remettons en état de marche pour leur donner une vie en les proposant à la vente sur notre site
+                soit nous les recyclons.
+                <br>
+                Si vous jouet est remis en vente et qu'il est acheté, vous recevrez un bon d'achat correspondant au prix de revente de votre ancien jouet.
+                <br> <br>
+                <a href="{{ url('customer.refurbished_toy.request') }}" class="text-decoration-none link-dark">
+                    <b>Ne laissez pas vos vieux jouets dans leur coffre et offrez leur une seconde vie auprès d'un autre enfant ici.</b>
+                </a>
+            </p>
         </div>
     </section>
 {% endblock %}

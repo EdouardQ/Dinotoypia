@@ -19,7 +19,7 @@ class RefurbishedToyController extends AbstractController
     public function index(RefurbishedToyRepository $refurbishedToyRepository): Response
     {
         return $this->render('customer/refurbished_toy/index.html.twig', [
-            'refurbishedToyList' => $refurbishedToyRepository->findBy(['customer' => $this->getUser()])
+            'refurbishedToyList' => $refurbishedToyRepository->findBy(['customer' => $this->getUser()], ['id' => 'DESC'])
         ]);
     }
 
@@ -35,6 +35,7 @@ class RefurbishedToyController extends AbstractController
             $entityManager->persist($entity);
             $entityManager->flush();
 
+            $this->addFlash('refurbishedToyNotice', "Votre demande a été accepté");
             return $this->redirectToRoute('customer.refurbished_toy.index');
         }
 

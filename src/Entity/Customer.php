@@ -75,11 +75,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $orders;
 
     /**
-     * @ORM\OneToMany(targetEntity=PromotionCode::class, mappedBy="customer")
-     */
-    private $promotionCodes;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Civility::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -89,7 +84,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->refurbishedToys = new ArrayCollection();
         $this->orders = new ArrayCollection();
-        $this->promotionCodes = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -281,36 +275,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PromotionCode>
-     */
-    public function getPromotionCodes(): Collection
-    {
-        return $this->promotionCodes;
-    }
-
-    public function addPromotionCode(PromotionCode $promotionCode): self
-    {
-        if (!$this->promotionCodes->contains($promotionCode)) {
-            $this->promotionCodes[] = $promotionCode;
-            $promotionCode->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removePromotionCode(PromotionCode $promotionCode): self
-    {
-        if ($this->promotionCodes->removeElement($promotionCode)) {
-            // set the owning side to null (unless already changed)
-            if ($promotionCode->getCustomer() === $this) {
-                $promotionCode->setCustomer(null);
             }
         }
 

@@ -319,7 +319,7 @@ class StripeService
                 if ($promotionCode->getUseLimit() === null) {
                     $coupon = $this->stripe->coupons->create([
                         'name' => $promotionCode->getName(),
-                        'amount_off' => $promotionCode->getAmount(),
+                        'amount_off' => $promotionCode->getAmount()*100,
                         'currency' => 'EUR',
                         'duration' => 'forever',
                     ]);
@@ -327,7 +327,7 @@ class StripeService
                 else {
                     $coupon = $this->stripe->coupons->create([
                         'name' => $promotionCode->getName(),
-                        'amount_off' => $promotionCode->getAmount(),
+                        'amount_off' => $promotionCode->getAmount()*100,
                         'currency' => 'EUR',
                         'duration' => 'forever',
                         'max_redemptions' => $promotionCode->getUseLimit(),
@@ -360,7 +360,7 @@ class StripeService
 
         $promotionCode->setCouponStripeId($coupon->id);
 
-        if ($promotionCode->getCustomer() === null) {
+        if ($promotionCode->getRefurbishedToy() === null) {
             if ($promotionCode->isFirstTimeTransaction()) {
                 $stripePromotionCode = $this->stripe->promotionCodes->create([
                     'coupon' => $coupon->id,
@@ -388,7 +388,7 @@ class StripeService
                 $stripePromotionCode = $this->stripe->promotionCodes->create([
                     'coupon' => $coupon->id,
                     'code' => $promotionCode->getCode(),
-                    'customer' => $promotionCode->getCustomer()->getStripeId(),
+                    'customer' => $promotionCode->getRefurbishedToy()->getCustomer()->getStripeId(),
                     'restrictions' => [
                         'minimum_amount' => $promotionCode->getMinimumAmount()*100,
                         'minimum_amount_currency' => 'EUR',
@@ -400,7 +400,7 @@ class StripeService
                 $stripePromotionCode = $this->stripe->promotionCodes->create([
                     'coupon' => $coupon->id,
                     'code' => $promotionCode->getCode(),
-                    'customer' => $promotionCode->getCustomer()->getStripeId(),
+                    'customer' => $promotionCode->getRefurbishedToy()->getCustomer()->getStripeId(),
                     'restrictions' => [
                         'minimum_amount' => $promotionCode->getMinimumAmount()*100,
                         'minimum_amount_currency' => 'EUR',

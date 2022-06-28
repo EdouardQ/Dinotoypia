@@ -3,10 +3,17 @@
     <section class="text-center">
         <br>
         {% if not refurbishedToyList %}
-            <div class="">
+            <div>
                 Vous nous avez envoyer aucun jouet.
+                <br>
+                <a href="{{ url('customer.refurbished_toy.request') }}">Faites une demande ici</a>
             </div>
         {% endif %}
+
+        {% for message in app.flashes('refurbishedToyNotice') %}
+            <p class="alert-success w-25 m-auto">{{ message }}</p>
+            <br>
+        {% endfor %}
 
         {% for refurbishedToy in refurbishedToyList %}
             <table class="table table-striped w-75 m-auto">
@@ -19,12 +26,51 @@
                     <td>Statut <br> {{ refurbishedToy.state.name }}</td>
                     <div>
                         <table class="table m-auto w-75">
-                            <tr>
-                                <td>
-                                    <img alt='Barcode Generator TEC-IT'
-                                         src='https://barcode.tec-it.com/barcode.ashx?data={{ refurbishedToy.barCodeNumber }}&code=&translate-esc=true'/>
-                                </td>
-                            </tr>
+                            {% if refurbishedToy.state.code == "waiting_deposit" %}
+                                <tr>
+                                    <td>
+                                        <img alt='Barcode Generator TEC-IT'
+                                             src='https://barcode.tec-it.com/barcode.ashx?data={{ refurbishedToy.barCodeNumber }}&code=&translate-esc=true'/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <p>
+                                            Vous pouvez déposer votre jouet dans un point dépôt UPS.
+
+                                            Trouvez le plus proche de chez vous <a href="https://www.ups.com/dropoff/" target="_blank">en appuyant ici</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if refurbishedToy.state.code == "sold" %}
+                                <tr>
+                                    <td>
+                                        <p>
+                                            Votre ancien jouet a été vendu! Félécitations à lui et à vous.
+                                            {% if refurbishedToy.promotionCode %}
+                                                <br>
+                                                Voici un bon d'achat pour vous récompenser de ce geste : {{ refurbishedToy.promotionCode.code }}
+                                            {% else %}
+                                                <br>
+                                                Nous générons votre bon d'achat, il sera disponible d'ici peu
+                                            {% endif %}
+                                        </p>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if refurbishedToy.state.code == "recycled" %}
+                                <tr>
+                                    <td>
+                                        <p>
+                                            Votre jouet est en trop mauvais état pour être revendu
+                                            <br>
+                                            Il a donc été recyclé pour lui offir une deuxième vie
+                                        </p>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         </table>
                     </div>
                 </tr>

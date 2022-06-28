@@ -139,7 +139,7 @@ class EntitySubscriber implements EventSubscriberInterface
             $this->stripeService->updateShipping($entity);
         }
         elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
-            if ($entity->getState()->getCode() === 'refurbish' || $entity->getState()->getCode() === 're-sale') {
+            if ($entity->getState()->getCode() === 'recycled' || $entity->getState()->getCode() === 're-sale') {
                 $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
                 $entity->setImage(null);
             }
@@ -151,6 +151,7 @@ class EntitySubscriber implements EventSubscriberInterface
         $entity = $args->getObject();
 
         if ($entity instanceof PromotionCode) {
+            $entity->setRefurbishedToy(null);
             $this->stripeService->deletePromotionCode($entity);
         }
         elseif ($entity instanceof RefurbishedToy) {

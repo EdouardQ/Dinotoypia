@@ -1,12 +1,5 @@
-<table>
+<ul class="list-unstyled">
     {% for item in field.value %}
-        <tr>
-            <td>{{ item.product }}</td>
-            <td>-</td>
-            <td>{{ item.price }} €</td>
-            <td>-</td>
-            <td>{{ item.quantity }}</td>
-        </tr>
+        <li>{{ item.product }} - {{ item.price }}€ - {{ item.quantity }}</li>
     {% endfor %}
-</table>
-
+</ul>

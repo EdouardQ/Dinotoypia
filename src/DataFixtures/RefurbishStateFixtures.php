@@ -22,12 +22,20 @@ class RefurbishStateFixtures extends Fixture
             'code' => 'retrieve'
         ],
         [
-            'name' => "Reconditionner",
-            'code' => 'refurbish'
+            'name' => "Reconditionnement",
+            'code' => 'reconditioning'
+        ],
+        [
+            'name' => "Recyclé",
+            'code' => 'recycled'
         ],
         [
             'name' => "Remise en vente",
             'code' => 're-sale'
+        ],
+        [
+            'name' => "Vendu",
+            'code' => 'sold'
         ]
     ];
 

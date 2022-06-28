@@ -11,8 +11,12 @@
             {{ form_label(form.toyCondition, "État") }}
             {{ form_widget(form.toyCondition) }}
             <br>
-            {{ form_label(form.image, "Image") }}
+            {{ form_label(form.image, "Image de votre jouet") }}
             {{ form_widget(form.image) }}
+            <br>
+            <div>
+                {{ form_row(form.agreeTerms) }}
+            </div>
             <br>
             <input type="submit" class="btn btn-primary" value="Confirmer">
 
