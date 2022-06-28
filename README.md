@@ -35,7 +35,7 @@ https://barcode.tec-it.com/fr/
 
  - ~~créer un compte client~~
 
- - reprise des vieux jouets à commencer
+ - ~~reprise des vieux jouets~~
 
  - ~~tâches cron~~
     
@@ -46,6 +46,8 @@ https://barcode.tec-it.com/fr/
  - ~~contraintes stock~~
 
  - ~~stripe stock~~
+
+ - Conditions de ventes / utilisation
 
 ### Marc et Jonas
 
