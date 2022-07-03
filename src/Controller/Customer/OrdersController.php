@@ -41,6 +41,8 @@ class OrdersController extends AbstractController
             "Attachment" => false
         ]);
 
-        die();
+        return new Response('', 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }
