@@ -24,6 +24,10 @@ class OrdersController extends AbstractController
     #[Route('/orders/invoice/{id}', name: 'customer.orders.invoice')]
     public function invoice(Order $order): Response
     {
+        if ($order->getCustomer() !== $this->getUser()) {
+            return $this->redirectToRoute('customer.homepage.index');
+        }
+
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
 
