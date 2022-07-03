@@ -38,8 +38,10 @@ class RefurbishedToyFormType extends AbstractType
                             'image/svg+xml',
                             'image/png'
                         ],
-                        'mimeTypesMessage' => "Veuillez nous envoyer une image du jouet sous format .jpeg, .png ou .svg"
-                    ])
+                        'mimeTypesMessage' => "Veuillez nous envoyer une image du jouet sous format .jpeg, .png ou .svg",
+                        'maxSize' => '6M',
+                        'maxSizeMessage' => "La taille du fichier est trop grosse ({{ size }} {{ suffix }}). La taille maximum est de {{ limit }} {{ suffix }}."
+                    ]),
                 ]
             ])
             ->add('toyCondition', EntityType::class, [
