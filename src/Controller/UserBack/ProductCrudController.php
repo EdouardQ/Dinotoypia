@@ -43,9 +43,19 @@ class ProductCrudController extends AbstractCrudController
                 ->setStoredAsCents(false)
                 ->setLabel('Prix'),
             IntegerField::new('stock')->setLabel('Stock'),
+            IntegerField::new('id')
+                ->setLabel('Retirer 1 Unité')
+                ->setTemplatePath('user_back/product_crud/updating_stock_field.html.twig')
+                ->onlyOnIndex(),
             AssociationField::new('category')->setLabel('Catégorie(s)')->onlyOnForms(),
             ArrayField::new('category',)->setLabel('Catégorie(s)')->onlyOnIndex(),
-            BooleanField::new('visible')->setLabel('Visible')
+            BooleanField::new('visible')
+                ->setLabel('Visible')
+                ->setFormTypeOption('disabled', 'disabled')
+                ->onlyOnIndex(),
+            BooleanField::new('visible')
+                ->setLabel('Visible')
+                ->hideOnIndex(),
         ];
     }
 }

@@ -36,7 +36,13 @@ class ShippingCrudController extends AbstractCrudController
                 ->setStoredAsCents(false)
                 ->setLabel('Frais')
                 ->hideWhenUpdating(),
-            BooleanField::new('active')->setLabel('Active')->hideWhenCreating(),
+            BooleanField::new('active')
+                ->setLabel('Active')
+                ->setFormTypeOption('disabled', 'disabled')
+                ->hideWhenCreating(),
+            BooleanField::new('active')
+                ->setLabel('Active')
+                ->onlyWhenUpdating(),
             IntegerField::new('deliveryEstimateMinimum')
                 ->setLabel('Temps de livraison minimum')
                 ->hideWhenUpdating(),
