@@ -72,12 +72,19 @@ div {
 }
 
 /* PARTIE MAIN */
-main{
+.container_content{
     background-color: #527e4d;
+    min-height: 700px;
 }
 
 /* PARTIE FOOTER */
-
+#top_footer{
+    background-size: cover;
+}
+.menu_footer{
+    background-color: #795016;
+    min-height: 250px;
+}
 
 
 
