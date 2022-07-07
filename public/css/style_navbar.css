@@ -1,14 +1,9 @@
-div {
-    display: flex;
-    font-family: Montserrat, sans-serif;
-}
-
 /* PARTIE CONTAINER TOP */
 .container-top{
     flex-flow: row wrap;
     height: 80px;
     justify-content: space-evenly;
-    background-color: #795016;
+    background-color: var(--primary-color);
     font-weight: bold;
 }
 .container-top .container_logo img{
@@ -51,7 +46,7 @@ div {
     flex-flow: row wrap;
     justify-content: center;
     height: 40px;
-    background-color: #5B3C11;
+    background-color: var(--secondary-color);
 }
 .nav-container .container-sub-menu{
     width: 70%;
@@ -69,21 +64,6 @@ div {
     color: white;
     font-weight: bold;
     font-size: 24px;
-}
-
-/* PARTIE MAIN */
-.container_content{
-    background-color: #527e4d;
-    min-height: 700px;
-}
-
-/* PARTIE FOOTER */
-#top_footer{
-    background-size: cover;
-}
-.menu_footer{
-    background-color: #795016;
-    min-height: 250px;
 }
 
 
