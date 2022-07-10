@@ -28,7 +28,7 @@ class ProductCrudController extends AbstractCrudController
             ->setDateFormat('d-m-Y')
             ->setEntityLabelInSingular('Produit')
             ->setEntityLabelInPlural('Produits')
-            ->setEntityPermission('ROLE_DEV')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 
