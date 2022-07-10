@@ -27,6 +27,7 @@ class PromotionCodeCrudController extends AbstractCrudController
             ->setSearchFields(['name', 'code', 'createdAt', 'expiresAt', 'type', 'amount', 'amountType', 'refurbishedToy.name', 'refurbishedToy.barCodeNumber', 'refurbishedToy.customer.firstName', 'refurbishedToy.customer.lastName', 'useLimit', 'useLimitPerCustomer'])
             ->setEntityLabelInSingular('Code promo')
             ->setEntityLabelInPlural('Codes promo')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 

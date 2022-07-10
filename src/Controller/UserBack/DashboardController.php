@@ -60,8 +60,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('États', 'fa fa-tags', RefurbishState::class)->setPermission('ROLE_DEV'),
             MenuItem::linkToCrud('Condition', 'fa fa-tags', ToyCondition::class)->setPermission('ROLE_DEV'),
 
-            MenuItem::section(""), // to keep empty
-            MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class),
+            MenuItem::section("")->setPermission('ROLE_ADMIN'), // to keep empty
+            MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class)->setPermission('ROLE_ADMIN'),
 
             MenuItem::section('Admin')->setPermission('ROLE_ADMIN'),
             MenuItem::linkToCrud('Clients', 'fa fa-user', Customer::class)->setPermission('ROLE_ADMIN'),
