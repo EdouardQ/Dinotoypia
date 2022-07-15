@@ -7,7 +7,8 @@
 }
 
 main,
-div {
+div,
+h1{
     display: flex;
     font-family: Montserrat, sans-serif;
 }
@@ -21,9 +22,11 @@ ul {
 
 /* PARTIE MAIN */
 .container_content{
+    flex-flow: column;
     background-color: var(--container-content-bg);
     min-height: 700px;
     justify-content: center;
+    align-items: center;
     padding-bottom: 20px;
 }
 .container_content .content{
@@ -47,4 +50,47 @@ ul {
     background-color: var(--primary-color);
     min-height: 250px;
 }
+.menu_footer .section_footer{
+    flex-flow: row wrap;
+    flex: 1 1 30%;
+}
+.menu_footer .section_footer:nth-child(2){
+    border-left: white solid 1px;
+    border-right: white solid 1px;
+}
 
+/* Page de connexion */
+.container_content .title_connexion{
+    color: white;
+}
+.container_content .connexion_content{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    margin-top: 5%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    width: 30%;
+    height: 400px;
+    justify-content: center;
+}
+.container_content .connexion_content #login_customer{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.container_content .connexion_content #login_customer .log_button{
+    text-decoration: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    background: #5B3C11;
+    border-radius: 40px;
+    color: #FFF;
+    padding: 10px 17px 9px;
+    margin: 0 10px 10px 0;
+    transition: all .2s;
+    text-align: center;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+}
