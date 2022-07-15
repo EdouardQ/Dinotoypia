@@ -10,6 +10,10 @@ class RefurbishStateFixtures extends Fixture
 {
     private array $list = [
         [
+            'name' => "En évaluation",
+            'code' => 'in_evaluation'
+        ],
+        [
             'name' => "En attente de dépôt",
             'code' => 'waiting_deposit'
         ],
@@ -24,10 +28,6 @@ class RefurbishStateFixtures extends Fixture
         [
             'name' => "Reconditionnement",
             'code' => 'reconditioning'
-        ],
-        [
-            'name' => "Recyclé",
-            'code' => 'recycled'
         ],
         [
             'name' => "Remise en vente",

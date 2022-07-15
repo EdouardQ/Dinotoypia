@@ -35,4 +35,20 @@ class MailService
             $this->mailer->send($email);
         }
     }
+
+    public function sendEmailFromContact(array $contactForm): void
+    {
+        if($this->prod) {
+            $email = (new TemplatedEmail())
+                ->from('no-reply@dinotoypia.store')
+                ->to('no-reply@dinotoypia.store')
+                ->subject('Contact de ' . $contactForm['email'])
+                ->htmlTemplate('emails/contact.html.twig')
+                ->context([
+                    'contactForm' => $contactForm,
+                ]);
+
+            $this->mailer->send($email);
+        }
+    }
 }

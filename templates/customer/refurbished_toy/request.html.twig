@@ -2,9 +2,9 @@
 {% block body %}
     <br>
     <section>
-        <div class="row w-50 m-auto">
+        <div class="row m-auto text-center">
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'requestRefurbishedToy'}}) }}
             {{ form_label(form.name, "Nom") }}
             {{ form_widget(form.name) }}
             <br>
@@ -18,10 +18,24 @@
                 {{ form_row(form.agreeTerms) }}
             </div>
             <br>
-            <input type="submit" class="btn btn-primary" value="Confirmer">
+            <button class="g-recaptcha btn btn-primary"
+                    data-sitekey="{{ google_recaptcha_site_key }}"
+                    data-callback='onSubmit'
+                    data-action='submit'>
+                Confirmer
+            </button>
 
         {{ form_end(form) }}
 
         </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("requestRefurbishedToy").submit();
+        }
+    </script>
 {% endblock %}

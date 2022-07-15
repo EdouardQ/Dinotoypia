@@ -141,7 +141,7 @@ class EntitySubscriber implements EventSubscriberInterface
             $this->stripeService->updateShipping($entity);
         }
         elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
-            if ($entity->getState()->getCode() === 'recycled' || $entity->getState()->getCode() === 're-sale') {
+            if ($entity->getState()->getCode() === 're-sale') {
                 $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
                 $entity->setImage(null);
             }
