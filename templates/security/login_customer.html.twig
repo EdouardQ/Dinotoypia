@@ -3,33 +3,33 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <h1 class="title_content">Identifiez-vous</h1>
-    <div class="connexion_content">
+    <h1 class="flex_content title_content">Identifiez-vous</h1>
+    <div class="flex_content connexion_content">
     <form method="post" id="login_customer">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="flex_content alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <div class="mb-3">
+        <div class="flex_content mb-3">
             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Votre email" autocomplete="email" required autofocus>
         </div>
-        <div class="mb-3">
+        <div class="flex_content mb-3">
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Votre mot de passe" autocomplete="current-password" required>
         </div>
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <div class="checkbox mt-5 mb-2">
+        <div class="flex_content checkbox mt-5 mb-2">
             <label>
                 <input type="checkbox" name="_remember_me"> Rester connecté
             </label>
         </div>
 
-        <div>
+        <div class="flex_content">
             <a href="{{ url('reset_password.request') }}">Vous avez oublié votre mot de passe ?</a>
         </div>
 
-        <div>
+        <div class="flex_content">
             <a href="{{ url('registration.register') }}">Créez un compte</a>
         </div>
 

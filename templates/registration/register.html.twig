@@ -4,7 +4,7 @@
 
 {% block body %}
 <h1 class="title_content">Inscription</h1>
-<div class="w-50 m-auto text-center">
+<div class="flex_content register_content">
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
@@ -33,10 +33,7 @@
         {{ form_widget(form.agreeTerms) }}
     </div>
     <br>
-    <button class="g-recaptcha btn-primary"
-            data-sitekey="{{ google_recaptcha_site_key }}"
-            data-callback='onSubmit'
-            data-action='submit'>
+    <button class="g-recaptcha btn-primary" data-sitekey="{{ google_recaptcha_site_key }}" data-callback='onSubmit' data-action='submit'>
         S'inscrire
     </button>
 

@@ -1,3 +1,9 @@
+.flex_nav,
+.flex_title{
+    display: flex;
+    font-family: Montserrat, sans-serif;
+}
+
 /* PARTIE CONTAINER TOP */
 #nav-logo{
     max-height:100%;

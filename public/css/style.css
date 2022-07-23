@@ -5,12 +5,11 @@
     --container-content-bg: #527E4D;
     --content-bg: #FFFFFF;
 }
-main,
-div,
-h1{
+.flex_content{
     display: flex;
     font-family: Montserrat, sans-serif;
 }
+
 ul {
     list-style-type: none;
 }
