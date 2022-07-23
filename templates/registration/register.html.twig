@@ -3,7 +3,7 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<h1 class="title_content">Inscription</h1>
+<h1 class="flex_title title_content">Inscription</h1>
 <div class="flex_content register_content">
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
@@ -11,33 +11,41 @@
 
     {{ form_start(form, {attr: {id: 'register_form'}}) }}
 
-    <div>
+    <div class="flex_content input_register">
         {{ form_widget(form.email, { 'attr': {'placeholder': 'Adresse mail'}}) }}
     </div>
 
-
+    <div class="flex_content input_register">
     {{ form_widget(form.civility) }}
+    </div>
 
+    <div class="flex_content input_register">
     {{ form_widget(form.lastName, { 'attr': {'placeholder': 'Nom'}}) }}
+    </div>
 
+    <div class="flex_content input_register">
     {{ form_widget(form.firstName, { 'attr': {'placeholder': 'Prénom'}}) }}
+    </div>
 
+    <div class="flex_content input_register">
     {{ form_widget(form.phone, { 'attr': {'placeholder': 'Téléphone'}}) }}
+    </div>
 
+    <div class="flex_content input_register">
     {{ form_widget(form.plainPassword.first, { 'attr': {'placeholder': 'Mot de passe'}}) }}
+    </div>
 
+    <div class="flex_content input_register">
     {{ form_widget(form.plainPassword.second, { 'attr': {'placeholder': 'Confirmation mot de passe'}}) }}
+    </div>
 
-
-    <div class="w-25 m-auto">
+    <div class="flex_content input_register">
         {{ form_widget(form.agreeTerms) }}
     </div>
-    <br>
-    <button class="g-recaptcha btn-primary" data-sitekey="{{ google_recaptcha_site_key }}" data-callback='onSubmit' data-action='submit'>
+
+    <button class="g-recaptcha register_button" data-sitekey="{{ google_recaptcha_site_key }}" data-callback='onSubmit' data-action='submit'>
         S'inscrire
     </button>
-
-
 
     {{ form_end(form) }}
 </div>

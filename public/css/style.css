@@ -1,4 +1,8 @@
 /* PARTIE GLOBAL */
+@font-face {
+    font-family: 'CarterOne';
+    src: url('fonts/CarterOne.ttf') format('truetype')
+}
 :root {
     --primary-color: #795016;
     --secondary-color: #5B3C11;
@@ -8,6 +12,9 @@
 .flex_content{
     display: flex;
     font-family: Montserrat, sans-serif;
+}
+.container_content .title_content{
+    color: white;
 }
 
 ul {
@@ -58,26 +65,26 @@ ul {
 }
 
 /* Page de connexion */
-.container_content .title_content{
-    color: white;
-}
-.container_content .connexion_content{
+.container_content .connexion_content,
+.container_content .register_content{
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     display: flex;
-    margin-top: 5%;
+    margin-top: 2%;
     background-color: var(--content-bg);
     border-radius: 30px;
     width: 30%;
     height: 400px;
     justify-content: center;
 }
-.container_content .connexion_content #login_customer{
+.container_content .connexion_content #login_customer,
+.container_content .register_content #register_form{
     display: flex;
     flex-flow: column;
     justify-content: center;
     align-items: center;
 }
-.container_content .connexion_content #login_customer .log_button{
+.container_content .connexion_content #login_customer .log_button,
+.container_content .register_content #register_form .register_button{
     text-decoration: none;
     font-size: 16px;
     text-transform: uppercase;
@@ -92,7 +99,17 @@ ul {
     border: 0;
     cursor: pointer;
 }
-.container_content .connexion_content #login_customer .log_button:hover{
+.container_content .connexion_content #login_customer .log_button:hover,
+.container_content .register_content #register_form .register_button:hover{
     color: var(--primary-color);
     background-color: var(--content-bg);
 }
+
+/* Page d'inscription */
+.container_content .register_content{
+    height: 500px;
+}
+.container_content .register_content #register_form .input_register{
+    margin-bottom: 15px;
+}
+
