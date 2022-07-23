@@ -50,6 +50,12 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastName;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Civility::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $civility;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $phone;
@@ -73,12 +79,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="customer")
      */
     private $orders;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Civility::class, inversedBy="customers")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $civility;
 
     public function __construct()
     {
@@ -181,6 +181,18 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getCivility(): ?Civility
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?Civility $civility): self
+    {
+        $this->civility = $civility;
 
         return $this;
     }
@@ -294,15 +306,5 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
         return $usedPromotionCodes;
     }
 
-    public function getCivility(): ?Civility
-    {
-        return $this->civility;
-    }
 
-    public function setCivility(?Civility $civility): self
-    {
-        $this->civility = $civility;
-
-        return $this;
-    }
 }

@@ -62,6 +62,11 @@ class Shipping
         $this->orders = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name . " (" . $this->deliveryEstimateMinimum . " - " . $this->deliveryEstimateMaximum . " jours)";
+    }
+
     public function getId(): ?int
     {
         return $this->id;

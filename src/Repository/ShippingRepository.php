@@ -39,6 +39,19 @@ class ShippingRepository extends ServiceEntityRepository
         }
     }
 
+    public function getShippingDataForCheckout(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.id')
+            ->addSelect('s.name')
+            ->addSelect('s.fee')
+            ->andWhere('s.active = 1')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Shipping[] Returns an array of Shipping objects
 //     */

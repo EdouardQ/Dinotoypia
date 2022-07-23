@@ -16,6 +16,7 @@ $(document).ready(function() {
 
     // Load the widget in the div "#Zone_Widget" with the following parameters
     $("#Zone_Widget").MR_ParcelShopPicker({
+
         Target: "#Target_Widget",
         TargetDisplay: "#TargetDisplay_Widget",
         TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
@@ -23,12 +24,11 @@ $(document).ready(function() {
         Brand: "BDTEST  ",
         Country: "FR",
         PostCode: "92130",
-        // Delivery MEthod (Standard [24R], XL [24L], XXL [24X], Drive [DRI])
+        // Delivery Method (Standard [24R], XL [24L], XXL [24X], Drive [DRI])
         ColLivMod: "24R",
         NbResults: "7",
         ShowResultsOnMap: true,
         DisplayMapInfo: true,
-        EnableGeolocalisatedSearch: "true",
         OnParcelShopSelected:
             function(data) {
                 $("#cb_id").val(data.ID);
@@ -39,10 +39,12 @@ $(document).ready(function() {
                 $("#cb_post_code").val(data.CP);
                 $("#cb_city").val(data.Ville);
                 $("#cb_country").val(data.Pays);
-            }
+            },
+        EnableGeolocalisatedSearch: "true",
+        CSS: 1,
     });
 
-    // Configure when teh form can be submit
+    // Configure when the form can be submit
     var form = $("#checkout_form");
     form.submit(function (event) {
         if (shipping_input.val() == '3' && (

@@ -14,11 +14,15 @@ class RefurbishStateFixtures extends Fixture
             'code' => 'in_evaluation'
         ],
         [
+            'name' => "Refusé",
+            'code' => 'refused'
+        ],
+        [
             'name' => "En attente de dépôt",
             'code' => 'waiting_deposit'
         ],
         [
-            'name' => "En livrason",
+            'name' => "En livraison",
             'code' => 'in_delivery'
         ],
         [

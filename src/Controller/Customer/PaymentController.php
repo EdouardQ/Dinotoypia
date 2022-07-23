@@ -3,9 +3,11 @@
 namespace App\Controller\Customer;
 
 use App\Entity\PromotionCode;
+use App\Entity\Shipping;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
+use App\Repository\PromotionCodeRepository;
 use App\Service\AddressesService;
 use App\Service\MailService;
 use App\Service\PromotionCodeService;
@@ -69,7 +71,62 @@ class PaymentController extends AbstractController
 
         return $this->render('customer/payment/checkout.html.twig', [
             'form' => $form->createView(),
+            'order' => $order,
+            'shipppingList' => $entityManager->getRepository(Shipping::class)->getShippingDataForCheckout(),
         ]);
+    }
+
+    #[Route('/checkout/promocode/{code}', name: 'customer.payment.add_and_check_promocode', defaults: ['code' => null])]
+    public function addAndCheckPromoCode($code, EntityManagerInterface $entityManager, PromotionCodeRepository $promotionCodeRepository, PromotionCodeService $promotionCodeService): Response
+    {
+        $order = $this->orderManager->getOrder($this->getUser());
+        // if the route parameter is null
+        if (is_null($code)) {
+            if ($order->getPromotionCode()) {
+                $order->getPromotionCode()->removeOrder($order);
+                $entityManager->flush();
+                return new Response(json_encode([
+                    'code' => 'removed',
+                    'message' => "Code promo retiré de votre commande avec succès"
+                ]));
+            }
+            return new Response(json_encode([
+                'code' => 'null',
+                'message' => "Rien ne s'est passé"
+            ]));
+        }
+
+        $promotionCode = $promotionCodeRepository->findOneBy(['code' => $code]);
+        // if the code doesn't exist
+        if (is_null($promotionCode)) {
+            return new Response(json_encode([
+                'code' => 'not found',
+                'message' => "Ce code promo n'éxiste pas"
+            ]));
+        }
+
+        // if teh code is already added to the order
+        if ($order->getPromotionCode() && $order->getPromotionCode() === $promotionCode) {
+            return new Response(json_encode([
+                'code' => 'aleardy in order',
+                'message' => "Ce code promo est déjà affecté à votre commande"
+            ]));
+        }
+
+        // if the customer is not able to use the code
+        if (!$promotionCodeService->checkUseCondition($this->getUser(), $order, $promotionCode)) {
+            return new Response(json_encode([
+                'code' => 'condition not meet',
+                'message' => "Votre commande ne remplie pas les conditions d'utilisation de ce code promo"
+            ]));
+        }
+
+        $promotionCode->addOrder($order);
+        $entityManager->flush();
+        return new Response(json_encode([
+            'code' => 'add',
+            'message' => "Code promo ajouté avec succès"
+        ]));
     }
 
     #[Route('/payment-process', name: 'customer.payment.payment_process')]

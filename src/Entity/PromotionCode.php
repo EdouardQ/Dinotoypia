@@ -296,6 +296,13 @@ class PromotionCode
         return $this;
     }
 
+    public function isOverUsed(): bool
+    {
+        $orders = $this->getOrders()->getValues();
+
+        return $this->useLimit <= count($orders);
+    }
+
     public function getMinimumAmount(): ?string
     {
         return $this->minimumAmount;

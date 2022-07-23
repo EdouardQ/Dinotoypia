@@ -13,10 +13,6 @@
 ul {
     list-style-type: none;
 }
-#widgetFormError {
-    background-color: red;
-    color: white;
-}
 
 /* PARTIE MAIN */
 .container_content{
@@ -96,3 +92,27 @@ ul {
     color: var(--primary-color);
     background-color: var(--content-bg);
 }
+
+/* page du checkout */
+#Zone_Widget{
+    margin-left: 12%;
+}
+
+#promocodeInputBtn:hover{
+    cursor: pointer;
+}
+
+.container_recap_delivery{
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_recap,
+.container_delivery{
+    flex : 1 48%;
+    margin : 0% 1% 0% 1%;
+    width: 30em
+}
+

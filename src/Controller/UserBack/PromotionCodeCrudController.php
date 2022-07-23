@@ -43,10 +43,7 @@ class PromotionCodeCrudController extends AbstractCrudController
                 ->setLabel('Type'),
             AssociationField::new('refurbishedToy')->setLabel('Jouet'),
             TextField::new('code')->setLabel('Code'),
-            MoneyField::new('amount')
-                ->setCurrency('EUR')
-                ->setStoredAsCents(false)
-                ->setLabel('Montant'),
+            IntegerField::new('amount')->setLabel('Montant'),
             ChoiceField::new('amountType')
                 ->setChoices([
                     'Montant' => 'amount',
