@@ -16,40 +16,23 @@ https://barcode.tec-it.com/fr/
 
 ## Todo
 
-### Marc: 
- - panier : faire front
+### Marc:
 
- - checkout : front + calc du total à payer
+- navbar
+
+- panier
+
+- page produit
 
 ### Jonas
 
-- mot de passe oublié
+- mail
 
-- faire tout les mails (création de compte, passage de commande)
-
-- facture après paiement
+- aider Marc
 
 ### Edouard
 
- - ~~espace client : à faire (infos perso + précédentes commandes)~~
+- recap avant paiement
 
- - ~~créer un compte client~~
-
- - ~~reprise des vieux jouets~~
-
- - ~~tâches cron~~
-    
- - ~~serveur smtp~~
-
- - ~~logs~~
-
- - ~~contraintes stock~~
-
- - ~~stripe stock~~
-
- - Conditions de ventes / utilisation
-
-### Marc et Jonas
-
- - affichage complet des produits / catégories / page d'accueil
+- partie customer
 
