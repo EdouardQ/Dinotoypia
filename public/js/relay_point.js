@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     shipping_input.change(function () {
         if (shipping_input.val() === '3') {
-           widget.style.display = 'block';
+            widget.style.display = 'block';
         }
         else {
             widget.style.display = 'none';

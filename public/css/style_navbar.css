@@ -1,4 +1,8 @@
 /* PARTIE CONTAINER TOP */
+#nav-logo{
+    max-height:100%;
+    width: auto;
+}
 .container-top{
     flex-flow: row wrap;
     height: 80px;
