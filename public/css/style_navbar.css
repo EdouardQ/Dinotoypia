@@ -66,6 +66,27 @@
     font-weight: bold;
     font-size: 24px;
 }
+.nav-container .container-sub-menu .redirect-sub-menu:hover{
+    color: var(--primary-color);
+    background-color: var(--content-bg);
+}
+
+
+.searchResults {
+    position: absolute;
+    border: black 1px solid;
+    border-radius: 12px;
+    background-color: white;}
+
+.searchResults li {
+    text-align: left;
+    min-width: 160px;
+    padding-top: 1em;
+    z-index: 1;}
+
+.searchResults img {
+    max-width: 120px;
+}
 
 
 
