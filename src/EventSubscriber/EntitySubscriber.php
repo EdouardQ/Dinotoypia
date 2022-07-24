@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\Customer;
 use App\Entity\Image;
+use App\Entity\Log;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
@@ -42,6 +43,7 @@ class EntitySubscriber implements EventSubscriberInterface
             Events::prePersist,
             Events::postPersist,
             Events::preUpdate,
+            Events::postUpdate,
             Events::preRemove,
         ];
     }
@@ -53,6 +55,7 @@ class EntitySubscriber implements EventSubscriberInterface
 
             if ($entity instanceof Product) {
                 $this->stripeService->createProduct($entity);
+                $entity->setReleaseDate(new \DateTime());
             }
             elseif ($entity instanceof UserBack) {
                 $entity->setCreatedBy($this->security->getUser());
@@ -139,10 +142,29 @@ class EntitySubscriber implements EventSubscriberInterface
             $this->stripeService->updateShipping($entity);
         }
         elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
-            if ($entity->getState()->getCode() === 'refurbish' || $entity->getState()->getCode() === 're-sale') {
+            if ($entity->getState()->getCode() === 're-sale') {
                 $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
                 $entity->setImage(null);
             }
+        }
+    }
+
+    public function postUpdate(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
+
+        // this case can only from backend -> remove 1 unit from stock in ProductCrudController
+        if ($entity instanceof Product && $this->security->getUser() instanceof UserBack) {
+            $log = new Log();
+            $log->setUser($this->security->getUser())
+                ->setEntity(get_class($entity))
+                ->setEntityId($entity->getId())
+                ->setLogedAt(new \DateTimeImmutable())
+                ->setAction('update (-1 from stock)')
+            ;
+
+            $args->getObjectManager()->persist($log);
+            $args->getObjectManager()->flush();
         }
     }
 
@@ -151,7 +173,13 @@ class EntitySubscriber implements EventSubscriberInterface
         $entity = $args->getObject();
 
         if ($entity instanceof PromotionCode) {
+            $entity->setRefurbishedToy(null);
             $this->stripeService->deletePromotionCode($entity);
+        }
+        elseif ($entity instanceof RefurbishedToy) {
+            if ($entity->getImage() != null) {
+                $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
+            }
         }
     }
 }

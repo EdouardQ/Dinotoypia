@@ -3,12 +3,12 @@
 namespace App\Controller\UserBack;
 
 use App\Entity\Product;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -28,7 +28,7 @@ class ProductCrudController extends AbstractCrudController
             ->setDateFormat('d-m-Y')
             ->setEntityLabelInSingular('Produit')
             ->setEntityLabelInPlural('Produits')
-            ->setEntityPermission('ROLE_DEV')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 
@@ -43,9 +43,23 @@ class ProductCrudController extends AbstractCrudController
                 ->setStoredAsCents(false)
                 ->setLabel('Prix'),
             IntegerField::new('stock')->setLabel('Stock'),
+            IntegerField::new('id')
+                ->setLabel('Retirer 1 Unité')
+                ->setTemplatePath('user_back/product_crud/updating_stock_field.html.twig')
+                ->onlyOnIndex(),
             AssociationField::new('category')->setLabel('Catégorie(s)')->onlyOnForms(),
             ArrayField::new('category',)->setLabel('Catégorie(s)')->onlyOnIndex(),
-            BooleanField::new('visible')->setLabel('Visible')
+            DateField::new('releaseDate')
+                ->setFormat('short')
+                ->hideOnForm()
+                ->setLabel("Date de sortie"),
+            BooleanField::new('visible')
+                ->setLabel('Visible')
+                ->setFormTypeOption('disabled', 'disabled')
+                ->onlyOnIndex(),
+            BooleanField::new('visible')
+                ->setLabel('Visible')
+                ->hideOnIndex(),
         ];
     }
 }

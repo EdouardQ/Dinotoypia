@@ -279,17 +279,21 @@ class Order
         return $this;
     }
 
-    public function getTotal(): int|string
+    public function getTotal(): float
     {
-        $orderItems = $this->getOrderItems()->getValues();
-        $total = 0;
+        $total = $this->getTotalPriceOfOrderItems();
 
-        if (!$orderItems) {
-            return $total;
+        if ($this->getShipping()) {
+            $total += $this->getShipping()->getFee();
         }
 
-        foreach ($orderItems as $item) {
-            $total = $total + ($item->getPrice() * $item->getQuantity());
+        if ($this->getPromotionCode()) {
+            if ($this->getPromotionCode()->getAmountType() === "percentage") {
+                $total = $total*(1-$this->getPromotionCode()->getAmount()/100);
+            }
+            else {
+                $total -= $this->getPromotionCode()->getAmount();
+            }
         }
 
         return $total;

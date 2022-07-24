@@ -59,4 +59,10 @@ class HomepageController extends AbstractController
             'order' => $orderManager->createCheckout(),
         ]);
     }
+
+    #[Route('/refurbished_toy', name: 'homepage.refurbished_toy')]
+    public function refurbished_toy(): Response
+    {
+        return $this->render('homepage/refurbished_toy.html.twig');
+    }
 }

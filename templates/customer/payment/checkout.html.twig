@@ -5,18 +5,19 @@
 {% endblock %}
 
 {% block body %}
-    <br>
-    <section>
-        {{ form_start(form, {attr: {id: "checkout_form"}}) }}
-            <div class="text-center w-50 m-auto">
-                {% for message in app.flashes('mondialRelaisNotice') %}
-                    <p class="alert-danger">
-                        {{ message }}
-                    </p>
-                {% endfor %}
-                <br>
+<article class="content">
+    {{ form_start(form, {attr: {id: "checkout_form"}}) }}
+    <section class="text-content">
+        {% for message in app.flashes('mondialRelaisNotice') %}
+            <p class="alert-danger">
+                {{ message }}
+            </p>
+        {% endfor %}
+        <br>
+        <div class="container_recap_delivery">
+            <div class="container_delivery">
                 {{ form_label(form.shipping, "Mode livraison") }}
-                {{ form_widget(form.shipping) }}
+                {{ form_widget(form.shipping, {attr: {class: "text-center"}}) }}
                 <br>
                 {% for message in app.flashes('checkoutNotice') %}
                     <p class="alert-danger">
@@ -24,16 +25,60 @@
                     </p>
                 {% endfor %}
                 {{ form_label(form.promotion_code, "Code Promo") }}
-                {{ form_widget(form.promotion_code) }}
+                <div class="input-group mb-3">
+                    {% if order.promotionCode %}
+                        {{ form_widget(form.promotion_code, {attr: {value: order.promotionCode.code}}) }}
+                    {% else %}
+                        {{ form_widget(form.promotion_code) }}
+                    {% endif %}
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="promocode_input_btn">Valider</span>
+                    </div>
+                </div>
+                <p id="promotion_message" class="text-center"><br></p>
+
                 <br>
-                    <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
-                <br><br>
             </div>
 
-            <div id="mondial_relais_widget" class="m-auto text-center">
-                <div id="Zone_Widget" class="d-inline-block"></div>
-                <div class="text-center m-auto d-inline-block">
-                    <span id="widgetFormError"></span>
+            <div class="container_recap text-center">
+                <h4><b>Récapitulatif</b></h4>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Total de la commande</td>
+                        <td>{{ order.totalPriceOfOrderItems | number_format(2) }} €</td>
+                    </tr>
+                    <tr>
+                        <td>Promotion</td>
+                        <td id="displayPromotionReduction">
+                            {% if order.promotionCode %}
+                                {% if order.promotionCode.amountType == "percentage" %}
+                                    - {{ order.promotionCode.amount | number_format(0) }}%
+                                {% else %}
+                                    - {{ order.promotionCode.amount }} €
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Livraison</td>
+                        <td id="displayDeliveryPrice"></td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td id="displayTotalPrice"></td>
+                    </tr>
+                </table>
+                <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
+            </div>
+        </div>
+
+        <div class="row text-center m-auto">
+            <div id="mondial_relais_widget">
+                <div id="Zone_Widget"></div>
+                <div>
+                    <span id="widgetFormError" class="alert-danger"></span>
                     Point Relais sélectionné : <br> <span id="TargetDisplayInfoPR_Widget"></span>
                     <input type="hidden" id="cb_id" name="id" />
                     <input type="hidden" id="cb_address" name="address" />
@@ -41,13 +86,24 @@
                     <input type="hidden" id="cb_city" name="city" />
                     <input type="hidden" id="cb_country" name="country" />
                 </div>
+                <br>
             </div>
-        {{ form_end(form) }}
+        </div>
+        <br><br>
     </section>
+    {{ form_end(form) }}
+</article>
+
 {% endblock %}
 
 {% block javascripts %}
     <script src="https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="{{ asset('js/relay_point.js') }}"></script>
+
+    <script src="{{ asset('js/checkout.js') }}"></script>
+    <script>
+        initCheckout({{ order.totalPriceOfOrderItems }}, {{ shipppingList | json_encode | raw }})
+    </script>
 {% endblock %}
+

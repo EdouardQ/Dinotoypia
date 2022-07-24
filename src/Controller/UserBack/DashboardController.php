@@ -50,18 +50,18 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('États', 'fa fa-cart-plus', State::class)->setPermission('ROLE_DEV'),
             MenuItem::linkToCrud("Mode d'expédition", 'fa fa-cart-plus', Shipping::class)->setPermission('ROLE_ADMIN'),
 
-            MenuItem::section('Produits')->setPermission('ROLE_DEV'),
-            MenuItem::linkToCrud('Produits', 'fa fa-tags', Product::class)->setPermission('ROLE_DEV'),
-            MenuItem::linkToCrud('Catégories', 'fa fa-tags', ProductCategory::class)->setPermission('ROLE_DEV'),
-            MenuItem::linkToCrud('Images', 'fa fa-tags', Image::class)->setPermission('ROLE_DEV'),
+            MenuItem::section('Produits')->setPermission('ROLE_ADMIN'),
+            MenuItem::linkToCrud('Produits', 'fa fa-tags', Product::class)->setPermission('ROLE_ADMIN'),
+            MenuItem::linkToCrud('Catégories', 'fa fa-tags', ProductCategory::class)->setPermission('ROLE_ADMIN'),
+            MenuItem::linkToCrud('Images', 'fa fa-tags', Image::class)->setPermission('ROLE_ADMIN'),
 
             MenuItem::section('Reconditionnement'),
             MenuItem::linkToCrud('Jouets reconditionnés', 'fa fa-tags', RefurbishedToy::class),
             MenuItem::linkToCrud('États', 'fa fa-tags', RefurbishState::class)->setPermission('ROLE_DEV'),
             MenuItem::linkToCrud('Condition', 'fa fa-tags', ToyCondition::class)->setPermission('ROLE_DEV'),
 
-            MenuItem::section(""), // to keep empty
-            MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class),
+            MenuItem::section("")->setPermission('ROLE_ADMIN'), // to keep empty
+            MenuItem::linkToCrud('Codes promo', 'fa fa-gift', PromotionCode::class)->setPermission('ROLE_ADMIN'),
 
             MenuItem::section('Admin')->setPermission('ROLE_ADMIN'),
             MenuItem::linkToCrud('Clients', 'fa fa-user', Customer::class)->setPermission('ROLE_ADMIN'),

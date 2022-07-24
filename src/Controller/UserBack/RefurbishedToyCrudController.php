@@ -3,6 +3,8 @@
 namespace App\Controller\UserBack;
 
 use App\Entity\RefurbishedToy;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -23,6 +25,13 @@ class RefurbishedToyCrudController extends AbstractCrudController
             ->setSearchFields(['name', 'barCodeNumber','customer.firstName', 'customer.lastName', 'createdAt', 'state.name'])
             ->setEntityLabelInSingular('Jouet reconditionné')
             ->setEntityLabelInPlural('Jouets reconditionnés')
+            ;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->disable(Action::NEW)
             ;
     }
 

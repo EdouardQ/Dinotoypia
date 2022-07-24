@@ -22,7 +22,7 @@ class ImageCrudController extends AbstractCrudController
             ->setSearchFields(['name'])
             ->setEntityLabelInSingular('Image')
             ->setEntityLabelInPlural('Images')
-            ->setEntityPermission('ROLE_DEV')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 

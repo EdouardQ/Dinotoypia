@@ -26,6 +26,7 @@ class AddressesService
                 ->addOrder($order)
             ;
             $entityManager->persist($delivery);
+            $entityManager->flush();
         }
     }
 

@@ -18,7 +18,7 @@ class CheckoutFormType extends AbstractType
         $builder
             ->add('shipping', EntityType::class, [
                 'class' => Shipping::class,
-                'choice_label' => 'name',
+                // 'choice_label' => 'name', // change for the method toString
                 'query_builder' => function (ShippingRepository $shippingRepository) {
                     return $shippingRepository->createQueryBuilder('s')
                         ->andWhere('s.active = 1')

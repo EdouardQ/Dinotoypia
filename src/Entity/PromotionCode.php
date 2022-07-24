@@ -25,11 +25,6 @@ class PromotionCode
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="promotionCodes")
-     */
-    private $customer;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $code;
@@ -99,6 +94,11 @@ class PromotionCode
      */
     private $useLimitPerCustomer;
 
+    /**
+     * @ORM\OneToOne(targetEntity=RefurbishedToy::class, mappedBy="promotionCode")
+     */
+    private $refurbishedToy;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -117,18 +117,6 @@ class PromotionCode
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
 
         return $this;
     }
@@ -308,6 +296,13 @@ class PromotionCode
         return $this;
     }
 
+    public function isOverUsed(): bool
+    {
+        $orders = $this->getOrders()->getValues();
+
+        return $this->useLimit <= count($orders);
+    }
+
     public function getMinimumAmount(): ?string
     {
         return $this->minimumAmount;
@@ -340,6 +335,28 @@ class PromotionCode
     public function setUseLimitPerCustomer(int $useLimitPerCustomer): self
     {
         $this->useLimitPerCustomer = $useLimitPerCustomer;
+
+        return $this;
+    }
+
+    public function getRefurbishedToy(): ?RefurbishedToy
+    {
+        return $this->refurbishedToy;
+    }
+
+    public function setRefurbishedToy(?RefurbishedToy $refurbishedToy): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($refurbishedToy === null && $this->refurbishedToy !== null) {
+            $this->refurbishedToy->setPromotionCode(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($refurbishedToy !== null && $refurbishedToy->getPromotionCode() !== $this) {
+            $refurbishedToy->setPromotionCode($this);
+        }
+
+        $this->refurbishedToy = $refurbishedToy;
 
         return $this;
     }

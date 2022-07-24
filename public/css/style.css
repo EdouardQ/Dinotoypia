@@ -1,7 +1,134 @@
+/* PARTIE GLOBAL */
+@font-face {
+    font-family: 'CarterOne';
+    src: url('fonts/CarterOne.ttf') format('truetype')
+}
+:root {
+    --primary-color: #795016;
+    --secondary-color: #5B3C11;
+    --container-content-bg: #527E4D;
+    --content-bg: #FFFFFF;
+}
+.flex_content{
+    display: flex;
+    font-family: Montserrat, sans-serif;
+}
+.container_content .title_content{
+    color: white;
+}
+
 ul {
     list-style-type: none;
 }
-#widgetFormError {
-    background-color: red;
-    color: white;
+
+/* PARTIE MAIN */
+.container_content{
+    flex-flow: column;
+    background-color: var(--container-content-bg);
+    min-height: 700px;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
 }
+.container_content .content{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    margin-top: 5%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    width: 60%;
+    justify-content: center;
+}
+.container_content .content .text-content{
+    margin-top: 10px;
+}
+
+/* PARTIE FOOTER */
+#top_footer{
+    width: 100%;
+}
+.menu_footer{
+    background-color: var(--primary-color);
+    min-height: 250px;
+}
+.menu_footer .section_footer{
+    flex-flow: row wrap;
+    flex: 1 1 30%;
+}
+.menu_footer .section_footer:nth-child(2){
+    border-left: white solid 1px;
+    border-right: white solid 1px;
+}
+
+/* Page de connexion */
+.container_content .connexion_content,
+.container_content .register_content{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    margin-top: 2%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    width: 30%;
+    height: 400px;
+    justify-content: center;
+}
+.container_content .connexion_content #login_customer,
+.container_content .register_content #register_form{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.container_content .connexion_content #login_customer .log_button,
+.container_content .register_content #register_form .register_button{
+    text-decoration: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    background-color: var(--secondary-color);
+    border-radius: 40px;
+    color: var(--content-bg);
+    padding: 10px 17px 9px;
+    margin: 0 10px 10px 0;
+    transition: all .2s;
+    text-align: center;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+}
+.container_content .connexion_content #login_customer .log_button:hover,
+.container_content .register_content #register_form .register_button:hover{
+    color: var(--primary-color);
+    background-color: var(--content-bg);
+}
+
+/* page du checkout */
+#Zone_Widget{
+    margin-left: 12%;
+}
+
+#promocodeInputBtn:hover{
+    cursor: pointer;
+}
+
+.container_recap_delivery{
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_recap,
+.container_delivery {
+    flex: 1 48%;
+    margin: 0% 1% 0% 1%;
+    width: 30em;
+}
+
+/* Page d'inscription */
+.container_content .register_content{
+    height: 500px;
+}
+.container_content .register_content #register_form .input_register{
+    margin-bottom: 15px;
+}
+

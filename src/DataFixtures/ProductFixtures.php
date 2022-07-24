@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Product;
-use App\Entity\ProductCategory;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -35,6 +34,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             ->setPriceStripeId("price_1KqbumHowZnzDNfSWAFkk07V")
             ->setVisible(true)
             ->setStock(42)
+            ->setReleaseDate(new \DateTime())
         ;
 
         $this->addReference($product->getName(), $product);
@@ -50,6 +50,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             ->setPriceStripeId("price_1LClckHowZnzDNfSIHuGLniK")
             ->setVisible(true)
             ->setStock(10)
+            ->setReleaseDate(new \DateTime())
         ;
 
         $this->addReference($product->getName(), $product);
@@ -69,6 +70,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                     ->addCategory($this->getReference($this->categories[$i % sizeof($this->categories)]))
                     ->setVisible(true)
                     ->setStock($faker->numberBetween(0, 200))
+                    ->setReleaseDate($faker->dateTime())
                 ;
 
                 $this->addReference($product->getName(), $product);

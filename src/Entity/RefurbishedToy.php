@@ -55,6 +55,16 @@ class RefurbishedToy
      */
     private $toyCondition;
 
+    /**
+     * @ORM\OneToOne(targetEntity=PromotionCode::class, inversedBy="refurbishedToy", cascade={"remove"})
+     */
+    private $promotionCode;
+
+    public function __toString(): string
+    {
+        return $this->barCodeNumber;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,6 +150,18 @@ class RefurbishedToy
     public function setToyCondition(?ToyCondition $toyCondition): self
     {
         $this->toyCondition = $toyCondition;
+
+        return $this;
+    }
+
+    public function getPromotionCode(): ?PromotionCode
+    {
+        return $this->promotionCode;
+    }
+
+    public function setPromotionCode(?PromotionCode $promotionCode): self
+    {
+        $this->promotionCode = $promotionCode;
 
         return $this;
     }

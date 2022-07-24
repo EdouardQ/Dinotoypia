@@ -22,7 +22,7 @@ class ProductCategoryCrudController extends AbstractCrudController
             ->setSearchFields(['name'])
             ->setEntityLabelInSingular('Catégorie')
             ->setEntityLabelInPlural('Catégories')
-            ->setEntityPermission('ROLE_DEV')
+            ->setEntityPermission('ROLE_ADMIN')
             ;
     }
 

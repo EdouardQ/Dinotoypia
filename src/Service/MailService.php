@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpKernel\KernelInterface;
+use App\Entity\Order;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class MailService
 {
@@ -19,11 +20,35 @@ class MailService
         $this->prod = $this->env === "prod";
     }
 
-    public function test(): void
+    public function sendEmailOrder(Order $order): void
     {
-        if ($this->prod) {
-            dd('ok');
+        if($this->prod) {
+            $email = (new TemplatedEmail())
+                ->from('no-reply@dinotoypia.store')
+                ->to($order->getCustomer()->getEmail())
+                ->subject('Confirmation de commande')
+                ->htmlTemplate('emails/order.html.twig')
+                ->context([
+                    'order' => $order,
+                ]);
+
+            $this->mailer->send($email);
         }
-        dd('pas ok');
+    }
+
+    public function sendEmailFromContact(array $contactForm): void
+    {
+        if($this->prod) {
+            $email = (new TemplatedEmail())
+                ->from('no-reply@dinotoypia.store')
+                ->to('no-reply@dinotoypia.store')
+                ->subject('Contact de ' . $contactForm['email'])
+                ->htmlTemplate('emails/contact.html.twig')
+                ->context([
+                    'contactForm' => $contactForm,
+                ]);
+
+            $this->mailer->send($email);
+        }
     }
 }

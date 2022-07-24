@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <article class="content">
+        <section class="text-content text-center">
+            {% for message in app.flashes('contactNotice') %}
+                <p class="alert-success">{{ message }}</p>
+            {% endfor %}
+            {{ form_start(form, {attr: {id: 'contact_form'}}) }}
+            {{ form_label(form.email, 'Adresse email: ') }}
+            {{ form_widget(form.email) }}
+            <br>
+            {{ form_label(form.subject, 'Sujet: ') }}
+            {{ form_widget(form.subject) }}
+            <br>
+            {{ form_label(form.text, 'Message: ') }}
+            {{ form_widget(form.text, {attr: {rows: 10, cols: 50}}) }}
+            <br>
+            <button class="g-recaptcha btn-primary"
+                    data-sitekey="{{ google_recaptcha_site_key }}"
+                    data-callback='onSubmit'
+                    data-action='submit'>
+                Envoyer
+            </button>
+            {{ form_end(form) }}
+        </section>
+    </article>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("contact_form").submit();
+        }
+    </script>
+{% endblock %}

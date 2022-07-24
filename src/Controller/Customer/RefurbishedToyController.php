@@ -15,36 +15,32 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/my-account')]
 class RefurbishedToyController extends AbstractController
 {
-    #[Route('/refurbishment', name: 'customer.refurbished_toy.form')]
-    public function form(EntityManagerInterface $entityManager, Request $request): Response
+    #[Route('/refurbishment', name: 'customer.refurbished_toy.index')]
+    public function index(RefurbishedToyRepository $refurbishedToyRepository): Response
+    {
+        return $this->render('customer/refurbished_toy/index.html.twig', [
+            'refurbishedToyList' => $refurbishedToyRepository->findBy(['customer' => $this->getUser()], ['id' => 'DESC'])
+        ]);
+    }
+
+    #[Route('/refurbishment/request', name: 'customer.refurbished_toy.request')]
+    public function request(EntityManagerInterface $entityManager, Request $request): Response
     {
         $entity = new RefurbishedToy();
         $form = $this->createForm(RefurbishedToyFormType::class, $entity)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entity->setCustomer($this->getUser());
-            $entity->setState($entityManager->getRepository(RefurbishState::class)->findOneBy(['code' => 'waiting_deposit']));
+            $entity->setState($entityManager->getRepository(RefurbishState::class)->findOneBy(['code' => 'in_evaluation']));
             $entityManager->persist($entity);
             $entityManager->flush();
 
-            return $this->redirectToRoute('customer.refurbished_toy.validation', ['id' => $entity->getId()]);
+            $this->addFlash('refurbishedToyNotice', "Votre demande a été accepté");
+            return $this->redirectToRoute('customer.refurbished_toy.index');
         }
 
-        return $this->render('customer/refurbished_toy/form.html.twig', [
+        return $this->render('customer/refurbished_toy/request.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
-    #[Route('/refurbishment/validation/{id}', name: 'customer.refurbished_toy.validation')]
-    public function validation(int $id = null, RefurbishedToyRepository $refurbishedToyRepository): Response
-    {
-        $refurbishedToy = $refurbishedToyRepository->find($id);
-        if ($refurbishedToy === null || $refurbishedToy->getCustomer() !== $this->getUser()) {
-            return $this->redirectToRoute('homepage.index');
-        }
-        return $this->render('customer/refurbished_toy/validation.html.twig', [
-            'refurbishedToy' => $refurbishedToy
-        ]);
-    }
-
 }

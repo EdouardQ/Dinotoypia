@@ -3,41 +3,46 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post" id="login_customer">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <h1 class="flex_title title_content">Identifiez-vous</h1>
+    <div class="flex_content connexion_content">
+    <form method="post" id="login_customer">
+        {% if error %}
+            <div class="flex_content alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
 
+        <div class="flex_content mb-3">
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Votre email" autocomplete="email" required autofocus>
+        </div>
+        <div class="flex_content mb-3">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Votre mot de passe" autocomplete="current-password" required>
+        </div>
 
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+        <div class="flex_content checkbox mt-5 mb-2">
+            <label>
+                <input type="checkbox" name="_remember_me"> Rester connecté
+            </label>
+        </div>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+        <div class="flex_content">
+            <a href="{{ url('reset_password.request') }}">Vous avez oublié votre mot de passe ?</a>
+        </div>
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Se souvenir de moi
-        </label>
-    </div>
+        <div class="flex_content">
+            <a href="{{ url('registration.register') }}">Créez un compte</a>
+        </div>
 
-    <div>
-        <a href="{{ url('registration.register') }}">Vous n'avez pas de compte</a>
-    </div>
+        <br>
 
-
-    <button class="g-recaptcha btn-primary"
-            data-sitekey="{{ google_recaptcha_site_key }}"
-            data-callback='onSubmit'
-            data-action='submit'>
-        Se connecter
-    </button>
-</form>
+        <button class="g-recaptcha btn-primary log_button"
+                data-sitekey="{{ google_recaptcha_site_key }}"
+                data-callback='onSubmit'
+                data-action='submit'>
+            Se connecter
+        </button>
+    </form>
+</div>
 {% endblock %}
 
 {% block javascripts %}

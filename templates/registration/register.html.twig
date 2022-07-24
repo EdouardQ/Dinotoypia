@@ -1,57 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-<section class="w-50 m-auto text-center">
+<h1 class="flex_title title_content">Inscription</h1>
+<div class="flex_content register_content">
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    <h1>Inscription</h1>
-    <br>
-
     {{ form_start(form, {attr: {id: 'register_form'}}) }}
 
-    <div class="row w-50 m-auto">
-        <div class="col">
-            {{ form_label(form.email, 'Adresse email: ') }}
-            {{ form_widget(form.email) }}
-            <br>
-            {{ form_label(form.civility, 'Civilité: ') }}
-            {{ form_widget(form.civility) }}
-            <br>
-            {{ form_label(form.lastName, 'Nom: ') }}
-            {{ form_widget(form.lastName) }}
-            <br>
-            {{ form_label(form.firstName, 'Prénom: ') }}
-            {{ form_widget(form.firstName) }}
-            <br>
-            {{ form_label(form.phone, 'Téléphone: ') }}
-            {{ form_widget(form.phone) }}
-            <br>
-            {{ form_row(form.plainPassword.first) }}
-            <br>
-            {{ form_row(form.plainPassword.second) }}
-        </div>
+    <div class="flex_content input_register">
+        {{ form_widget(form.email, { 'attr': {'placeholder': 'Adresse mail'}}) }}
+    </div>
 
+    <div class="flex_content input_register">
+    {{ form_widget(form.civility) }}
     </div>
-    <br>
-    <div class="w-25 m-auto">
-        {{ form_row(form.agreeTerms) }}
+
+    <div class="flex_content input_register">
+    {{ form_widget(form.lastName, { 'attr': {'placeholder': 'Nom'}}) }}
     </div>
-    <br>
-    <button class="g-recaptcha btn-primary"
-            data-sitekey="{{ google_recaptcha_site_key }}"
-            data-callback='onSubmit'
-            data-action='submit'>
+
+    <div class="flex_content input_register">
+    {{ form_widget(form.firstName, { 'attr': {'placeholder': 'Prénom'}}) }}
+    </div>
+
+    <div class="flex_content input_register">
+    {{ form_widget(form.phone, { 'attr': {'placeholder': 'Téléphone'}}) }}
+    </div>
+
+    <div class="flex_content input_register">
+    {{ form_widget(form.plainPassword.first, { 'attr': {'placeholder': 'Mot de passe'}}) }}
+    </div>
+
+    <div class="flex_content input_register">
+    {{ form_widget(form.plainPassword.second, { 'attr': {'placeholder': 'Confirmation mot de passe'}}) }}
+    </div>
+
+    <div class="flex_content input_register">
+        {{ form_widget(form.agreeTerms) }}
+    </div>
+
+    <button class="g-recaptcha register_button" data-sitekey="{{ google_recaptcha_site_key }}" data-callback='onSubmit' data-action='submit'>
         S'inscrire
     </button>
 
-
-
     {{ form_end(form) }}
-</section>
+</div>
 {% endblock %}
 
 {% block javascripts %}

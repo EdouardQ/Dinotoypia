@@ -1,0 +1,13 @@
+{{ include('./style/email_style.html.twig') }}
+
+<body class="body">
+<div class="container-mail">
+   De : {{ contactForm['email'] }}
+   <br>
+   <br>
+   Sujet : {{ contactForm['subject'].subject }}
+   <br>
+   <br>
+   Texte : {{ contactForm['text'] }}
+</div>
+</body>

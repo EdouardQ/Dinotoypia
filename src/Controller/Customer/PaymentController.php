@@ -3,10 +3,13 @@
 namespace App\Controller\Customer;
 
 use App\Entity\PromotionCode;
+use App\Entity\Shipping;
 use App\Entity\State;
 use App\Form\CheckoutFormType;
 use App\Manager\OrderManager;
+use App\Repository\PromotionCodeRepository;
 use App\Service\AddressesService;
+use App\Service\MailService;
 use App\Service\PromotionCodeService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,34 +44,81 @@ class PaymentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order->setPromotionCode(null);
-
             $order->setShipping($form->getData()['shipping']);
+
             if ($order->getShipping()->getName() === "Livraison Mondial Relais") {
+
                 if ($request->request->get('id') === "") {
                     $this->addFlash('mondialRelaisNotice', "Veuillez sélectionner un point relais");
                     return $this->redirectToRoute('customer.payment.checkout');
                 }
+
                $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
             }
 
-            if ($form->getData()['promotion_code'] !== null) {
-                $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
-                if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
-                    $this->addFlash('checkoutNotice', "Code promo invalide ou expiré");
-                    return $this->redirectToRoute('customer.payment.checkout');
-                }
-
-                $order->setPromotionCode($promotionCode);
-            }
-
-            $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
         }
 
         return $this->render('customer/payment/checkout.html.twig', [
             'form' => $form->createView(),
+            'order' => $order,
+            'shipppingList' => $entityManager->getRepository(Shipping::class)->getShippingDataForCheckout(),
         ]);
+    }
+
+    #[Route('/checkout/promocode/{code}', name: 'customer.payment.add_and_check_promocode', defaults: ['code' => null])]
+    public function addAndCheckPromoCode($code, EntityManagerInterface $entityManager, PromotionCodeRepository $promotionCodeRepository, PromotionCodeService $promotionCodeService): Response
+    {
+        $order = $this->orderManager->getOrder($this->getUser());
+        // if the route parameter is null
+        if (is_null($code)) {
+            if ($order->getPromotionCode()) {
+                $order->getPromotionCode()->removeOrder($order);
+                $entityManager->flush();
+                return new Response(json_encode([
+                    'code' => 'removed',
+                    'message' => "Code promo retiré de votre commande avec succès"
+                ]));
+            }
+            return new Response(json_encode([
+                'code' => 'null',
+                'message' => "Rien ne s'est passé"
+            ]));
+        }
+
+        $promotionCode = $promotionCodeRepository->findOneBy(['code' => $code]);
+        // if the code doesn't exist
+        if (is_null($promotionCode)) {
+            return new Response(json_encode([
+                'code' => 'not found',
+                'message' => "Ce code promo n'éxiste pas"
+            ]));
+        }
+
+        // if teh code is already added to the order
+        if ($order->getPromotionCode() && $order->getPromotionCode() === $promotionCode) {
+            return new Response(json_encode([
+                'code' => 'aleardy in order',
+                'message' => "Ce code promo est déjà affecté à votre commande"
+            ]));
+        }
+
+        // if the customer is not able to use the code
+        if (!$promotionCodeService->checkUseCondition($this->getUser(), $order, $promotionCode)) {
+            return new Response(json_encode([
+                'code' => 'condition not meet',
+                'message' => "Votre commande ne remplie pas les conditions d'utilisation de ce code promo"
+            ]));
+        }
+
+        $promotionCode->addOrder($order);
+        $entityManager->flush();
+        return new Response(json_encode([
+            'code' => 'add',
+            'message' => "Code promo ajouté avec succès",
+            'type' => $promotionCode->getAmountType(),
+            'amount' => $promotionCode->getAmount(),
+        ]));
     }
 
     #[Route('/payment-process', name: 'customer.payment.payment_process')]
@@ -99,7 +149,7 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/succeeded-payment', name: 'customer.payment.payment_succeeded')]
-    public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService): Response
+    public function paymentSucceeded(EntityManagerInterface $entityManager, StripeService $stripeService, MailService $mailService): Response
     {
         $order = $this->orderManager->getOrder($this->getUser());
 
@@ -115,7 +165,9 @@ class PaymentController extends AbstractController
 
         $this->orderManager->purgeOrderSession();
 
-        return $this->redirectToRoute('homepage.index');
+        $mailService->sendEmailOrder($order);
+
+        return $this->render('order/order_confirm.html.twig');
     }
 
     #[Route('/failed-payment', name: 'customer.payment.payment_failed')]

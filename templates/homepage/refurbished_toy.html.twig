@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <article class="content">
+        <section class="text-content">
+            <h5>Dinotoypia vous propose de reprendre vos anciens jouets pour les reconditionner.</h5> <br>
+            <p>
+                En collaboration avec des artisans, vos anciens jouets peuvent nous être envoyé pour que nous les reconditionnons.
+                <br>
+                Nous les remettons en état de marche pour leur donner une vie en les proposant à la vente sur notre site.
+                <br>
+                Si vous jouet est remis en vente et qu'il est acheté, vous recevrez un bon d'achat correspondant au prix de revente de votre ancien jouet.
+                <br> <br>
+                <a href="{{ url('customer.refurbished_toy.request') }}" class="text-decoration-none link-dark">
+                    <b>Ne laissez pas vos vieux jouets dans leur coffre et offrez leur une seconde vie auprès d'un autre enfant ici.</b>
+                </a>
+            </p>
+        </section>
+    </article>
+{% endblock %}
