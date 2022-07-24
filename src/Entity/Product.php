@@ -76,6 +76,11 @@ class Product
      */
     private $stock;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateRelease;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -269,6 +274,18 @@ class Product
     public function setStock(int $stock): self
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getDateRelease(): ?\DateTimeInterface
+    {
+        return $this->dateRelease;
+    }
+
+    public function setDateRelease(\DateTimeInterface $dateRelease): self
+    {
+        $this->dateRelease = $dateRelease;
 
         return $this;
     }
