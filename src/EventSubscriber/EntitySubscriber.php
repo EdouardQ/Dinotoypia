@@ -55,6 +55,7 @@ class EntitySubscriber implements EventSubscriberInterface
 
             if ($entity instanceof Product) {
                 $this->stripeService->createProduct($entity);
+                $entity->setReleaseDate(new \DateTime());
             }
             elseif ($entity instanceof UserBack) {
                 $entity->setCreatedBy($this->security->getUser());

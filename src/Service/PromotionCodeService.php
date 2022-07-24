@@ -9,13 +9,6 @@ use App\Repository\StateRepository;
 
 class PromotionCodeService
 {
-    private StateRepository $stateRepository;
-
-    public function __construct(StateRepository $stateRepository)
-    {
-        $this->stateRepository = $stateRepository;
-    }
-
     public function checkUseCondition(Customer $customer, Order $order, PromotionCode $promotionCode): bool
     {
         // verify if the code comes from a refurbishedToy and if the customer is the good one
@@ -49,10 +42,6 @@ class PromotionCodeService
             }
         }
 
-        if (empty($promotionCodesAlreadyUsed)) {
-            return true;
-        }
-
         foreach ($promotionCodesAlreadyUsed as $id => $numberUse) {
             if ($id === $promotionCode->getId() && $numberUse >= $promotionCode->getUseLimitPerCustomer()) {
                 return false;
@@ -60,7 +49,7 @@ class PromotionCodeService
         }
 
         // verify the minimum amount
-        if ($order->getTotalPriceOfOrderItems() < $promotionCode->getMinimumAmount()) {
+        if ($order->getTotalPriceOfOrderItems() < floatval($promotionCode->getMinimumAmount())) {
             return false;
         }
 
@@ -70,9 +59,8 @@ class PromotionCodeService
     private function customerHasAlreadyBuySomething(Customer $customer): bool
     {
         $orders = $customer->getOrders()->getValues();
-        $pendingState = $this->stateRepository->findOneBy(['code' => "pending"]);
         foreach ($orders as $order) {
-            if ($orders->getState()->getCode() !== $pendingState) {
+            if ($order->getState()->getCode() !== 'pending') {
                 return true;
             }
         }

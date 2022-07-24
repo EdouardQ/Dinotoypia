@@ -79,7 +79,7 @@ class Product
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateRelease;
+    private $releaseDate;
 
     public function __construct()
     {
@@ -278,14 +278,14 @@ class Product
         return $this;
     }
 
-    public function getDateRelease(): ?\DateTimeInterface
+    public function getReleaseDate(): ?\DateTimeInterface
     {
-        return $this->dateRelease;
+        return $this->releaseDate;
     }
 
-    public function setDateRelease(\DateTimeInterface $dateRelease): self
+    public function setReleaseDate(\DateTimeInterface $releaseDate): self
     {
-        $this->dateRelease = $dateRelease;
+        $this->releaseDate = $releaseDate;
 
         return $this;
     }

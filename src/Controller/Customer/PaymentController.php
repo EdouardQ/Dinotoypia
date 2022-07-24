@@ -44,28 +44,18 @@ class PaymentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order->setPromotionCode(null);
-
             $order->setShipping($form->getData()['shipping']);
+
             if ($order->getShipping()->getName() === "Livraison Mondial Relais") {
+
                 if ($request->request->get('id') === "") {
                     $this->addFlash('mondialRelaisNotice', "Veuillez sélectionner un point relais");
                     return $this->redirectToRoute('customer.payment.checkout');
                 }
+
                $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
             }
 
-            if ($form->getData()['promotion_code'] !== null) {
-                $promotionCode = $entityManager->getRepository(PromotionCode::class)->findOneBy(['code' => $form->getData()['promotion_code']]);
-                if ($promotionCode === null || !$promotionCodeService->checkUseCondition($this->getUser(), $promotionCode)) {
-                    $this->addFlash('checkoutNotice', "Code promo invalide ou expiré");
-                    return $this->redirectToRoute('customer.payment.checkout');
-                }
-
-                $order->setPromotionCode($promotionCode);
-            }
-
-            $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
         }
 
@@ -125,7 +115,9 @@ class PaymentController extends AbstractController
         $entityManager->flush();
         return new Response(json_encode([
             'code' => 'add',
-            'message' => "Code promo ajouté avec succès"
+            'message' => "Code promo ajouté avec succès",
+            'type' => $promotionCode->getAmountType(),
+            'amount' => $promotionCode->getAmount(),
         ]));
     }
 

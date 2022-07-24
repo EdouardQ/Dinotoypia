@@ -26,7 +26,11 @@
                 {% endfor %}
                 {{ form_label(form.promotion_code, "Code Promo") }}
                 <div class="input-group mb-3">
-                    {{ form_widget(form.promotion_code) }}
+                    {% if order.promotionCode %}
+                        {{ form_widget(form.promotion_code, {attr: {value: order.promotionCode.code}}) }}
+                    {% else %}
+                        {{ form_widget(form.promotion_code) }}
+                    {% endif %}
                     <div class="input-group-append">
                         <span class="input-group-text" id="promocode_input_btn">Valider</span>
                     </div>
@@ -44,25 +48,26 @@
                         <td>{{ order.totalPriceOfOrderItems | number_format(2) }} €</td>
                     </tr>
                     <tr>
-                        <td>Livraison</td>
-                        <td id="displayDeliveryPrice"></td>
-                    </tr>
-                    <tr>
                         <td>Promotion</td>
                         <td id="displayPromotionReduction">
-                            -
                             {% if order.promotionCode %}
                                 {% if order.promotionCode.amountType == "percentage" %}
-                                    {{ order.promotionCode.amount | number_format(0) }}%
+                                    - {{ order.promotionCode.amount | number_format(0) }}%
                                 {% else %}
-                                    {{ order.promotionCode.amount }} €
+                                    - {{ order.promotionCode.amount }} €
                                 {% endif %}
+                            {% else %}
+                                -
                             {% endif %}
                         </td>
                     </tr>
                     <tr>
+                        <td>Livraison</td>
+                        <td id="displayDeliveryPrice"></td>
+                    </tr>
+                    <tr>
                         <td>Total</td>
-                        <td id="displayTotalPrice">{{ order.total | number_format(2) }} €</td>
+                        <td id="displayTotalPrice"></td>
                     </tr>
                 </table>
                 <input type="submit" class="btn btn-primary" value="Confirmer et Payer">
@@ -98,7 +103,7 @@
 
     <script src="{{ asset('js/checkout.js') }}"></script>
     <script>
-        initDisplayShipping({{ shipppingList | json_encode | raw }})
+        initCheckout({{ order.totalPriceOfOrderItems }}, {{ shipppingList | json_encode | raw }})
     </script>
 {% endblock %}
 
