@@ -21,6 +21,10 @@ ul {
     list-style-type: none;
 }
 
+.flew_column {
+    flex-flow: column;
+}
+
 .mb-15 {
     margin-bottom: 15px;
 }
