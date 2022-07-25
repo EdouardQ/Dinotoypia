@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
                                 const name = arr.name;
                                 const urlName = arr.urlName;
                                 const image = arr.image;
-                                entitySelector.append("<li><a href='/product/"+urlName+"'><img src='/img/products/"+image+"' alt=''></img>"+name+"</a></li>");
+                                entitySelector.append("<li><a href='/product/"+urlName+"'><img class='searchbar_products' src='/img/products/"+image+"' alt=''></img>"+name+"</a></li>");
                             });
                         }
                     }
