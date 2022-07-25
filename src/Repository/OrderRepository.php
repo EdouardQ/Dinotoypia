@@ -52,6 +52,24 @@ class OrderRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findUncompletedOrderWithPromoCode(Customer $customer): array
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.state', 's', 'o.state = state.id')
+            ->andWhere('o.customer = :customer')
+            ->andWhere('o.promotionCode IS NOT NULL')
+            ->andWhere('s.code = :pending')
+            ->orWhere('s.code = :cancel')
+            ->setParameters([
+                'customer' => $customer->getId(),
+                'pending' => "pending",
+                'cancel' => "cancel"
+            ])
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Order[] Returns an array of Order objects
     //  */

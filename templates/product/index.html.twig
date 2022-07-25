@@ -17,14 +17,23 @@
                 {{ product.description }}
             </div>
             <div class="container_add_to_cart">
-                {% if product.stock > 0 %}
-                    <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
-                    <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="button_add">Ajouter au panier</a>
-                {% else %}
-                    <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
-                    <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="button_add" disabled>Ajouter au panier</a>
-                {% endif %}
+                <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
+                {{ form_start(form) }}
+                    {{ form_label(form.quantity, "Quantité") }}
+                    {{ form_widget(form.quantity) }}
+                    {% if product.stock > 0 %}
+                        <input type="submit" class="btn button_add" value="Ajouter au panier" />
+                    {% else %}
+                        <input type="submit" class="btn button_add" value="Ajouter au panier" disabled />
+                    {% endif %}
+                {{ form_end(form) }}
+
+
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+
 {% endblock %}

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\OrderItem;
 use App\Entity\Product;
+use App\Form\AddToCartFormType;
 use App\Manager\OrderManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,25 +22,27 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{urlName}', name: 'product.index')]
-    public function index(Product $product): Response
+    public function index(Product $product, Request $request): Response
     {
+        $form = $this->createForm(AddToCartFormType::class, null, [
+            'quantity' => $product->getStock(),
+        ])->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($product->getStock() > 0) {
+                $this->orderManager->addItemToOrderSession($product->getId(), $form->getData()['quantity']);
+                $this->orderManager->updateCart();
+            }
+            else {
+                $this->addFlash('addToOrderNotice', "Le produit est actuellement en rupture de stock, veuillez réessayer ultérieurement");
+            }
+            return $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
+        }
+
         return $this->render('product/index.html.twig', [
             'product' => $product,
+            'form' => $form->createView()
         ]);
-    }
-
-    #[Route('/add_to_order/{id}', name: 'product.add_to_order')]
-    public function addToOrder(Product $product): Response
-    {
-        if ($product->getStock() > 0) {
-            $this->orderManager->addItemToOrderSession($product->getId());
-            $this->orderManager->updateCart();
-        }
-        else {
-            $this->addFlash('addToOrderNotice', "Le produit est actuellement en rupture de stock, veuillez réessayer ultérieurement");
-        }
-
-        return $this->redirectToRoute('product.index', ['urlName' => $product->getUrlName()]);
     }
 
     #[Route('/remove_to_order/{id}', name: 'product.remove_to_order')]
