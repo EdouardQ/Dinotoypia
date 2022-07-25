@@ -113,7 +113,6 @@ ul {
     color: white;
     background-color: var(--primary-color);
 }
-
 /* page du checkout */
 #Zone_Widget{
     margin-left: 12%;
@@ -236,11 +235,11 @@ ul {
     justify-content: flex-start;
     margin-top: 10px;
 }
-.container_content .container_primary_product .title_content{
+.container_content .container_primary_product .title_product{
     margin: 5px 0;
     color: #505050;
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 800;
     text-transform: none;
 }
 .container_content .container_primary_product .release_date_product{
@@ -264,31 +263,49 @@ ul {
     flex: 1 1 43%;
     margin: 0 1% 0 1%;
     display: flex;
-    justify-content: center;
+    flex-flow: column;
+    justify-content: space-evenly;
     align-items: center;
     min-height: 300px;
 }
+.container_content .container_secondary_product .container_description #mondial_relay_logo{
+    width: 50px;
+    height: 50px;
+}
+
 .container_content .container_secondary_product .container_add_to_cart{
     flex: 1 1 23%;
     margin: 0 1% 0 1%;
     display: flex;
     flex-flow: column;
     align-items: center;
+    justify-content: space-evenly;
     min-height: 300px;
     background-color: var(--primary-pale-color);
 }
 .container_content .container_secondary_product .container_add_to_cart .price_product{
+
     font-size: 36px;
     font-weight: 600;
     color: var(--secondary-color);
+}
+.container_content .container_secondary_product .container_add_to_cart .container_qty{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.container_content .container_secondary_product .container_add_to_cart .input_number_qty{
+    display: flex;
+    width: 25%;
 }
 .container_content .container_secondary_product .container_add_to_cart .button_add{
     text-decoration: none;
     font-size: 16px;
     text-transform: uppercase;
-    background-color: var(--secondary-color);
+    background-color: #FFC800;
     border-radius: 40px;
-    color: var(--content-bg);
+    color: var(--secondary-color);
     padding: 10px 17px 9px;
     margin-top: 20px;
     transition: all .2s;

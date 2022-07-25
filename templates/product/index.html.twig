@@ -14,21 +14,28 @@
                 <img src="{{ asset('img/products/'~product.images[0].fileName) }}" alt="">
             </div>
             <div class="container_description">
-                {{ product.description }}
+                <div class="product_description">
+                    {{ product.description }}
+                </div>
+
+                <div class="container_delivery_info">
+                    <img id="mondial_relay_logo" src="{{ asset('img/mondial_relay_logo.png') }}" alt="mondial_relay_logo.png" >
+                    <span>Livraison possible en Point Relais</span>
+                </div>
             </div>
             <div class="container_add_to_cart">
                 <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
                 {{ form_start(form) }}
+                <div class="container_qty">
                     {{ form_label(form.quantity, "Quantité") }}
-                    {{ form_widget(form.quantity) }}
+                    {{ form_widget(form.quantity, {'attr' : {'class': 'input_number_qty'}}) }}
+                </div>
                     {% if product.stock > 0 %}
                         <input type="submit" class="btn button_add" value="Ajouter au panier" />
                     {% else %}
                         <input type="submit" class="btn button_add" value="Ajouter au panier" disabled />
                     {% endif %}
                 {{ form_end(form) }}
-
-
             </div>
         </div>
     </div>
