@@ -1,21 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ dump(product) }}
-
-    <section>
-        <div>
-            {% if product.stock > 0 %}
-                <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary">Ajouter au panier</a>
-            {% else %}
-                <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="btn btn-primary disabled">Ajouter au panier</a>
-            {% endif %}
-
-            <p>Stock : {{ product.stock }}</p>
-            {% for message in app.flashes('addToOrderNotice') %}
-                <p class="alert-danger">{{ message }}</p>
-            {% endfor %}
+    <div class="container_product_info">
+        {% for message in app.flashes('addToOrderNotice') %}
+            <p class="alert-danger">{{ message }}</p>
+        {% endfor %}
+        <div class="container_primary_product">
+            <h1 class="title_product">{{ product.name }}</h1>
+            <h2 class="release_date_product">Date de sortie : {{ product.releaseDate| date('d/m/Y') }}</h2>
         </div>
-    </section>
-
+        <div class="container_secondary_product">
+            <div class="container_image">
+                <img src="{{ asset('img/products/'~product.images[0].fileName) }}" alt="">
+            </div>
+            <div class="container_description">
+                {{ product.description }}
+            </div>
+            <div class="container_add_to_cart">
+                {% if product.stock > 0 %}
+                    <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
+                    <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="button_add">Ajouter au panier</a>
+                {% else %}
+                    <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
+                    <a href="{{ url('product.add_to_order', {id: product.id}) }}" class="button_add" disabled>Ajouter au panier</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
