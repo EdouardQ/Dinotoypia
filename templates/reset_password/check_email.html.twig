@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block title %}Mail modification de mot de passe envoyé{% endblock %}
 
 {% block body %}
-    <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('reset_password.request') }}">try again</a>.</p>
+    <article class="content info">
+        <div class="info_content">
+            <section class="text-content text-center">
+                Si l'adresse email que vous avez rentré existe bien dans Dinotoypia, un mail de réinitialisation lui a été envoyé.
+                Le lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+            </section>
+            <section class="text-content text-center">Si vous ne recevez pas le mail pensez à regarder dans vos spam ou <a href="{{ path('reset_password.request') }}">Réessayer</a>.</section>
+        </div>
+    </article>
 {% endblock %}

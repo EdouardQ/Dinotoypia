@@ -21,6 +21,10 @@ ul {
     list-style-type: none;
 }
 
+.mb-15 {
+    margin-bottom: 15px;
+}
+
 /* PARTIE MAIN */
 .container_content{
     flex-flow: column;
@@ -97,8 +101,8 @@ ul {
 }
 .container_content .connexion_content #login_customer .log_button:hover,
 .container_content .register_content #register_form .register_button:hover{
-    color: var(--primary-color);
-    background-color: var(--content-bg);
+    color: white;
+    background-color: var(--primary-color);
 }
 
 /* page du checkout */
@@ -159,3 +163,45 @@ ul {
     flex-flow: column;
 }
 
+/* Partie reset password */
+
+.reset_password_content{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    margin-top: 2%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    width: 50%;
+    justify-content: center;
+    padding: 20px;;
+}
+
+.confirm_button {
+    text-decoration: none;
+    font-size: 16px;
+    text-transform: uppercase;
+    background-color: var(--secondary-color);
+    border-radius: 40px;
+    color: var(--content-bg);
+    padding: 10px 17px 9px;
+    margin: 0 10px 10px 0;
+    transition: all .2s;
+    text-align: center;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    margin-left: 33%;
+}
+
+.confirm_button:hover {
+    color: white;
+    background-color: var(--primary-color);
+}
+
+.info {
+    flex-flow: column;
+}
+
+.info_content {
+    margin: 20px;
+}
