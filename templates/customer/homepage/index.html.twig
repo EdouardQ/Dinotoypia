@@ -1,34 +1,42 @@
 {% extends "base.html.twig" %}
+
 {% block body %}
-<section class="m-auto text-center">
-    <div class="row m-auto">
+<article class="content">
+    <section class="text-content text-center">
         <h1>Votre Compte</h1>
-        <br><br><br>
-        <div class="col-md-4">
+        <br><br>
+        <div class="container_customer_homepage">
             <a href="{{ url('customer.orders.index') }}">
-                <div class="card">
-                    <h3 class="card-title">Vos commandes</h3>
-                    <div class="card-body">Suivi des commandes</div>
+                <div class="thumbnail">
+                    <img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt="" class="thumbnail-img img-fluid">
+                    <div class="thumbnail-body">
+                        <h4 class="thumbnail-title">Vos commandes</h4>
+                        <div class="thumbnail-desc">Suivi des commandes</div>
+                    </div>
                 </div>
             </a>
-        </div>
-        <div class="col-md-4">
+
             <a href="{{ url('customer.refurbished_toy.index') }}">
-                <div class="card">
-                    <h3 class="card-title">Mes reconditionnements de jouet</h3>
-                    <div class="card-body">Suivre ses reconditionnements de vieux jouets</div>
+                <div class="thumbnail">
+                    <img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt="" class="thumbnail-img img-fluid">
+                    <div class="thumbnail-body">
+                        <h4 class="thumbnail-title">Reconditionnement</h4>
+                        <div class="thumbnail-desc">Suivre mes demandes de reconditionnement</div>
+                    </div>
                 </div>
             </a>
-        </div>
-        <div class="col-md-4">
+
             <a href="{{ url('customer.customer.index') }}">
-                <div class="card">
-                    <h3 class="card-title">Mes Infos</h3>
-                    <div class="card-body">Consulter et modifier mes informations</div>
+                <div class="thumbnail">
+                    <img src="{{ asset('img/logo_dinotoypia_120.png') }}" alt="" class="thumbnail-img img-fluid">
+                    <div class="thumbnail-body">
+                        <h4 class="thumbnail-title">Mes Infos</h4>
+                        <div class="thumbnail-desc">Consulter et modifier mes informations</div>
+                    </div>
                 </div>
             </a>
         </div>
-    </div>
-</section>
+    </section>
+</article>
 
 {% endblock %}

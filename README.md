@@ -32,7 +32,7 @@ https://barcode.tec-it.com/fr/
 
 ### Edouard
 
-- recap avant paiement
+- ~~checkout~~
 
 - partie customer
 
