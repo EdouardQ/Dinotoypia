@@ -56,6 +56,7 @@ class PaymentController extends AbstractController
                $this->addressesService->addDeliveryAddressToOrderByRequest($order, $request, $entityManager);
             }
 
+            $entityManager->flush();
             return $this->redirectToRoute('customer.payment.payment_process');
         }
 

@@ -34,7 +34,7 @@ class PromotionCodeService
         // verify if the code is over-used by the customer
         $promotionCodesAlreadyUsed = [];
         foreach ($customer->getOrders()->getValues() as $order) {
-            if ($order->getPromotionCode()) {
+            if ($order->getPromotionCode() && in_array($order->getState()->getCode(), ['pending', 'cancel', 'in_payment']) ) {
                 if (!array_key_exists($order->getPromotionCode()->getId(), $promotionCodesAlreadyUsed)) {
                     $promotionCodesAlreadyUsed[$order->getPromotionCode()->getId()] = 0;
                 }

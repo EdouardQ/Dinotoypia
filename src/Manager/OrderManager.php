@@ -45,15 +45,15 @@ class OrderManager
         return $order;
     }
 
-    public function addItemToOrderSession(int $id): void
+    public function addItemToOrderSession(int $id, int $quantity): void
     {
         $order = $this->getOrderSession();
 
         if (array_key_exists($id, $order)) {
-            $order[$id] += 1;
+            $order[$id] += $quantity;
         }
         else {
-            $order[$id] = 1;
+            $order[$id] = $quantity;
         }
 
         $this->orderSessionStorage->setOrder($order);

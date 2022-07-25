@@ -1,9 +1,30 @@
-<h1>Hi!</h1>
+{{ include('./style/email_style.html.twig') }}
 
-<p>To reset your password, please visit the following link</p>
+<body class="body">
+    <div class="container-mail">
+        <header class="header">
+            <div class="container-base">
+                Bonjour,
+            </div>
+        </header>
 
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+        <hr class="hr">
 
-<p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+        <div class="cardlayout">
+            <div class="container">
+                Pour réinitialiser votre mot de passe merci de suivre le lien suivant 
+                <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+            </div>
 
-<p>Cheers!</p>
+            <div class="container">Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</div>
+        </div>
+
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container">Si vous n'êtes pas l'auteur de cette demande veuillez nous contacter via le formulaire de contact présent sur le site</div>
+
+            <div class="container">L'équipe Dinotoypia</div>
+        </div>
+    </div>
+</body>
