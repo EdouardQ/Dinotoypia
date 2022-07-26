@@ -42,17 +42,17 @@
             {% endfor %}
                 <tr>
                     <td class="grey" colspan='2'></td>
-                    <td class="border-b price">Prix produits:</td>
+                    <td class="border-b price">Prix produits</td>
                     <td class="center border-b price">{{ order.TotalPriceOfOrderItems|format_currency('EUR') }}</td>
                 </tr>
                 <tr>
                     <td class="grey" colspan='2'></td>
-                    <td class="border-b price">Frais livraison:</td>
+                    <td class="border-b price">Frais livraison</td>
                     <td class="center border-b price">{{ order.shipping.fee|format_currency('EUR') }}</td>
                 </tr>
                 <tr>
                     <td class="grey" colspan='2'></td>
-                    <td class="border-b price">Réduction:</td>
+                    <td class="border-b price">Réduction</td>
                     <td class="center border-b price">
                         {% if order.promotionCode is not null %}
                             {% if order.promotionCode.amountType == 'amount' %}
@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td class="grey" colspan='2'></td>
-                    <td class="border-b price">Prix total:</td>
+                    <td class="border-b price">Prix total</td>
                     <td class="center border-b price">{{ order.Total|format_currency('EUR') }}</td>
                 </tr>
         </tbody>
