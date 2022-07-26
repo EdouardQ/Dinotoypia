@@ -26,6 +26,10 @@ ul {
     flex-flow: column;
 }
 
+.mb-10 {
+    margin-bottom: 10px;
+}
+
 .mb-15 {
     margin-bottom: 15px;
 }
@@ -200,7 +204,7 @@ ul {
     font-weight: 600;
     border: 0;
     cursor: pointer;
-    margin-left: 33%;
+    float: center;
 }
 
 .confirm_button:hover {
