@@ -35,7 +35,7 @@ class RefurbishedToyController extends AbstractController
             $entityManager->persist($entity);
             $entityManager->flush();
 
-            $this->addFlash('refurbishedToyNotice', "Votre demande a été accepté");
+            $this->addFlash('refurbishedToyNotice', "Votre demande a été reçue");
             return $this->redirectToRoute('customer.refurbished_toy.index');
         }
 
