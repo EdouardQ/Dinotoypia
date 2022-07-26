@@ -1,5 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ dump(products) }}
+    <div class="container_search">
+        {% if products|length > 1 %}
+            <h1 class="content_title">{{products|length}} produits semblent correspond à votre recherche</h1>
+        {% else %}
+            <h1 class="content_title">{{products|length}} produit semble correspond à votre recherche</h1>
+        {% endif %}
+
+
+        <div class="container_products">
+            {% for product in products %}
+                <div class="product_content">
+                    <div class="container_image">
+                        <img src="{{ asset('img/products/'~product.images[0].fileName) }}" alt="">
+                    </div>
+                    <div class="container_description">
+                        <a href="{{ url('product.index', {urlName: product.urlName}) }}" class="text-decoration-none link-dark">
+                            <div class="title_product">
+                                {{ product.name }}
+                            </div>
+                        </a>
+
+                        <div class="description">
+                            {{ product.description }}
+                        </div>
+                    </div>
+                    <div class="container_add_to_cart">
+                        <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+
+    </div>
 {% endblock %}

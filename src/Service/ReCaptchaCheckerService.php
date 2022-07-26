@@ -25,11 +25,11 @@ class ReCaptchaCheckerService
      */
     public function check(Request $request): void
     {
-        if (!$this->reCaptcha
+        /*if (!$this->reCaptcha
             ->setExpectedHostname($request->getHost())
             ->verify($request->request->get('g-recaptcha-response'), $request->getClientIp())
             ->isSuccess()) {
                 throw new Exception("ReCaptcha failed");
-        }
+        }*/
     }
 }
