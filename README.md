@@ -16,23 +16,21 @@ https://barcode.tec-it.com/fr/
 
 ## Todo
 
-### Marc:
-
-- navbar
-
-- panier
-
+- homepage
+- nos produis
 - page produit
-
-### Jonas
-
-- mail
-
-- aider Marc
-
-### Edouard
-
-- ~~checkout~~
-
-- partie customer
+- recherches avanceés (POST)
+- toutes les catégories
+- mails
+- factures
+- panier
+- compteur panier
+- tout l'espace Client :
+  - historique des commandes
+  - demande de reconditionnement
+  - suivi des reconditionnements
+  - infos clients
+  - form modifier infos clients
+  - form modifier mot de passe client
+- contact
 

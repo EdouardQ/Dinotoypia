@@ -15,7 +15,7 @@
             {{ form_label(form.text, 'Message: ') }}
             {{ form_widget(form.text, {attr: {rows: 10, cols: 50}}) }}
             <br>
-            <button class="g-recaptcha btn-primary"
+            <button class="g-recaptcha button_contact"
                     data-sitekey="{{ google_recaptcha_site_key }}"
                     data-callback='onSubmit'
                     data-action='submit'>

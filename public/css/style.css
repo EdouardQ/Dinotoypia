@@ -93,7 +93,8 @@ ul {
     align-items: center;
 }
 .container_content .connexion_content #login_customer .log_button,
-.container_content .register_content #register_form .register_button{
+.container_content .register_content #register_form .register_button,
+.button_contact{
     text-decoration: none;
     font-size: 16px;
     text-transform: uppercase;
@@ -109,7 +110,8 @@ ul {
     cursor: pointer;
 }
 .container_content .connexion_content #login_customer .log_button:hover,
-.container_content .register_content #register_form .register_button:hover{
+.container_content .register_content #register_form .register_button:hover,
+.button_contact{
     color: white;
     background-color: var(--primary-color);
 }
@@ -317,4 +319,17 @@ ul {
 .container_content .container_secondary_product .container_add_to_cart .button_add:hover{
     color: var(--primary-color);
     background-color: var(--content-bg);
+}
+/* page infos client */
+
+.container-customer-profile{
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-customer-infos,
+.container-customer-links {
+    flex: 1 48%;
 }

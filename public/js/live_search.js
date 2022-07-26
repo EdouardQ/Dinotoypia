@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
     var searchRequest = null;
+
     $("#searchBar").keyup(function() {
         var minlength = 3;
         var that = this;
@@ -34,5 +35,9 @@ jQuery(document).ready(function() {
             // clean results
             entitySelector.html('');
         }
+    });
+
+    document.getElementById("searchBar").addEventListener("search", function(event) {
+        $("#searchResults").html('');
     });
 });
