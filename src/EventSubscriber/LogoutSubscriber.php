@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Customer;
 use App\Repository\OrderRepository;
 use App\Storage\OrderSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,12 +32,16 @@ class LogoutSubscriber implements EventSubscriberInterface
     public function onLogoutEvent(LogoutEvent $event): void
     {
         $this->orderSessionStorage->removeOrder();
-        $ordersWithUnusedPromoCodeList = $this->orderRepository->findUncompletedOrderWithPromoCode($event->getToken()->getUser());
-        if (!empty($ordersWithUnusedPromoCodeList)) {
-            foreach ($ordersWithUnusedPromoCodeList as $order) {
-                $order->getPromotionCode()->removeOrder($order);
+        $user = $event->getToken()->getUser();
+
+        if ($user instanceof Customer) {
+            $ordersWithUnusedPromoCodeList = $this->orderRepository->findUncompletedOrderWithPromoCode($user);
+            if (!empty($ordersWithUnusedPromoCodeList)) {
+                foreach ($ordersWithUnusedPromoCodeList as $order) {
+                    $order->getPromotionCode()->removeOrder($order);
+                }
+                $this->entityManager->flush();
             }
-            $this->entityManager->flush();
         }
     }
 

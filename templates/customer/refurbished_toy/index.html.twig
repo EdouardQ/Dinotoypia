@@ -48,10 +48,11 @@
                                 <tr>
                                     <td>
                                         <p>
-                                            Votre ancien jouet a été vendu! Félécitations à lui et à vous.
+                                            Votre ancien jouet a été vendu! <br>
+                                            Félicitations à lui et à vous.
                                             {% if refurbishedToy.promotionCode %}
                                                 <br>
-                                                Voici un bon d'achat pour vous récompenser de ce geste : {{ refurbishedToy.promotionCode.code }}
+                                                Voici un bon d'achat pour vous récompenser de ce geste :<br> {{ refurbishedToy.promotionCode.code }}
                                             {% else %}
                                                 <br>
                                                 Nous générons votre bon d'achat, il sera disponible d'ici peu

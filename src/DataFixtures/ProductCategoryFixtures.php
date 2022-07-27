@@ -9,11 +9,11 @@ use Doctrine\Persistence\ObjectManager;
 class ProductCategoryFixtures extends Fixture
 {
     private array $list = [
-        '1-3',
-        '3-5',
-        '6-8',
-        '9-11',
-        '12+',
+        '1-3 ans',
+        '3-5 ans',
+        '6-8 ans',
+        '9-11 ans',
+        '12+ ans',
         "jouets d'éveil et peluches",
         "figurines",
         "jeux de société et puzzles",
