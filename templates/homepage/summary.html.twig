@@ -17,6 +17,7 @@
                                 <th>Nom</th>
                                 <th>Prix / unité</th>
                                 <th>Quantité</th>
+                                <th>Total</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -25,11 +26,22 @@
                                 <tr>
                                     <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}"><img src="{{ asset('img/products/' ~ item.product.images[0].filename ) }}" alt="{{ item.product.images[0].filename }}"></a></td>
                                     <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}">{{ item.product.name }}</a></td>
-                                    <td>{{ item.price|format_currency('EUR') }}</td>
+                                    <td>{{ item.price | format_currency('EUR') }}</td>
                                     <td>{{ item.quantity }}</td>
-                                    <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger">-</a></td>
+                                    <td>{{ (item.price * item.quantity) | format_currency('EUR') }}</td>
+                                    <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger"><img src="{{ asset('img/delete.png') }}" alt="-"></a></td>
                                 </tr>
                             {% endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    {{ order.total | format_currency('EUR')}}
+                                </td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

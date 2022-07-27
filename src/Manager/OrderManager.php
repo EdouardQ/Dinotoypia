@@ -119,7 +119,7 @@ class OrderManager
         $this->orderSessionStorage->setCart($n);
     }
 
-    public function createCheckout(): array
+    public function generateSummary(): array
     {
         $orderSession = $this->getOrderSession();
         $productRepository = $this->entityManager->getRepository(Product::class);

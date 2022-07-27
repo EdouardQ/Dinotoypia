@@ -243,10 +243,7 @@ hr {
 }
 
 .thumbnail{
-    border: solid black 1px;
-    border-radius: 10px;
     display: flex;
-    height: 100px;
 }
 
 .thumbnail-img{
@@ -256,6 +253,12 @@ hr {
 .thumbnail-body{
     flex-flow: column;
 }
+
+.container_customer_homepage a {
+    text-decoration: none;
+    color: black;
+}
+
 
 /* Partie reset password */
 

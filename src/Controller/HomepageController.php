@@ -63,7 +63,7 @@ class HomepageController extends AbstractController
     public function summary(OrderManager $orderManager): Response
     {
         return $this->render('homepage/summary.html.twig', [
-            'order' => $orderManager->createCheckout(),
+            'order' => $orderManager->generateSummary(),
         ]);
     }
 
