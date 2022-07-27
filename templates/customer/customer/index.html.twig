@@ -17,37 +17,40 @@
             </div>
         </div>
         <div class="container-customer-links">
-            <a href="{{ url('customer.customer.form') }}">Modifier ses informations</a>
-            <br>
-            <a href="{{ url('customer.customer.form_password') }}">Modifier votre mot de passe</a>
+            <a class="button_modif" href="{{ url('customer.customer.form') }}">Modifier mes informations</a>
+            <br><br>
+            <a class="button_modif" href="{{ url('customer.customer.form_password') }}">Modifier votre mot de passe</a>
         </div>
 
         <br><br><br><br><br><br><br><br><br>
 
-        <h3>Codes promo utilisés</h3>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Montant</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for promotionCode in app.user.getUsedPromotionCodes %}
+        {% if app.user.getUsedPromotionCodes is not empty %}
+            <h3>Codes promo utilisés</h3>
+            <table class="table">
+                <thead>
                 <tr>
-                    <td>{{ promotionCode.name }}</td>
-                    <td>
-                        {{ promotionCode.amount }}
-                        {% if promotionCode.amountType == 'percentage' %}
-                            %
-                        {% else %}
-                            €
-                        {% endif %}
-                    </td>
+                    <th>Nom</th>
+                    <th>Montant</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for promotionCode in app.user.getUsedPromotionCodes %}
+                    <tr>
+                        <td>{{ promotionCode.name }}</td>
+                        <td>
+                            {{ promotionCode.amount }}
+                            {% if promotionCode.amountType == 'percentage' %}
+                                %
+                            {% else %}
+                                €
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
     </section>
 </article>
 {% endblock %}

@@ -23,30 +23,6 @@ ul {
     list-style-type: none;
 }
 
-.flew_column {
-    flex-flow: column;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-.mb-15 {
-    margin-bottom: 15px;
-}
-
-.mt-15 {
-    margin-top: 15px;
-}
-
-.center-item {
-    text-align: center;
-}
-
-.no-float {
-    float: none !important;
-}
-
 hr {
     width: 80%;
     border: 1px solid rgba(255,255,255,.3);
@@ -178,7 +154,7 @@ hr {
 }
 .container_content .connexion_content #login_customer .log_button,
 .container_content .register_content #register_form .register_button,
-.button_contact{
+.button_contact, .button_modif{
     text-decoration: none;
     font-size: 16px;
     text-transform: uppercase;
@@ -195,7 +171,7 @@ hr {
 }
 .container_content .connexion_content #login_customer .log_button:hover,
 .container_content .register_content #register_form .register_button:hover,
-.button_contact{
+.button_contact:hover, .button_modif:hover{
     color: white;
     background-color: var(--primary-color);
 }
@@ -529,4 +505,46 @@ hr {
 }
 .content .contact_container form .input_contact{
     width: 60%;
+}
+
+
+/* divers */
+
+.flew_column {
+    flex-flow: column;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.center-item {
+    text-align: center;
+}
+
+.no-float {
+    float: none !important;
+}
+
+.title-typo {
+    color: var(--secondary-color);
+    font-family: CarterOne, sans-serif;
+}
+
+.modify-info {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    margin-top: 2%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    justify-content: center;
+    padding: 20px;
 }

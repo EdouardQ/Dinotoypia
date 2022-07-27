@@ -1,42 +1,44 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <section>
-        <br>
+    <article class="content">
+        <section class="text-content mb-10">
+            {% if not orders %}
 
-        {% if not orders %}
-            Il n'y a aucune commande dans votre historique.
-        {% endif %}
+                Il n'y a aucune commande dans votre historique.
+            {% endif %}
 
-        {% for order in orders %}
-        <table class="table table-striped w-75 m-auto text-center">
-            <tbody>
-                <tr>
-                    <td>Numéro de commande <br> {{ order.id }}</td>
-                    <td>Commande passée le <br> {{ order.createdAt | date('d M Y') }}</td>
-                    <td>Adresse de livraison <br> {{ order.deliveryAddress.address }}, {{ order.deliveryAddress.city }} - {{ order.deliveryAddress.country | country_name('fr')}}</td>
-                    <td>Prix total <br> {{ order.total | number_format(2) }}€</td>
-                    <td>Statut <br> {{ order.state.name }}</td>
-                    <td><a href="{{ url('customer.orders.invoice', {id: order.id}) }}" target="_blank">Imprimer <br> facture</a></td>
-                    <div>
-                        <table class="table m-auto text-center w-75">
-                            {% for item in order.getOrderItems %}
-                                <tr>
-                                    <td><img src="{{ asset('img/products/' ~ item.product.getImages[0].filename) }}" alt=""></td>
-                                    <td><a href="{{ url('product.index', {urlName: item.product.urlName}) }}">{{ item.product.name }}</a></td>
-                                    <td>{{ item.product.description }}</td>
-                                    <td></td>
-                                    {% if item.quantity > 1 %}
-                                        <td>Quantité: <br> {{ item.quantity }}</td>
-                                    {% endif %}
-                                    <td>{{ item.price | number_format(2)}}€</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </tr>
-            </tbody>
-        </table>
-            <br><br><br>
-        {% endfor %}
-    </section>
+            {% for order in orders %}
+            <table class="table table-striped w-75 m-auto text-center">
+                <tbody>
+                    <tr>
+                        <td>Numéro de commande <br> {{ order.id }}</td>
+                        <td>Commande passée le <br> {{ order.createdAt | date('d M Y') }}</td>
+                        <td>Adresse de livraison <br> {{ order.deliveryAddress.address }}, {{ order.deliveryAddress.city }} - {{ order.deliveryAddress.country | country_name('fr')}}</td>
+                        <td>Prix total <br> {{ order.total | number_format(2) }}€</td>
+                        <td>Statut <br> {{ order.state.name }}</td>
+                        <td><a href="{{ url('customer.orders.invoice', {id: order.id}) }}" target="_blank">Imprimer <br> facture</a></td>
+                        <div>
+                            <table class="table m-auto text-center w-75">
+                                {% for item in order.getOrderItems %}
+                                    <tr>
+                                        <td><img src="{{ asset('img/products/' ~ item.product.getImages[0].filename) }}" alt=""></td>
+                                        <td><a href="{{ url('product.index', {urlName: item.product.urlName}) }}">{{ item.product.name }}</a></td>
+                                        <td>{{ item.product.description }}</td>
+                                        <td></td>
+                                        {% if item.quantity > 1 %}
+                                            <td>Quantité: <br> {{ item.quantity }}</td>
+                                        {% endif %}
+                                        <td>{{ item.price | number_format(2)}}€</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </tr>
+                </tbody>
+            </table>
+                <br><br><br>
+            {% endfor %}
+        </section>
+    </article>
+    
 {% endblock %}
