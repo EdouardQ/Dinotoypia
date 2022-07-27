@@ -46,6 +46,17 @@
     padding-right: 10%;
     padding-left: 10%;
 }
+.container-top .container_menu .redirect-top #cart{
+    position: relative;
+}
+.container-top .container_menu .redirect-top #cart #cart-qty{
+    position: absolute;
+    padding: 0 4px;
+    border-radius: 100px;
+    background: #FFC800;
+    top: 30px;
+    left: 35px;
+}
 .container-top .redirect-top svg{
     width: 48px;
     height: 48px;
@@ -126,6 +137,7 @@
     color: var(--primary-color);
     background-color: var(--content-bg);
 }
+
 
 
 
