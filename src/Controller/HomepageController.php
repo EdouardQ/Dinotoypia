@@ -40,6 +40,7 @@ class HomepageController extends AbstractController
                         'name' => $product->getName(),
                         'urlName' => $product->getUrlName(),
                         'image' => $product->getImages()->getValues()[0]->getFileName(), // index 0 to get the first image
+                        'price' => $product->getPrice(),
                     ];
                 }
             }
