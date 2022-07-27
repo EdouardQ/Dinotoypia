@@ -17,14 +17,11 @@ https://barcode.tec-it.com/fr/
 ## Todo
 
 - homepage
-- nos produis
-- page produit
-- recherches avanceés (POST)
+- nos produits
 - toutes les catégories
-- mails
-- factures
-- panier
+- ajouter le prix dans les résultat de la recherches (menu déroulant)
 - compteur panier
+- 
 - tout l'espace Client :
   - historique des commandes
   - demande de reconditionnement
@@ -32,5 +29,4 @@ https://barcode.tec-it.com/fr/
   - infos clients
   - form modifier infos clients
   - form modifier mot de passe client
-- contact
 

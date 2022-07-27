@@ -31,7 +31,7 @@
 }
 .container-top .container_search_bar #searchBar{
     width: 100%;
-    text-align: right;
+    text-align: left;
     color: #808080;
 }
 .container-top .container_menu{

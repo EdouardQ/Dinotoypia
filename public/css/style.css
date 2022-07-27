@@ -7,15 +7,16 @@
     --primary-color: #7aa33f;
     --primary-pale-color: #DEB887;
     --secondary-color: #428214;
-    --container-content-bg: #fffcd6;
+    --container-content-bg: #FFFBF0;
     --content-bg: #FFFFFF;
+    --color-title-product: #505050;
 }
 .flex_content{
     display: flex;
     font-family: Montserrat, sans-serif;
 }
 .container_content .title_content{
-    color: white;
+    color: var(--secondary-color);
 }
 
 ul {
@@ -82,6 +83,33 @@ hr {
     text-align: left;
     font-weight: bold;
     color: var(--content-bg);
+}
+
+/* Page d'accueil */
+.container_content .container_daily_products{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: 2%;
+    background-color: var(--content-bg);
+    border-radius: 30px;
+    width: 60%;
+    height: 400px;
+    justify-content: center;
+}
+.container_content .container_daily_products .homepage_wrapper{
+    flex: 1 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.container_content .container_daily_products .homepage_wrapper .content_title{
+    margin: 5px 0;
+    color: var(--color-title-product);
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: none;
 }
 
 /* Page de connexion */
@@ -250,7 +278,7 @@ hr {
 }
 .container_content .container_primary_product .title_product{
     margin: 5px 0;
-    color: #505050;
+    color: var(--color-title-product);
     font-size: 22px;
     font-weight: 800;
     text-transform: none;
@@ -294,7 +322,6 @@ hr {
     align-items: center;
     justify-content: space-evenly;
     min-height: 300px;
-    background-color: var(--primary-pale-color);
 }
 .container_content .container_secondary_product .container_add_to_cart .price_product{
     font-size: 36px;
@@ -357,7 +384,7 @@ hr {
 }
 .container_content .content .content_title{
     margin: 5px 0;
-    color: #505050;
+    color: var(--color-title-product);
     font-size: 22px;
     font-weight: 800;
     text-transform: none;
@@ -378,7 +405,7 @@ hr {
 }
 .container_content .container_search .content_title{
     margin: 25px 25px 5px 25px;
-    color: #505050;
+    color: var(--color-title-product);
     font-size: 22px;
     font-weight: 800;
     text-transform: none;
@@ -419,7 +446,7 @@ hr {
 }
 .container_content .container_search .container_products .product_content .container_description .title_product{
     margin: 5px 5px 5px 5px;
-    color: #505050;
+    color: var(--color-title-product);
     font-size: 16px;
     font-weight: 600;
     text-transform: none;
