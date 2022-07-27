@@ -14,7 +14,7 @@
                     <td>Numéro de commande <br> {{ order.id }}</td>
                     <td>Commande passée le <br> {{ order.createdAt | date('d M Y') }}</td>
                     <td>Adresse de livraison <br> {{ order.deliveryAddress.address }}, {{ order.deliveryAddress.city }} - {{ order.deliveryAddress.country | country_name('fr')}}</td>
-                    <td>Pris total <br> {{ order.totalPriceOfOrderItems | number_format(2) }}€</td>
+                    <td>Prix total <br> {{ order.total | number_format(2) }}€</td>
                     <td>Statut <br> {{ order.state.name }}</td>
                     <td><a href="{{ url('customer.orders.invoice', {id: order.id}) }}" target="_blank">Imprimer <br> facture</a></td>
                     <div>

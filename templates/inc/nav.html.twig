@@ -8,9 +8,10 @@
 	<div class="flex_nav container_search_bar">
 		<form class="form_search_bar" method="post" action="{{ url('homepage.search') }}">
 			<input class="form-control" type="search" name="search" id="searchBar" placeholder="ENTREZ VOTRE RECHERCHE ..." aria-label="Search">
+			<ul class="searchResults" id="searchResults">
+			</ul>
 		</form>
-		<ul class="searchResults" id="searchResults">
-		</ul>
+
 	</div>
 	<div class="flex_nav container_menu">
 		<a class="redirect-top" href="{{ url('homepage.summary') }}">

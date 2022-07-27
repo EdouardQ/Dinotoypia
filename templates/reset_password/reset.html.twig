@@ -7,7 +7,10 @@
 
     <div class="flex_content reset_password_content">
         {{ form_start(resetForm) }}
-            {{ form_row(resetForm.plainPassword) }}
+            {{ form_label(resetForm.plainPassword.first) }}
+            {{ form_widget(resetForm.plainPassword.first) }}
+            {{ form_label(resetForm.plainPassword.second) }}
+            {{ form_widget(resetForm.plainPassword.second, {attr: {class: "mb-15"}}) }}
             <button class="confirm_button">Modifier le mot de passe</button>
         {{ form_end(resetForm) }}
     </div>

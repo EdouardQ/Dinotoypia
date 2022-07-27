@@ -14,6 +14,7 @@ use App\Entity\Shipping;
 use App\Entity\State;
 use App\Entity\UserBack;
 use App\Service\FileService;
+use App\Service\MailService;
 use App\Service\StripeService;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -24,13 +25,15 @@ use Symfony\Component\Security\Core\Security;
 
 class EntitySubscriber implements EventSubscriberInterface
 {
+    private MailService $mailService;
     private FileService $fileService;
     private Security $security;
     private StripeService $stripeService;
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(FileService $fileService, Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(MailService $mailService, FileService $fileService, Security $security, StripeService $stripeService, UserPasswordHasherInterface $userPasswordHasher)
     {
+        $this->mailService = $mailService;
         $this->fileService = $fileService;
         $this->security = $security;
         $this->stripeService = $stripeService;
@@ -141,8 +144,19 @@ class EntitySubscriber implements EventSubscriberInterface
         elseif ($entity instanceof Shipping && $args->hasChangedField('active')) {
             $this->stripeService->updateShipping($entity);
         }
-        elseif ($entity instanceof RefurbishedToy && $args->hasChangedField('state') && $entity->getImage() !== null) {
-            if ($entity->getState()->getCode() === 're-sale') {
+        elseif ($entity instanceof RefurbishedToy) {
+            // when the RefurbishedToy request is accepted
+            if ($args->hasChangedField('state' && $entity->getState()->getCode() === 'waiting_deposit')) {
+                $this->mailService->sendEmailAcceptedRefurbishedToy($entity);
+            }
+            // when the RefurbishedToy request is refused
+            elseif ($args->hasChangedField('state' && $entity->getState()->getCode() === 'refused')) {
+                $this->mailService->sendEmailRefusedRefurbishedToy($entity);
+                $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
+                $entity->setImage(null);
+            }
+            // remove img when the RefurbishedToy is set to re-sale
+            elseif ($args->hasChangedField('state') && $entity->getImage() !== null && $entity->getState()->getCode() === 're-sale') {
                 $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
                 $entity->setImage(null);
             }

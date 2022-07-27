@@ -1,0 +1,77 @@
+{% include "./style/export_style.html.twig" %}
+
+<style>
+    @page { 
+        margin: 10px;
+        size: 794px 1123px;
+        }
+</style>
+
+<body>
+    <div>
+        <h1 class="inline-b ml-10p">Dinotoypia</h1>
+        <h1 class="inline-b f-right mr-10p">Commande N° {{ order.id }}</h1>
+    </div>
+    
+
+    <div class='ml-5p mb-20'>Client: {{ order.customer.firstName}} {{ order.customer.lastName}}</div>
+
+    <div class='ml-5p mb-20 w-80p'>
+        <div class="inline-b">Mode d'envoi: {{ order.shipping.name }}</div>
+        <div class="inline-b f-right">Date de la commande: {{ order.createdAt|date('d/m/Y') }}</div>
+    </div>
+
+    <table class="w-100p">
+        <thead>
+            <tr>
+                <td>Quantité</td>
+                <td>Nom du produit</td>
+                <td>Prix unitaire</td>
+                <td>Prix total</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in order.orderItems %}
+            {% set prixTotal = entry.quantity * entry.price %}
+                <tr class="product-line">
+                    <td class="center">{{ entry.quantity }}</td>
+                    <td class="center">{{ entry.product.name }}</td>
+                    <td class="center">{{ entry.price|format_currency('EUR') }}</td>
+                    <td class="center">{{ prixTotal|format_currency('EUR') }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td class="grey" colspan='2'></td>
+                    <td class="border-b price">Prix produits</td>
+                    <td class="center border-b price">{{ order.TotalPriceOfOrderItems|format_currency('EUR') }}</td>
+                </tr>
+                <tr>
+                    <td class="grey" colspan='2'></td>
+                    <td class="border-b price">Frais livraison</td>
+                    <td class="center border-b price">{{ order.shipping.fee|format_currency('EUR') }}</td>
+                </tr>
+                <tr>
+                    <td class="grey" colspan='2'></td>
+                    <td class="border-b price">Réduction</td>
+                    <td class="center border-b price">
+                        {% if order.promotionCode is not null %}
+                            {% if order.promotionCode.amountType == 'amount' %}
+                                - {{ order.promotionCode.amount }} €
+                            {% else %}
+                                - {{ order.promotionCode.amount }} %
+                            {% endif %}
+                        {% else %}
+                            - 0 €
+                        {% endif %}
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td class="grey" colspan='2'></td>
+                    <td class="border-b price">Prix total</td>
+                    <td class="center border-b price">{{ order.Total|format_currency('EUR') }}</td>
+                </tr>
+        </tbody>
+    </table>
+        
+</body>

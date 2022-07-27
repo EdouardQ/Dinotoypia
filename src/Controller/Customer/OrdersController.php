@@ -32,7 +32,7 @@ class OrdersController extends AbstractController
         $pdfOptions->set('defaultFont', 'Arial');
 
         $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('', [
+        $html = $this->renderView('order/order_pdf.html.twig', [
             'order' => $order,
         ]);
 

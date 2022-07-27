@@ -1,42 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <br>
-    <section>
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Nom</th>
-                        <th>Prix / unité</th>
-                        <th>Quantité</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in order.orderItems %}
-                        <tr>
-                            <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}"><img src="{{ asset('img/products/' ~ item.product.images[0].filename ) }}" alt="{{ item.product.images[0].filename }}"></a></td>
-                            <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}">{{ item.product.name }}</a></td>
-                            <td>{{ item.price }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger">-</a></td>
-                        </tr>
+    {% if order.orderItems is empty %}
+        <article class="content">
+            <section class="text-content mb-10">Le panier est actuellement vide, veuillez ajouter des produits pour en avoir la liste</section>
+        </article>
+    {% else %}
+        <br>
+        <article class="content">
+            <section>
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Nom</th>
+                                <th>Prix / unité</th>
+                                <th>Quantité</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.orderItems %}
+                                <tr>
+                                    <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}"><img src="{{ asset('img/products/' ~ item.product.images[0].filename ) }}" alt="{{ item.product.images[0].filename }}"></a></td>
+                                    <td><a href="{{ url('product.index', {urlName: item.product.urlname}) }}">{{ item.product.name }}</a></td>
+                                    <td>{{ item.price|format_currency('EUR') }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td><a href="{{ url('product.remove_to_order', {id: item.product.id}) }}" class="btn btn-danger">-</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mb-15">
+                    {% for message in app.flashes('paymentFailedNotice') %}
+                        <p class="alert-danger">{{ message }}</p>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div>
-            {% for message in app.flashes('paymentFailedNotice') %}
-                <p class="alert-danger">{{ message }}</p>
-            {% endfor %}
-            {% for message in app.flashes('outOfStockNotice') %}
-                <p class="alert-danger">{{ message }}</p>
-            {% endfor %}
-            <a href="{{ url('customer.payment.checkout') }}" class="btn btn-primary">Confirmer panier</a>
-        </div>
-    </section>
+                    {% for message in app.flashes('outOfStockNotice') %}
+                        <p class="alert-danger">{{ message }}</p>
+                    {% endfor %}
+                    <a href="{{ url('customer.payment.checkout') }}" class="confirm_button">Confirmer panier</a>
+                </div>
+            </section>
+        </article>
+    {% endif %}
+    
 {% endblock %}
 
 {% block javascripts %}

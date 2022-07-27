@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
     var searchRequest = null;
+
     $("#searchBar").keyup(function() {
         var minlength = 3;
         var that = this;
@@ -23,7 +24,7 @@ jQuery(document).ready(function() {
                                 const name = arr.name;
                                 const urlName = arr.urlName;
                                 const image = arr.image;
-                                entitySelector.append("<li><a href='/product/"+urlName+"'><img src='/img/products/"+image+"' alt=''></img>"+name+"</a></li>");
+                                entitySelector.append("<li><a href='/product/"+urlName+"'><img class='searchbar_products' src='/img/products/"+image+"' alt=''></img>"+name+"</a></li>");
                             });
                         }
                     }
@@ -34,5 +35,9 @@ jQuery(document).ready(function() {
             // clean results
             entitySelector.html('');
         }
+    });
+
+    document.getElementById("searchBar").addEventListener("search", function(event) {
+        $("#searchResults").html('');
     });
 });

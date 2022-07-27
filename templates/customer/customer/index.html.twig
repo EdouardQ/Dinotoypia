@@ -1,24 +1,28 @@
-{% extends 'base.html.twig' %}
+    {% extends 'base.html.twig' %}
 {% block body %}
-    <section>
-        <div>
+<article class="content">
+    <section class="text-content container-customer-profile">
+        <div class="container-customer-infos">
             <h3>Informations</h3>
-            <ul>
-                <li>{{ app.user.email }}</li>
-                <li>{{ app.user.civility.name }}</li>
-                <li>{{ app.user.firstName }}</li>
-                <li>{{ app.user.lastName }}</li>
-                <li>{{ app.user.phone }}</li>
-            </ul>
-            <br><br>
             <div>
-                <a href="{{ url('customer.customer.form') }}">Modifier ses informations</a>
+                Email : {{ app.user.email }}
                 <br>
-                <a href="{{ url('customer.customer.form_password') }}">Modifier votre mot de passe</a>
+                Civilité : {{ app.user.civility.name }}
+                <br>
+                Prénom : {{ app.user.firstName }}
+                <br>
+                Nom : {{ app.user.lastName }}
+                <br>
+                Téléphone : {{ app.user.phone }}
             </div>
         </div>
+        <div class="container-customer-links">
+            <a href="{{ url('customer.customer.form') }}">Modifier ses informations</a>
+            <br>
+            <a href="{{ url('customer.customer.form_password') }}">Modifier votre mot de passe</a>
+        </div>
 
-        <br><br><br>
+        <br><br><br><br><br><br><br><br><br>
 
         <h3>Codes promo utilisés</h3>
         <table class="table">
@@ -45,4 +49,5 @@
             </tbody>
         </table>
     </section>
+</article>
 {% endblock %}
