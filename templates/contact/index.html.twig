@@ -6,11 +6,10 @@
                 <p class="alert-success">{{ message }}</p>
             {% endfor %}
             {{ form_start(form, {attr: {id: 'contact_form'}}) }}
-            {{ form_label(form.email, 'Adresse email: ') }}
-            {{ form_widget(form.email) }}
+            {{ form_widget(form.email, { 'attr': {'placeholder': 'Adresse mail'}}) }}
             <br>
             {{ form_label(form.subject, 'Sujet: ') }}
-            {{ form_widget(form.subject) }}
+            {{ form_widget(form.subject, {attr: {class: 'input_contact'}}) }}
             <br>
             {{ form_label(form.text, 'Message: ') }}
             {{ form_widget(form.text, {attr: {rows: 10, cols: 50}}) }}
