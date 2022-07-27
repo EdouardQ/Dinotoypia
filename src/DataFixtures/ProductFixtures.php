@@ -44,7 +44,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         $product->setName("Flipper JurassicPark")
             ->setUrlName("flipper-jurassicpark")
             ->setDescription("Flipper Jurasic Park")
-            ->addCategory($this->getReference("12+"))
+            ->addCategory($this->getReference("12+ ans"))
             ->setPrice(250)
             ->setProductStripeId("prod_Luaopl7ghHmcbb")
             ->setPriceStripeId("price_1LClckHowZnzDNfSIHuGLniK")
