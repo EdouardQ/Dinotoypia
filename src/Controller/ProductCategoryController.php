@@ -16,7 +16,7 @@ class ProductCategoryController extends AbstractController
     {
         $productList = $productRepository->findByCatogory($productCategory);
         return $this->render('category/index.html.twig', [
-            'productList' => $$productList
+            'productList' => $productList
         ]);
     }
 }
