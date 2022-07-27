@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\ProductCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,6 +31,32 @@ class ProductRepository extends ServiceEntityRepository
             $query->setMaxResults($max);
         }
         return $query->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findByCatogory(ProductCategory $productCategory)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.category', 'c', 'p.category = c.id')
+            ->andWhere('c.id = :id')
+            ->andWhere('p.visible = 1')
+            ->setParameter('id', $productCategory->getId())
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findByCatogoryAndByReleaseDate(string $categoryName)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.category', 'c', 'p.category = c.id')
+            ->andWhere('c.name = :name')
+            ->andWhere('p.visible = 1')
+            ->setParameter('name', $categoryName)
+            ->orderBy('p.releaseDate', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
             ->getResult()
             ;
     }

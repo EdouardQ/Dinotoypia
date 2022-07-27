@@ -10,11 +10,11 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
     private array $ages = [
-        '1-3',
-        '3-5',
-        '6-8',
-        '9-11',
-        '12+'
+        '1-3 ans',
+        '3-5 ans',
+        '6-8 ans',
+        '9-11 ans',
+        '12+ ans'
     ];
     private array $categories = [
         "jouets d'éveil et peluches",
@@ -44,7 +44,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         $product->setName("Flipper JurassicPark")
             ->setUrlName("flipper-jurassicpark")
             ->setDescription("Flipper Jurasic Park")
-            ->addCategory($this->getReference("12+"))
+            ->addCategory($this->getReference("12+ ans"))
             ->setPrice(250)
             ->setProductStripeId("prod_Luaopl7ghHmcbb")
             ->setPriceStripeId("price_1LClckHowZnzDNfSIHuGLniK")

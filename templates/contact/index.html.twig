@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 {% block body %}
+
+    <h1 class="flex_title title_content mt-5">Contactez-nous !</h1>
     <article class="content">
         <section class="contact_container text-content text-center">
             {% for message in app.flashes('contactNotice') %}
