@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Manager\OrderManager;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomepageController extends AbstractController
 {
     #[Route('/', name: 'homepage.index')]
-    public function index(): Response
+    public function index(ProductRepository $productRepository): Response
     {
-        return $this->render('homepage/index.html.twig');
+        $listFigurines = $productRepository->findByExampleField('figurines');
+        $listGames = $productRepository->findByExampleField('jeux de société et puzzles');
+        return $this->render('homepage/index.html.twig', [
+            'listFigurines' => $listFigurines,
+            'listGames' => $listGames,
+        ]);
     }
 
     #[Route('/search/{requestString}', name: 'homepage.search', defaults: ['requestString' => null])]

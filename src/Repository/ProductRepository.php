@@ -34,6 +34,19 @@ class ProductRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findByExampleField(string $categoryName)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.category', 'c', 'p.category = c.id')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $categoryName)
+            ->orderBy('p.releaseDate', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
