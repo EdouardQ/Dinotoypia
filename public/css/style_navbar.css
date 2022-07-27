@@ -55,7 +55,7 @@
     width: 25px;
     height: 25px;
     border-radius: 15px;
-    background: red;
+    background: var(--secondary-color);
     top: 30px;
     left: 35px;
 }
