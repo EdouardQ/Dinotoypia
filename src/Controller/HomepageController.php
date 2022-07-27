@@ -16,8 +16,8 @@ class HomepageController extends AbstractController
     #[Route('/', name: 'homepage.index')]
     public function index(ProductRepository $productRepository): Response
     {
-        $listFigurines = $productRepository->findByExampleField('figurines');
-        $listGames = $productRepository->findByExampleField('jeux de société et puzzles');
+        $listFigurines = $productRepository->findByCatogoryAndByReleaseDate('figurines');
+        $listGames = $productRepository->findByCatogoryAndByReleaseDate('jeux de société et puzzles');
         return $this->render('homepage/index.html.twig', [
             'listFigurines' => $listFigurines,
             'listGames' => $listGames,
