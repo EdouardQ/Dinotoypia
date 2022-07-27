@@ -50,10 +50,12 @@
     position: relative;
 }
 .container-top .container_menu .redirect-top #cart #cart-qty{
+    font-family: Monserrat;
     position: absolute;
-    padding: 0 4px;
-    border-radius: 100px;
-    background: #FFC800;
+    width: 25px;
+    height: 25px;
+    border-radius: 15px;
+    background: red;
     top: 30px;
     left: 35px;
 }
