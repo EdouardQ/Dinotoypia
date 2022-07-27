@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ContactFormType;
 use App\Service\MailService;
+use App\Service\ReCaptchaCheckerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'contact.index')]
-    public function index(Request $request, MailService $mailService): Response
+    public function index(Request $request, MailService $mailService, ReCaptchaCheckerService $reCaptchaCheckerService): Response
     {
         $form = $this->createForm(ContactFormType::class)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $reCaptchaCheckerService->check($request);
             $mailService->sendEmailFromContact($form->getData());
             $this->addFlash('contactNotice', "Demande de contact envoyée avec succès");
             return $this->redirectToRoute('contact.index');
