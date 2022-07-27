@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <h1 class="flex_title title_content">Nos catégories de produit</h1>
+    <div class="container_categories">
+        {% for cat in categoryList %}
+            <a href="{{ url('category.cat', {id: cat.id}) }}" class="text-decoration-none link-dark">
+                <div class="title_category">
+                    {{ cat.name }}
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
