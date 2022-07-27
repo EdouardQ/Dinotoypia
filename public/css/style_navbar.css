@@ -58,19 +58,19 @@
     justify-content: center;
     height: 40px;
     background-color: var(--secondary-color);
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: 0 5px 15px -5px rgb(0 0 0 / 8%);
 }
 .nav-container .container-sub-menu{
-    width: 70%;
+    width: 100%;
     justify-content: space-evenly;
 }
 .nav-container .container-sub-menu .redirect-sub-menu{
     display: flex;
     justify-content: center;
     align-items: center;
-    border-left: #795016 1px solid;
-    border-right: #795016 1px solid;
-    width: 20%;
+    border-left: var(--primary-color) 1px solid;
+    border-right: var(--primary-color) 1px solid;
+    width: 250px;
     height: 100%;
     text-decoration: none;
     color: white;

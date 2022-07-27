@@ -4,10 +4,10 @@
     src: url('fonts/CarterOne.ttf') format('truetype')
 }
 :root {
-    --primary-color: #795016;
+    --primary-color: #7aa33f;
     --primary-pale-color: #DEB887;
-    --secondary-color: #5B3C11;
-    --container-content-bg: #527E4D;
+    --secondary-color: #428214;
+    --container-content-bg: #fffcd6;
     --content-bg: #FFFFFF;
 }
 .flex_content{
@@ -443,4 +443,15 @@ hr {
     font-size: 36px;
     font-weight: 600;
     color: var(--secondary-color);
+}
+/* Page de contact */
+.content .contact_container form{
+    margin-top: 10px;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.content .contact_container form .input_contact{
+    width: 60%;
 }
