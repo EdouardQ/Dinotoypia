@@ -1,34 +1,31 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <br>
-    <section>
-        <div class="row m-auto text-center">
+        <h1 class="flex_title title_content">Reconditionnement</h1>
+        <div class="flex_content connexion_content text-center">
+            {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'requestRefurbishedToy', class: "mt-15"}}) }}
+                {{ form_label(form.name, "Nom du produit") }}
+                {{ form_widget(form.name) }}
+                <br>
+                {{ form_label(form.toyCondition, "État") }}
+                {{ form_widget(form.toyCondition) }}
+                <br>
+                {{ form_label(form.image, "Image de votre jouet") }}
+                {{ form_widget(form.image) }}
+                <br>
+                <div>
+                    {{ form_row(form.agreeTerms, {attr: {class: "no-float"}}) }}
+                </div>
+                <br>
+                <button class="g-recaptcha button_contact"
+                        data-sitekey="{{ google_recaptcha_site_key }}"
+                        data-callback='onSubmit'
+                        data-action='submit'>
+                    Confirmer
+                </button>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'requestRefurbishedToy'}}) }}
-            {{ form_label(form.name, "Nom") }}
-            {{ form_widget(form.name) }}
-            <br>
-            {{ form_label(form.toyCondition, "État") }}
-            {{ form_widget(form.toyCondition) }}
-            <br>
-            {{ form_label(form.image, "Image de votre jouet") }}
-            {{ form_widget(form.image) }}
-            <br>
-            <div>
-                {{ form_row(form.agreeTerms) }}
-            </div>
-            <br>
-            <button class="g-recaptcha btn btn-primary"
-                    data-sitekey="{{ google_recaptcha_site_key }}"
-                    data-callback='onSubmit'
-                    data-action='submit'>
-                Confirmer
-            </button>
-
-        {{ form_end(form) }}
-
+            {{ form_end(form) }}
         </div>
-    </section>
 {% endblock %}
 
 {% block javascripts %}
