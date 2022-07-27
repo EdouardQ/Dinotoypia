@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Order;
+use App\Entity\RefurbishedToy;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -39,6 +40,34 @@ class MailService
             ->htmlTemplate('emails/contact.html.twig')
             ->context([
                 'contactForm' => $contactForm,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendEmailAcceptedRefurbishedToy(RefurbishedToy $refurbishedToy): void
+    {
+        $email = (new TemplatedEmail())
+            ->from('no-reply@dinotoypia.store')
+            ->to('no-reply@dinotoypia.store')
+            ->subject('Demande de reconditionnement')
+            ->htmlTemplate('')
+            ->context([
+                'refurbishedToy' => $refurbishedToy,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendEmailRefusedRefurbishedToy(RefurbishedToy $refurbishedToy): void
+    {
+        $email = (new TemplatedEmail())
+            ->from('no-reply@dinotoypia.store')
+            ->to('no-reply@dinotoypia.store')
+            ->subject('Demande de reconditionnement')
+            ->htmlTemplate('')
+            ->context([
+                'refurbishedToy' => $refurbishedToy,
             ]);
 
         $this->mailer->send($email);
