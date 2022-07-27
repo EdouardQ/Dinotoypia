@@ -3,11 +3,48 @@
 <div class="container_daily_products">
     <section class="homepage_wrapper">
         <h1 class="content_title">Nos jeux de sociétés récents</h1>
-        <div class=""
+        <div class="container_products">
+            {% for bg in listGames %}
+                <div class="product_content">
+                    <div class="container_image">
+                        <img src="{{ asset('img/products/'~bg.images[0].fileName) }}" alt="">
+                    </div>
+                    <div class="container_description">
+                        <a href="{{ url('product.index', {urlName: bg.urlName}) }}" class="text-decoration-none link-dark">
+                            <div class="title_product">
+                                {{ bg.name }}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="container_add_to_cart">
+                        <span class="price_product">{{ bg.price|number_format(2,'.',',') }} €</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </section>
+    <hr>
     <section class="homepage_wrapper">
         <h1 class="content_title">Nos figurines récents</h1>
-
+        <div class="container_products">
+            {% for fg in listFigurines %}
+                <div class="product_content">
+                    <div class="container_image">
+                        <img src="{{ asset('img/products/'~fg.images[0].fileName) }}" alt="">
+                    </div>
+                    <div class="container_description">
+                        <a href="{{ url('product.index', {urlName: fg.urlName}) }}" class="text-decoration-none link-dark">
+                            <div class="title_product">
+                                {{ fg.name }}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="container_add_to_cart">
+                        <span class="price_product">{{ fg.price|number_format(2,'.',',') }} €</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </section>
 </div>
 {% endblock %}
