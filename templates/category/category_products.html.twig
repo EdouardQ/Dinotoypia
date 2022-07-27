@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <h1 class="flex_title title_content mt-5">Nos produits de la gamme : {{ nameCategory }}</h1>
+    <div class="container_products_category">
+        {% for product in productList %}
+            <div class="product_content">
+                <div class="container_image">
+                    <img src="{{ asset('img/products/'~product.images[0].fileName) }}" alt="">
+                </div>
+                <div class="container_description">
+                    <a href="{{ url('product.index', {urlName: product.urlName}) }}" class="text-decoration-none link-dark">
+                        <div class="title_product">
+                            {{ product.name }}
+                        </div>
+                    </a>
+                </div>
+                <div class="container_add_to_cart">
+                    <span class="price_product">{{ product.price|number_format(2,'.',',') }} €</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
