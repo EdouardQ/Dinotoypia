@@ -146,11 +146,11 @@ class EntitySubscriber implements EventSubscriberInterface
         }
         elseif ($entity instanceof RefurbishedToy) {
             // when the RefurbishedToy request is accepted
-            if ($args->hasChangedField('state' && $entity->getState()->getCode() === 'waiting_deposit')) {
+            if ($args->hasChangedField('state') && $entity->getState()->getCode() === 'waiting_deposit') {
                 $this->mailService->sendEmailAcceptedRefurbishedToy($entity);
             }
             // when the RefurbishedToy request is refused
-            elseif ($args->hasChangedField('state' && $entity->getState()->getCode() === 'refused')) {
+            elseif ($args->hasChangedField('state') && $entity->getState()->getCode() === 'refused') {
                 $this->mailService->sendEmailRefusedRefurbishedToy($entity);
                 $this->fileService->ImageFromRefurbishedToyForm($entity->getImage());
                 $entity->setImage(null);

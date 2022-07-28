@@ -69,6 +69,7 @@
     top: 60px;
     border-radius: 12px;
     background-color: white;
+    width: 100%;
 }
 
 .searchResults li {
@@ -76,7 +77,7 @@
     text-align: left;
     padding-top: 5px;
     padding-bottom: 5px;
-    min-width: 725px;
+    width: 100%;
     z-index: 1;
 }
 .searchResults li a{
@@ -100,6 +101,11 @@
     font-size: 16px;
     font-weight: 600;
 }
+
+.searchResults li a .name_product:hover{
+    text-decoration: underline var(--secondary-color);
+}
+
 .searchResults li a .price_product{
     flex: 1 20%;
     display: flex;

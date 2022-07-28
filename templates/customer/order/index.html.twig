@@ -23,7 +23,7 @@
                                     <tr>
                                         <td><img src="{{ asset('img/products/' ~ item.product.getImages[0].filename) }}" alt=""></td>
                                         <td><a href="{{ url('product.index', {urlName: item.product.urlName}) }}">{{ item.product.name }}</a></td>
-                                        <td>{{ item.product.description }}</td>
+                                        <td></td>
                                         <td></td>
                                         {% if item.quantity > 1 %}
                                             <td>Quantité: <br> {{ item.quantity }}</td>

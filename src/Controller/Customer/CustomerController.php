@@ -45,6 +45,9 @@ class CustomerController extends AbstractController
                         ->to($customer->getEmail())
                         ->subject("Confirmation d'adresse email")
                         ->htmlTemplate('registration/confirmation_email.html.twig')
+                        ->context([
+                            'customer' => $customer
+                        ])
                 );
                 $this->addFlash('customerEmailNotice', "Un email de confirmation a été envoyé");
             }

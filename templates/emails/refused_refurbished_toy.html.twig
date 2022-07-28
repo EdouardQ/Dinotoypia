@@ -4,21 +4,20 @@
     <div class="container-mail">
         <header class="header">
             <div class="container-base">
-                Bonjour {{ customer.firstname }} {{ customer.lastname }},
+                Bonjour {{ refurbishedToy.customer.firstname }} {{ refurbishedToy.customer.lastname }},
             </div>
         </header>
 
         <hr class="hr">
 
         <div class="cardlayout">
-            <div class="container"><h2>Création de votre compte Dinotoypia</h2></div>
+            <div class="container"><h2>Demande de reconditionnement refusée</h2></div>
 
             <div class="container">
-                Merci de confirmer votre email pour finaliser la création de votre compte en cliquant sur le lien suivant :
+                La demande de reconditionnement de votre jouet a été déclinée par notre équipe car le produit ne rempli nos
+                critaires minimum de reconditionnement.
                 <br>
-                <a href="{{ signedUrl }}">Confirmer mon email</a>
-                <br>
-                Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}
+                Nous vous conseillons donc de jeter votre jouet (dans la poubelle jaune) afin d'être recyclé.
             </div>
         </div>
 

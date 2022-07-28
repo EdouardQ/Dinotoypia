@@ -5,7 +5,7 @@
         <h1 class="content_title">Nos jeux de sociétés récents</h1>
         <div class="container_products">
             {% for bg in listGames %}
-                <div class="product_content">
+                <div class="product_content text-center">
                     <div class="container_image">
                         <img src="{{ asset('img/products/'~bg.images[0].fileName) }}" alt="">
                     </div>
@@ -25,7 +25,7 @@
     </section>
     <hr>
     <section class="homepage_wrapper">
-        <h1 class="content_title">Nos figurines récents</h1>
+        <h1 class="content_title">Nos figurines récentes</h1>
         <div class="container_products">
             {% for fg in listFigurines %}
                 <div class="product_content">
