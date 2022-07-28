@@ -100,6 +100,11 @@
     font-size: 16px;
     font-weight: 600;
 }
+
+.searchResults li a .name_product:hover{
+    text-decoration: underline var(--secondary-color);
+}
+
 .searchResults li a .price_product{
     flex: 1 20%;
     display: flex;
