@@ -1,11 +1,32 @@
-<h1>Hi! Please confirm your email!</h1>
+{{ include('./style/email_style.html.twig') }}
 
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
+<body class="body">
+    <div class="container-mail">
+        <header class="header">
+            <div class="container-base">
+                Bonjour {{ customer.firstname }} {{ customer.lastname }},
+            </div>
+        </header>
 
-<p>
-    Cheers!
-</p>
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container"><h2>Création de votre compte Dinotoypia</h2></div>
+
+            <div class="container">
+                Merci de confirmer votre email pour finaliser la création de votre compte en cliquant sur le lien suivant :
+                <br>
+                <a href="{{ signedUrl }}">Confirmer mon email</a>
+                <br>
+                Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}
+            </div>
+        </div>
+
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container">L'équipe Dinotoypia</h2></div>
+        </div>
+
+    </div>
+</body>

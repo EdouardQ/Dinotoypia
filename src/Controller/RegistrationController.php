@@ -51,6 +51,9 @@ class RegistrationController extends AbstractController
                     ->to($user->getEmail())
                     ->subject("Confirmation d'adresse email")
                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context([
+                        'customer' => $user
+                    ])
             );
             // do anything else you need here, like send an email
 
