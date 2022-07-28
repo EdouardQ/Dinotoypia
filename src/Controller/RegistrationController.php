@@ -68,13 +68,13 @@ class RegistrationController extends AbstractController
         $id = $request->get('id');
 
         if (null === $id) {
-            return $this->redirectToRoute('registrationregister');
+            return $this->redirectToRoute('homepage.index');
         }
 
         $user = $customerRepository->find($id);
 
         if (null === $user) {
-            return $this->redirectToRoute('registration.register');
+            return $this->redirectToRoute('security.customer.login');
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists

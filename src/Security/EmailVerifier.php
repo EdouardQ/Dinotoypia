@@ -5,7 +5,6 @@ namespace App\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -16,16 +15,12 @@ class EmailVerifier
     private $verifyEmailHelper;
     private $mailer;
     private $entityManager;
-    private $env;
-    private bool $prod;
 
-    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager, KernelInterface $kernel)
+    public function __construct(VerifyEmailHelperInterface $helper, MailerInterface $mailer, EntityManagerInterface $manager)
     {
         $this->verifyEmailHelper = $helper;
         $this->mailer = $mailer;
         $this->entityManager = $manager;
-        $this->env = $kernel->getEnvironment();
-        $this->prod = $this->env === "prod";
     }
 
     public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
@@ -43,11 +38,6 @@ class EmailVerifier
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
         $email->context($context);
-
-        // send mail if prod env
-        if ($this->prod) {
-            $this->mailer->send($email);
-        }
     }
 
     /**
