@@ -49,9 +49,9 @@ class MailService
     {
         $email = (new TemplatedEmail())
             ->from('no-reply@dinotoypia.store')
-            ->to('no-reply@dinotoypia.store')
+            ->to($refurbishedToy->getCustomer()->getEmail())
             ->subject('Demande de reconditionnement')
-            ->htmlTemplate('')
+            ->htmlTemplate('emails/accepted_refurbished_toy.html.twig')
             ->context([
                 'refurbishedToy' => $refurbishedToy,
             ]);
@@ -63,9 +63,9 @@ class MailService
     {
         $email = (new TemplatedEmail())
             ->from('no-reply@dinotoypia.store')
-            ->to('no-reply@dinotoypia.store')
+            ->to($refurbishedToy->getCustomer()->getEmail())
             ->subject('Demande de reconditionnement')
-            ->htmlTemplate('')
+            ->htmlTemplate('emails/refused_refurbished_toy.html.twig')
             ->context([
                 'refurbishedToy' => $refurbishedToy,
             ]);

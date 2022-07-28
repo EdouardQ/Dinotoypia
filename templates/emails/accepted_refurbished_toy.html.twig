@@ -1,0 +1,37 @@
+{{ include('./style/email_style.html.twig') }}
+
+<body class="body">
+    <div class="container-mail">
+        <header class="header">
+            <div class="container-base">
+                Bonjour {{ refurbishedToy.customer.firstname }} {{ refurbishedToy.customer.lastname }},
+            </div>
+        </header>
+
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container"><h2>Demande de reconditionnement acceptée</h2></div>
+
+            <div class="container">
+                La demande de reconditionnement de votre jouet a été acceptée par notre équipe.
+                <br>
+                Vous pouvez donc présenter votre produit et le code barre suivant dans un point de dépot UPS afin qu'il soit emballé
+                et expédié dans nos locaux.
+                <br>
+                Trouvez un poit de dépot proche de chez vous <a href="https://www.ups.com/dropoff/" target="_blank">en appuyant ici</a>
+            </div>
+            <div class="centeritem">
+                <img alt='Barcode Generator TEC-IT' src='https://barcode.tec-it.com/barcode.ashx?data={{refurbishedToy.barCodeNumber }}&code=&translate-esc=true'/>
+            </div>
+            
+        </div>
+
+        <hr class="hr">
+
+        <div class="cardlayout">
+            <div class="container">L'équipe Dinotoypia</h2></div>
+        </div>
+
+    </div>
+</body>
