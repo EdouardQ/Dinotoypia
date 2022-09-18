@@ -9,5 +9,4 @@
 /vendor/
 ###< symfony/framework-bundle ###
 docker-compose.yml
-.env
 /.idea/
